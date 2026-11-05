@@ -1,18 +1,18 @@
 ---
-title: 1. Un cube qui tourne
+title: 1. Cube en rotation
 section: Tutoriel
 description: "Le plus petit exemple complet : un cube en OpenGL 3.3 brut, compilé en WebAssembly, dans une slide reveal.js qui le règle par l'adresse de son cadre. Tout le code, à télécharger."
 ---
 {% set code = '../../../code/examples/a1-opengl-cube/' %}
 
-# 1. Un cube qui tourne
+# 1. Cube en rotation
 
 Le plus petit programme pour une slide : un cube qui tourne tout seul, en OpenGL 3.3 brut avec GLFW, environ
 200 lignes. La slide règle sa vitesse et son inclinaison par l'adresse du cadre ; il n'y a aucun contrôle à
 l'écran. Une seule source se compile pour le bureau et pour le web.
 
 <div class="live">
-<iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Un cube qui tourne, OpenGL brut compilé en WebAssembly"></iframe>
+<iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Cube en rotation, OpenGL brut compilé en WebAssembly"></iframe>
 <div class="live-note">En direct : la compilation web de cet exemple, réglée par <code>?speed=0.2&amp;tilt=25</code>.
 <a href="{{ code }}slides.html">Ouvrir sa slide (reveal.js)</a>.</div>
 </div>
@@ -116,4 +116,4 @@ demo::../_demo/a1/index.html?speed=0.2&tilt=25
 ::{% endraw %}
 ```
 
-**Ensuite :** [2. Des uniforms pilotés en direct](../03_panel/index.html) : le même cube, changé pendant qu'il tourne.
+**Ensuite :** [2. Uniforms pilotés en direct](../03_panel/index.html) : le même cube, changé pendant qu'il tourne.

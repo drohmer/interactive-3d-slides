@@ -1,16 +1,14 @@
 ---
-title: 5. ImGui dans la salle
+title: 5. GUI avec ImGui
 section: Tutoriel
 description: "Des marching cubes interactifs en CGP, avec sa fenêtre ImGui agrandie pour le projecteur et les mêmes variables pilotées depuis la slide. Tout le code, à télécharger."
 ---
 {% set code = '../../../code/examples/c6-cgp-marching-cubes/' %}
 
-# 5. ImGui dans la salle
+# 5. GUI avec ImGui
 
 Une surface implicite, une somme de blobs et un bruit de Perlin, maillée par marching cubes à chaque changement.
-L'interface est la fenêtre ImGui du programme, la plus rapide à écrire : aucun HTML, tous les réglages sous la
-main. Dans une slide, il lui faut deux choses : être lisible du fond de la salle, et rester d'accord avec les
-boutons de la slide.
+L'interface est la fenêtre ImGui du programme : aucun HTML à écrire, tous les réglages dans une fenêtre. Dans une slide, elle doit être lisible au projecteur, et rester d'accord avec les boutons de la slide.
 
 <div class="live">
 <iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Des marching cubes avec la fenêtre ImGui"></iframe>
@@ -30,7 +28,7 @@ Le code vient de l'exemple CGP de [epita_ani3d_lab_code-2027](https://github.com
 
 ## Ce qui est nouveau
 
-- **ImGui lisible dans la salle :** `?gui_scale=1.4` agrandit son texte, par `project::gui_scale`, que le modèle
+- **ImGui lisible au projecteur :** `?gui_scale=1.4` agrandit son texte, par `project::gui_scale`, que le modèle
   de CGP donne à ImGui à chaque image. Ses sections restent fermées au départ : une fenêtre longue sort du cadre.
 - **Les mêmes variables pour ImGui et la slide :** elles sont déclarées au pont, avec ce qu'il faut recalculer
   quand la slide les change. ImGui affiche les nouvelles valeurs à l'image suivante, puisqu'il les lit.
@@ -87,4 +85,4 @@ La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués `slide-
 
 Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c6-cgp-marching-cubes`.
 
-**Ensuite :** [6. Des valeurs renvoyées vers la slide](../07_readout/index.html).
+**Ensuite :** [6. Valeurs renvoyées vers la slide](../07_readout/index.html).

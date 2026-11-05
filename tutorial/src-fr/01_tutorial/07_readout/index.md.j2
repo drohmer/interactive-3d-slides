@@ -1,11 +1,11 @@
 ---
-title: 6. Des valeurs renvoyées vers la slide
+title: 6. Valeurs renvoyées vers la slide
 section: Tutoriel
 description: "Déplacez à la souris les points de contrôle d'une courbe de Bézier ou d'une spline ; le programme calcule la longueur de la courbe et la slide l'affiche, en direct. Tout le code, à télécharger."
 ---
 {% set code = '../../../code/examples/c7-cgp-drag-points/' %}
 
-# 6. Des valeurs renvoyées vers la slide
+# 6. Valeurs renvoyées vers la slide
 
 Les points de contrôle d'une courbe, déplacés à la souris : une courbe de Bézier, qui approche ses points, ou une
 spline de Catmull-Rom, qui passe par eux. Le programme calcule la longueur de la courbe, et la slide l'affiche
@@ -33,10 +33,10 @@ pendant que vous déplacez : une valeur qui va de la démo vers la slide.
 - **La sélection :** au clic, `picking_spheres` trouve le point sous la souris ; tant que le bouton est enfoncé, le
   point suit la souris dans le plan face à la caméra, et la caméra reste immobile.
 
-<div class="callout warn"><div class="callout-title">Des lignes d'un pixel</div>
+<div class="callout warn"><div class="callout-title">Lignes d'un pixel</div>
 
 La plupart des navigateurs dessinent les lignes WebGL sur un pixel de large, quoi que demande `glLineWidth` : la
-courbe est fine au projecteur. Une courbe qui doit se voir du fond de la salle se dessine mieux en tube, un maillage.
+courbe est fine au projecteur. Une courbe qui doit rester visible se dessine mieux en tube, un maillage.
 
 </div>
 

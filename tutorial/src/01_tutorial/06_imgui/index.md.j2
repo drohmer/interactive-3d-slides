@@ -1,15 +1,14 @@
 ---
-title: 5. ImGui in the room
+title: 5. GUI with ImGui
 section: Tutorial
 description: 'Interactive marching cubes in CGP, with its ImGui window enlarged for the projector and the same variables driven from the slide. All the code, to download.'
 ---
 {% set code = '../../code/examples/c6-cgp-marching-cubes/' %}
 
-# 5. ImGui in the room
+# 5. GUI with ImGui
 
 An implicit surface, a sum of blobs and Perlin noise, meshed by marching cubes at each change. The interface is
-the ImGui window of the program, the quickest one to write: no HTML, every setting at hand. In a slide it needs
-two things: to be readable from the back of the room, and to stay in agreement with the buttons of the slide.
+the ImGui window of the program: no HTML to write, every setting in one window. In a slide, it has to be readable on the projector, and to stay in agreement with the buttons of the slide.
 
 <div class="live">
 <iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Marching cubes with the ImGui window"></iframe>
@@ -29,7 +28,7 @@ The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://githu
 
 ## What is new
 
-- **ImGui readable in the room:** `?gui_scale=1.4` enlarges its text, through `project::gui_scale`, which the
+- **ImGui readable on the projector:** `?gui_scale=1.4` enlarges its text, through `project::gui_scale`, which the
   template of CGP gives to ImGui at each frame. Its sections stay closed at start: a long window goes out of the
   frame.
 - **The same variables for ImGui and the slide:** they are declared to the bridge, with what to recompute when

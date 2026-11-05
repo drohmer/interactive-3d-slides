@@ -1,11 +1,11 @@
 ---
-title: 4. Des boutons dans la slide
+title: 4. Boutons dans la slide
 section: Tutoriel
 description: "Une surface qui ondule en CGP, pilotée depuis des boutons écrits dans le texte de la slide, depuis un panneau dans la démo, et depuis ImGui ; le fil de fer dessiné en lignes pour WebGL. Tout le code, à télécharger."
 ---
 {% set code = '../../../code/examples/c3-cgp-waving-surface/' %}
 
-# 4. Des boutons dans la slide
+# 4. Boutons dans la slide
 
 Une grille de 120 x 120 sommets déplacés à chaque image : une ride depuis le centre, ou des vagues parallèles.
 Vous la changez en parlant, avec des boutons écrits dans le texte de la slide, en dehors de la démo : le public
@@ -28,7 +28,7 @@ voit quel état est montré, et la slide affiche une valeur du programme.
 
 ## Ce qui est nouveau
 
-- **Des boutons dans la slide,** en HTML seulement, avec `slide-controls.js` : `data-demo-set` donne les réglages
+- **Boutons dans la slide,** en HTML seulement, avec `slide-controls.js` : `data-demo-set` donne les réglages
   à appliquer, `data-demo-value` affiche une valeur en direct, et un bouton reçoit la classe `on` tant que ses
   réglages sont les valeurs courantes de la démo.
 - **Une scène CGP à elle :** trois fichiers remplacent ceux du modèle. `main.cpp` change d'une ligne
@@ -90,4 +90,4 @@ images et les valeurs :
 
 {% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
 
-**Ensuite :** [5. ImGui dans la salle](../06_imgui/index.html).
+**Ensuite :** [5. GUI avec ImGui](../06_imgui/index.html).

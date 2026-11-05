@@ -1,18 +1,18 @@
 ---
-title: 1. A turning cube
+title: 1. Rotating cube
 section: Tutorial
 description: 'The smallest complete example: a cube in raw OpenGL 3.3, compiled to WebAssembly, in a reveal.js slide that sets it by the address of its frame. All the code, to download.'
 ---
 {% set code = '../../code/examples/a1-opengl-cube/' %}
 
-# 1. A turning cube
+# 1. Rotating cube
 
 The smallest program for a slide: a cube that turns by itself, in raw OpenGL 3.3 with GLFW, about 200
 lines. The slide sets its speed and its tilt through the address of the frame; there is no control on
 screen. One source builds for the desktop and for the web.
 
 <div class="live">
-<iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="A turning cube, raw OpenGL compiled to WebAssembly"></iframe>
+<iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Rotating cube, raw OpenGL compiled to WebAssembly"></iframe>
 <div class="live-note">Live: the web build of this example, set by <code>?speed=0.2&amp;tilt=25</code>.
 <a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
 </div>
@@ -108,7 +108,7 @@ right ([the slide in the example talk](../../decks/lhtml-site/html/01_address/in
 ```
 {% raw %}{% set layout = 'side' %}
 
-= A turning cube
+= Rotating cube
 
 media::
 demo::../_demo/a1/index.html?speed=0.2&tilt=25
