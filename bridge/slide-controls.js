@@ -75,7 +75,9 @@
     var m = event.data && event.data.slide;
     if (!m || typeof m !== 'object') return;
     if (m.key) {   // a navigation key from a demo of another origin
-      document.dispatchEvent(new KeyboardEvent('keydown', {key: m.key, bubbles: true}));
+      // a deck of lhtml-site handles these messages itself (window.__lhtmlNavigation)
+      if (!window.__lhtmlNavigation)
+        document.dispatchEvent(new KeyboardEvent('keydown', {key: m.key, bubbles: true}));
       return;
     }
     if (m.params) {

@@ -71,9 +71,14 @@
   /* colors of a group of controls (the class given in C++ by .with_class("time")): add yours here */
 </style>
 <script>
-  // The navigation keys go to the deck when the demo has the focus
+  // The navigation keys go to the deck when the demo has the focus. A deck of lhtml-site
+  // (from its version with window.__lhtmlNavigation) listens to the keys of its demos itself:
+  // nothing to do then. Other decks: the key is sent to the slide, or posted to another origin.
   window.addEventListener('keydown', function (e) {
-    if (window.parent === window || CONFIG.navigationKeys.indexOf(e.key) < 0) return;
+    if (window.parent === window || e.defaultPrevented || CONFIG.navigationKeys.indexOf(e.key) < 0) return;
+    var parentListens = false;
+    try { parentListens = !!window.parent.__lhtmlNavigation; } catch (err) {}
+    if (parentListens) return;
     e.stopImmediatePropagation(); e.preventDefault();
     try { window.parent.document.dispatchEvent(new KeyboardEvent('keydown', {key: e.key, bubbles: true})); }
     catch (err) { window.parent.postMessage({slide: {key: e.key}}, '*'); }   // another origin
