@@ -1,0 +1,161 @@
+{
+  "title": "CGP: a waving surface, driven from the panel and from the slide",
+  "kind": "cgp",
+  "query": "controls=ampl,k,speed,damping,wireframe,play&compact=1&panel=bl",
+  "panel": 6,
+  "slide": "<button data-demo-set=\"shape=ripple\">Ripple</button> <button data-demo-set=\"shape=waves\">Waves</button> <button data-demo-set=\"drop\">Drop</button> <button data-demo-set=\"ampl=0.25&amp;k=14\">Strong</button> A = <span data-demo-value=\"ampl\" data-digits=\"2\"></span>",
+  "steps": [
+    {
+      "expect": {
+        "shape": "ripple",
+        "ampl": 0.12,
+        "gui": false
+      }
+    },
+    {
+      "slide_on": [
+        "Ripple"
+      ]
+    },
+    {
+      "slide_text": [
+        "[data-demo-value=ampl]",
+        "0.12"
+      ]
+    },
+    {
+      "wait": 1.5
+    },
+    {
+      "set": {
+        "play": 0
+      }
+    },
+    {
+      "wait": 0.2
+    },
+    {
+      "snapshot": "frozen"
+    },
+    {
+      "wait": 0.4
+    },
+    {
+      "snapshot": "frozen2"
+    },
+    {
+      "same": [
+        "frozen",
+        "frozen2"
+      ]
+    },
+    {
+      "slide_click": "Waves"
+    },
+    {
+      "expect": {
+        "shape": "waves"
+      }
+    },
+    {
+      "slide_on": [
+        "Waves"
+      ]
+    },
+    {
+      "snapshot": "waves"
+    },
+    {
+      "differ": [
+        "frozen2",
+        "waves"
+      ]
+    },
+    {
+      "slide_click": "Strong"
+    },
+    {
+      "expect": {
+        "ampl": 0.25,
+        "k": 14
+      }
+    },
+    {
+      "slide_on": [
+        "Waves",
+        "Strong"
+      ]
+    },
+    {
+      "slide_text": [
+        "[data-demo-value=ampl]",
+        "0.25"
+      ]
+    },
+    {
+      "snapshot": "strong"
+    },
+    {
+      "differ": [
+        "waves",
+        "strong"
+      ]
+    },
+    {
+      "click": "Wireframe"
+    },
+    {
+      "expect": {
+        "wireframe": true
+      }
+    },
+    {
+      "snapshot": "wire"
+    },
+    {
+      "differ": [
+        "strong",
+        "wire"
+      ]
+    },
+    {
+      "drag": [
+        [
+          700,
+          300
+        ],
+        [
+          450,
+          250
+        ]
+      ]
+    },
+    {
+      "snapshot": "turned"
+    },
+    {
+      "differ": [
+        "wire",
+        "turned"
+      ]
+    },
+    {
+      "slide_click": "Drop"
+    },
+    {
+      "expect": {
+        "shape": "ripple"
+      }
+    },
+    {
+      "slide_on": [
+        "Ripple",
+        "Strong"
+      ]
+    }
+  ],
+  "poster": {
+    "query": "ampl=0.12&k=9",
+    "wait": 2.5
+  }
+}

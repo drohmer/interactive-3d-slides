@@ -7,11 +7,16 @@ Usage: python test_demo.py <web_dir> <demo.json> [--poster out.png]
     "panel":   number of rows expected in the panel (optional)
     "steps":   list of {"set": {key: value}}       postMessage from the slide
                        {"click": "text"}            click on the button of the panel with this text
+                       {"slide_click": "text"}      click on a button of the slide (outside the demo)
+                       {"slide_text": [sel, text]}  text of an element of the slide
+                       {"slide_on": ["text", ...]}  the buttons of the slide shown as on
+                       {"drag": [[x0, y0], [x1, y1]]}  mouse drag in the demo (pixels of the frame)
                        {"wait": seconds}
                        {"snapshot": "name"}         keep the image of the canvas
                        {"same": ["a", "b"]}         the two images are equal
                        {"differ": ["a", "b"]}       the two images differ
                        {"expect": {key: value}}     values of the parameters (numbers within 1e-3)
+    "slide":   HTML put in the test slide under the demo, with bridge/slide-controls.js (optional)
     "poster":  {"query": ..., "wait": seconds}      address and delay of the poster image (optional)
 
 Every demo is also checked for: the ready message, window.__lhtmlReady, a canvas that is not blank,
@@ -26,7 +31,9 @@ BROWSER_ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-sw
 
 DECK = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>test slide</title></head>
 <body style="margin:0">
-<iframe id="demo" src="demo/index.html?{query}" style="width:{w}px;height:{h}px;border:0"></iframe>
+<iframe id="demo" class="demo" src="demo/index.html?{query}" style="width:{w}px;height:{h}px;border:0;display:block"></iframe>
+<div id="slide">{slide}</div>
+<script src="slide-controls.js"></script>
 <script>
   window.messages = []; window.keys = [];
   window.addEventListener('message', function (e) {{ if (e.data && e.data.slide) window.messages.push(e.data.slide); }});
@@ -46,7 +53,7 @@ def serve(root):
 
 
 def open_demo(browser, port, query, w, h, errors):
-    page = browser.new_page(viewport={'width': w + 40, 'height': h + 40})
+    page = browser.new_page(viewport={'width': w + 40, 'height': h + 160})
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
     page.goto(f'http://127.0.0.1:{port}/deck_{abs(hash(query))}.html')
@@ -59,6 +66,7 @@ def main():
     parser.add_argument('web_dir')
     parser.add_argument('spec')
     parser.add_argument('--poster')
+    parser.add_argument('--shot', help='screenshot of the test slide after the steps')
     parser.add_argument('--size', default='1200x700')
     options = parser.parse_args()
     spec = json.load(open(options.spec))
@@ -69,7 +77,8 @@ def main():
     queries = [spec.get('query', '')] + ([spec['poster'].get('query', '')] if 'poster' in spec else [])
     for q in queries:
         with open(os.path.join(root, f'deck_{abs(hash(q))}.html'), 'w') as f:
-            f.write(DECK.format(query=q, w=w, h=h))
+            f.write(DECK.format(query=q, w=w, h=h, slide=spec.get('slide', '') if q == queries[0] else ''))
+    shutil.copy2(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'bridge', 'slide-controls.js'), root)
     server = serve(root)
     port = server.server_address[1]
 
@@ -111,6 +120,25 @@ def main():
             elif 'click' in step:
                 page.frame_locator('#demo').locator('#controls button', has_text=step['click']).first.click()
                 time.sleep(0.25)
+            elif 'slide_click' in step:
+                page.locator('#slide button', has_text=step['slide_click']).first.click()
+                time.sleep(0.3)
+            elif 'slide_on' in step:
+                on = page.evaluate("[...document.querySelectorAll('#slide button.on')].map(b => b.textContent.trim())")
+                check(f'slide buttons on: {step["slide_on"]}', on == step['slide_on'], on)
+            elif 'slide_text' in step:
+                selector, text = step['slide_text']
+                got = page.locator('#slide ' + selector).first.text_content()
+                check(f'slide shows {selector} = {text}', got == text, got)
+            elif 'drag' in step:
+                (x0, y0), (x1, y1) = step['drag']
+                page.mouse.move(x0, y0)
+                page.mouse.down()
+                for k in range(1, 11):
+                    page.mouse.move(x0 + (x1 - x0) * k / 10, y0 + (y1 - y0) * k / 10)
+                    time.sleep(0.02)
+                page.mouse.up()
+                time.sleep(0.2)
             elif 'wait' in step:
                 time.sleep(step['wait'])
             elif 'snapshot' in step:
@@ -128,6 +156,9 @@ def main():
                     ok = abs(got - value) < 1e-3 if isinstance(value, (int, float)) and not isinstance(value, bool) and isinstance(got, (int, float)) else got == value
                     check(f'{key} = {value}', ok, got)
 
+        if options.shot:
+            page.screenshot(path=options.shot)
+            print(f'     shot of the test slide: {options.shot}')
         demo.locator('#canvas').click(position={'x': w // 2, 'y': h // 2})
         page.keyboard.press('ArrowRight')
         time.sleep(0.2)

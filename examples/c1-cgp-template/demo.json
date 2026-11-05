@@ -1,0 +1,13 @@
+{
+  "title": "The CGP template, as is",
+  "kind": "cgp",
+  "query": "",
+  "steps": [
+    {"snapshot": "before"},
+    {"drag": [[700, 450], [500, 300]]},
+    {"wait": 0.3},
+    {"snapshot": "after"},
+    {"differ": ["before", "after"]}
+  ],
+  "poster": {"query": "", "wait": 1.0}
+}

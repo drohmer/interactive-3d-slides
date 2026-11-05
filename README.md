@@ -8,8 +8,8 @@ The repository holds a small bridge between the program and the slide, and (soon
 examples. It goes with the recipes of [lhtml-site](https://scholartools.fr/lhtml/), but the demos are
 plain web pages: any slide tool that can show an iframe can use them.
 
-> Status: work in progress. The bridge is written and tested on a real talk; the first examples
-> (raw OpenGL 3.3) are in [examples/](examples/), the CGP examples are next.
+> Status: work in progress. The bridge is written and tested on a real talk; four examples (raw OpenGL 3.3
+> and CGP) are in [examples/](examples/), two more are next.
 
 ## What the bridge does
 
@@ -121,11 +121,16 @@ source <emsdk>/emsdk_env.sh
 make examples
 ```
 
-builds each example for the web, copies the build into `examples/<id>/web/`, tests it in headless Chromium
+builds each example for the web (`--native`: also for the desktop, and runs it), copies the build into
+`examples/<id>/web/`, tests it in headless Chromium
 and captures `examples/<id>/poster.png` (the image for the PDF). The checks of an example are listed in its
 `demo.json` (see [tests/test_demo.py](tests/test_demo.py)); every example is also checked for a canvas that
 is drawn and fills the frame, the arrow keys reaching the slide, and no JavaScript error. Playwright comes
 from the Python of lhtml-site, or from `LHTML_PYTHON`. Log: `build/build_examples.log`.
+
+The CGP examples hold only the files that differ from the template project of CGP: the script stages them
+over a copy of that project (`CGP_DIR`, the folder of the CGP project with its `CMakeLists.txt`, `cgp/`,
+`src/`, `shaders/`), adds the bridge, and builds with the `CMakeLists.txt` of CGP.
 
 The bridge was checked end to end on the demo of the talk *Dynamic Skinning* (JFIG 2026) ported onto it:
 settings from the address, generated panel, sliders and buttons, `postMessage` from the parent page, a refused
@@ -140,8 +145,8 @@ First examples, from basic to advanced, each with another kind of interface:
 |---|---|---|---|
 | A1 | [Raw OpenGL 3.3: a turning cube](examples/a1-opengl-cube/) | none; settings in the address | done |
 | A2 | [A1 with uniforms driven live](examples/a2-opengl-uniforms/) | panel in the iframe, or the slide | done |
-| C1 | The CGP template, as is | mouse in the canvas | to do |
-| C3 | A waving surface | panel in the iframe, and buttons in the slide | to do |
+| C1 | [The CGP template, as is](examples/c1-cgp-template/) | mouse in the canvas, ImGui | done |
+| C3 | [A waving surface](examples/c3-cgp-waving-surface/) | panel in the iframe, and buttons in the slide | done |
 | C6 | Interactive marching cubes | ImGui | to do |
 | C7 | Select and drag points | direct manipulation | to do |
 
