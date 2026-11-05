@@ -1,0 +1,18 @@
+{
+  "title": "Raw OpenGL 3.3: a turning cube",
+  "query": "speed=0.2&tilt=25",
+  "steps": [
+    {"expect": {"speed": 0.2, "tilt": 25, "background": "light"}},
+    {"snapshot": "turning1"}, {"wait": 0.4}, {"snapshot": "turning2"},
+    {"differ": ["turning1", "turning2"]},
+    {"set": {"speed": 0}}, {"wait": 0.2},
+    {"snapshot": "still1"}, {"wait": 0.4}, {"snapshot": "still2"},
+    {"same": ["still1", "still2"]},
+    {"set": {"tilt": -40}}, {"snapshot": "tilted"},
+    {"differ": ["still2", "tilted"]},
+    {"set": {"background": "dark"}}, {"snapshot": "dark"},
+    {"differ": ["tilted", "dark"]},
+    {"expect": {"speed": 0, "tilt": -40, "background": "dark"}}
+  ],
+  "poster": {"query": "speed=0.05&tilt=25", "wait": 1.0}
+}

@@ -133,6 +133,7 @@
       (function count() {
         if (++frames < CONFIG.readyFrames) { requestAnimationFrame(count); return; }
         started = true;
+        resize();   // a program may have created its window at a fixed size (glfwCreateWindow resizes the canvas)
         refresh();
         buildPanel();
         pending.forEach(function (m) { receive(m); });

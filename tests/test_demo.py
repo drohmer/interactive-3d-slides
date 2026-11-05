@@ -1,0 +1,154 @@
+"""End-to-end test of a demo in a slide, and capture of its poster.
+
+Usage: python test_demo.py <web_dir> <demo.json> [--poster out.png]
+  <web_dir>    index.html (bridge/slide-frame.html) and project.js/.wasm(/.data)
+  <demo.json>  what to check (see examples/*/demo.json):
+    "query":   address of the demo in the test slide (settings, controls=...)
+    "panel":   number of rows expected in the panel (optional)
+    "steps":   list of {"set": {key: value}}       postMessage from the slide
+                       {"click": "text"}            click on the button of the panel with this text
+                       {"wait": seconds}
+                       {"snapshot": "name"}         keep the image of the canvas
+                       {"same": ["a", "b"]}         the two images are equal
+                       {"differ": ["a", "b"]}       the two images differ
+                       {"expect": {key: value}}     values of the parameters (numbers within 1e-3)
+    "poster":  {"query": ..., "wait": seconds}      address and delay of the poster image (optional)
+
+Every demo is also checked for: the ready message, window.__lhtmlReady, a canvas that is not blank,
+the arrow keys reaching the slide while the demo has the focus, and no JavaScript error.
+Needs Playwright (the Python of lhtml-site has it). WebGL by SwiftShader: no GPU needed.
+Exit code 0 when every check passes.
+"""
+import argparse, functools, hashlib, http.server, json, os, shutil, sys, tempfile, threading, time
+from playwright.sync_api import sync_playwright
+
+BROWSER_ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader']
+
+DECK = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>test slide</title></head>
+<body style="margin:0">
+<iframe id="demo" src="demo/index.html?{query}" style="width:{w}px;height:{h}px;border:0"></iframe>
+<script>
+  window.messages = []; window.keys = [];
+  window.addEventListener('message', function (e) {{ if (e.data && e.data.slide) window.messages.push(e.data.slide); }});
+  document.addEventListener('keydown', function (e) {{ window.keys.push(e.key); }});
+</script></body></html>'''
+
+
+class Quiet(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+
+def serve(root):
+    server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Quiet, directory=root))
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
+
+
+def open_demo(browser, port, query, w, h, errors):
+    page = browser.new_page(viewport={'width': w + 40, 'height': h + 40})
+    page.on('pageerror', lambda e: errors.append(str(e)))
+    page.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
+    page.goto(f'http://127.0.0.1:{port}/deck_{abs(hash(query))}.html')
+    page.wait_for_function("window.messages.some(m => m.ready)", timeout=60000)
+    return page
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('web_dir')
+    parser.add_argument('spec')
+    parser.add_argument('--poster')
+    parser.add_argument('--size', default='1200x700')
+    options = parser.parse_args()
+    spec = json.load(open(options.spec))
+    w, h = (int(x) for x in options.size.split('x'))
+
+    root = tempfile.mkdtemp(prefix='slide-demo-test-')
+    shutil.copytree(options.web_dir, os.path.join(root, 'demo'))
+    queries = [spec.get('query', '')] + ([spec['poster'].get('query', '')] if 'poster' in spec else [])
+    for q in queries:
+        with open(os.path.join(root, f'deck_{abs(hash(q))}.html'), 'w') as f:
+            f.write(DECK.format(query=q, w=w, h=h))
+    server = serve(root)
+    port = server.server_address[1]
+
+    failures = []
+    def check(name, condition, detail=''):
+        print(('ok   ' if condition else 'FAIL ') + name + (f'  {detail}' if detail and not condition else ''))
+        if not condition:
+            failures.append(name)
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(args=BROWSER_ARGS)
+        errors = []
+        t0 = time.time()
+        page = open_demo(browser, port, spec.get('query', ''), w, h, errors)
+        print(f'     ready after {time.time() - t0:.1f} s')
+        demo = page.frames[1]
+
+        def params():
+            return {q['key']: q for q in page.evaluate('window.messages')[-1]['params']}
+        def image():
+            return demo.evaluate("document.getElementById('canvas').toDataURL()")
+
+        check('ready message', True)
+        check('__lhtmlReady resolves', demo.evaluate("window.__lhtmlReady.ready().then(() => true)"))
+        blank = demo.evaluate("""(() => { const c = document.getElementById('canvas'); const t = document.createElement('canvas');
+            t.width = c.width; t.height = c.height; return t.toDataURL(); })()""")
+        check('canvas not blank', image() != blank)
+        size = demo.evaluate("[innerWidth, innerHeight, canvas.width, canvas.height]")
+        check('canvas fills the frame', size[0:2] == size[2:4], size)
+        if 'panel' in spec:
+            rows = demo.evaluate("document.querySelectorAll('#controls .row').length")
+            check(f'panel has {spec["panel"]} rows', rows == spec['panel'], rows)
+
+        snapshots = {}
+        for step in spec.get('steps', []):
+            if 'set' in step:
+                page.evaluate("(s) => document.getElementById('demo').contentWindow.postMessage({slide: {set: s}}, '*')", step['set'])
+                time.sleep(0.25)
+            elif 'click' in step:
+                page.frame_locator('#demo').locator('#controls button', has_text=step['click']).first.click()
+                time.sleep(0.25)
+            elif 'wait' in step:
+                time.sleep(step['wait'])
+            elif 'snapshot' in step:
+                snapshots[step['snapshot']] = hashlib.md5(image().encode()).hexdigest()
+            elif 'same' in step:
+                a, b = step['same']
+                check(f'{a} and {b} are the same image', snapshots[a] == snapshots[b])
+            elif 'differ' in step:
+                a, b = step['differ']
+                check(f'{a} and {b} differ', snapshots[a] != snapshots[b])
+            elif 'expect' in step:
+                current = params()
+                for key, value in step['expect'].items():
+                    got = current.get(key, {}).get('value')
+                    ok = abs(got - value) < 1e-3 if isinstance(value, (int, float)) and not isinstance(value, bool) and isinstance(got, (int, float)) else got == value
+                    check(f'{key} = {value}', ok, got)
+
+        demo.locator('#canvas').click(position={'x': w // 2, 'y': h // 2})
+        page.keyboard.press('ArrowRight')
+        time.sleep(0.2)
+        check('ArrowRight reaches the slide', 'ArrowRight' in page.evaluate('window.keys'), page.evaluate('window.keys'))
+        page.close()
+
+        if options.poster and 'poster' in spec:
+            poster = open_demo(browser, port, spec['poster'].get('query', ''), w, h, errors)
+            time.sleep(spec['poster'].get('wait', 0.5))
+            poster.locator('#demo').screenshot(path=options.poster)
+            print(f'     poster: {options.poster}')
+            poster.close()
+
+        check('no JavaScript error', not errors, errors[:5])
+        browser.close()
+
+    server.shutdown()
+    shutil.rmtree(root, ignore_errors=True)
+    print('ALL PASSED' if not failures else f'{len(failures)} FAILED: {failures}')
+    sys.exit(1 if failures else 0)
+
+
+if __name__ == '__main__':
+    main()

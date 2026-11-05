@@ -8,7 +8,8 @@ The repository holds a small bridge between the program and the slide, and (soon
 examples. It goes with the recipes of [lhtml-site](https://scholartools.fr/lhtml/), but the demos are
 plain web pages: any slide tool that can show an iframe can use them.
 
-> Status: work in progress. The bridge is written and tested on a real talk; the examples are next.
+> Status: work in progress. The bridge is written and tested on a real talk; the first examples
+> (raw OpenGL 3.3) are in [examples/](examples/), the CGP examples are next.
 
 ## What the bridge does
 
@@ -115,23 +116,34 @@ make test
 
 runs the unit tests of the C++ bridge (with the address and undefined-behavior sanitizers).
 
+```sh
+source <emsdk>/emsdk_env.sh
+make examples
+```
+
+builds each example for the web, copies the build into `examples/<id>/web/`, tests it in headless Chromium
+and captures `examples/<id>/poster.png` (the image for the PDF). The checks of an example are listed in its
+`demo.json` (see [tests/test_demo.py](tests/test_demo.py)); every example is also checked for a canvas that
+is drawn and fills the frame, the arrow keys reaching the slide, and no JavaScript error. Playwright comes
+from the Python of lhtml-site, or from `LHTML_PYTHON`. Log: `build/build_examples.log`.
+
 The bridge was checked end to end on the demo of the talk *Dynamic Skinning* (JFIG 2026) ported onto it:
 settings from the address, generated panel, sliders and buttons, `postMessage` from the parent page, a refused
 value, a change of model, the arrow keys reaching the deck, the readiness promise, and a canvas that is drawn
 and moves (headless Chromium, WebGL by SwiftShader).
 
-## Roadmap
+## Examples
 
 First examples, from basic to advanced, each with another kind of interface:
 
-| Id | Example | Interface |
-|---|---|---|
-| A1 | Raw OpenGL 3.3: a turning cube | none; settings in the address |
-| A2 | A1 with uniforms driven live | panel in the iframe |
-| C1 | The CGP template, as is | mouse in the canvas |
-| C3 | A waving surface | panel in the iframe, and buttons in the slide |
-| C6 | Interactive marching cubes | ImGui |
-| C7 | Select and drag points | direct manipulation |
+| Id | Example | Interface | Status |
+|---|---|---|---|
+| A1 | [Raw OpenGL 3.3: a turning cube](examples/a1-opengl-cube/) | none; settings in the address | done |
+| A2 | [A1 with uniforms driven live](examples/a2-opengl-uniforms/) | panel in the iframe, or the slide | done |
+| C1 | The CGP template, as is | mouse in the canvas | to do |
+| C3 | A waving surface | panel in the iframe, and buttons in the slide | to do |
+| C6 | Interactive marching cubes | ImGui | to do |
+| C7 | Select and drag points | direct manipulation | to do |
 
 ## License
 

@@ -1,7 +1,7 @@
 CXX ?= c++
 CXXFLAGS ?= -std=c++17 -Wall -Wextra -g
 
-.PHONY: test clean
+.PHONY: test examples clean
 
 # Unit tests of the C++ bridge, with the address and undefined-behavior sanitizers
 test: build/test_slide_bridge
@@ -13,3 +13,7 @@ build/test_slide_bridge: bridge/slide_bridge.cpp bridge/slide_bridge.hpp tests/t
 
 clean:
 	rm -rf build
+
+# Web build, browser test and poster of each example (the Emscripten SDK active)
+examples:
+	python3 scripts/build_examples.py

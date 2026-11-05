@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo</title>
+<!--
+  slide-frame.html: the page of a demo compiled with Emscripten, made to be shown in a slide (an iframe).
+  Copy it next to project.js / project.wasm / project.data as index.html, and adapt CONFIG below.
+
+  The address of the iframe gives the settings:
+    index.html?freq=2&model=bunny        arguments of the program: --freq 2 --model bunny
+    &controls=freq,model,mode:lbs:drag   controls shown in the panel, in this order; mode:lbs:drag keeps
+                                         only the buttons lbs and drag of the parameter mode
+    &compact=1                           short labels, small panel
+    &panel=tl|tr|bl|br                   corner of the panel (default tr)
+    &build=name                          load name/project.js (several builds in one folder)
+  The panel is built from the parameters the program declares (slide_bridge.hpp): their ranges, choices
+  and labels come from slide_describe().
+
+  The slide can drive the demo with postMessage (also from another origin):
+    frame.contentWindow.postMessage({slide: {set: {freq: 3, mode: 'ds'}}}, '*')
+    frame.contentWindow.postMessage({slide: {describe: true}}, '*')
+  and the demo answers each change, and its start, with {slide: {ready|changed: ..., params: [...]}}.
+
+  The arrow keys and Page Up/Down go to the deck even when the demo has the focus, and the PDF export of
+  lhtml-site waits for the first frames (window.__lhtmlReady).
+-->
+<script>
+  var CONFIG = {
+    script: 'project.js',                  // the file produced by Emscripten
+    defaults: {},                          // arguments given when the address does not, e.g. {gui: '0'}
+    readyFrames: 10,                       // frames drawn before the demo is shown and counted as ready
+    capture: true,                         // keep the image of the canvas (PDF export, tests); a little slower
+    navigationKeys: ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp']
+  };
+</script>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: white; }
+  #canvas { display: block; position: fixed; left: 0; top: 0; outline: none; opacity: 0; transition: opacity 0.35s; }
+  #canvas.ready { opacity: 1; }
+  #status { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #888;
+    font: 22px system-ui, sans-serif; }
+  #status.error { color: #b00020; max-width: 80%; text-align: center; }
+
+  #controls { position: fixed; right: 12px; top: 12px; padding: 10px 16px; display: none;
+    font-family: Palatino, "Palatino Linotype", Georgia, serif; font-size: 28px;
+    background: rgba(255, 255, 255, 0.85); border: 1px solid #ddd; border-radius: 10px; }
+  #controls.tl { right: auto; left: 12px; }
+  #controls.bl { right: auto; left: 12px; top: auto; bottom: 12px; }
+  #controls.br { top: auto; bottom: 12px; }
+  #controls .row { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+  #controls label { min-width: 200px; }
+  #controls input[type=range] { width: 240px; }
+  #controls .value { min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
+  #controls button { font: inherit; font-size: 0.93em; padding: 2px 12px; cursor: pointer;
+    border: 1px solid #aaa; border-radius: 6px; background: white; }
+  #controls button.on { background: #333; color: white; border-color: #333; }
+  #controls.compact { font-size: 20px; padding: 4px 10px; }
+  #controls.compact .row { gap: 8px; margin: 1px 0; }
+  #controls.compact label { min-width: 0; width: 62px; }
+  #controls.compact input[type=range] { width: 130px; }
+  #controls.compact .value { min-width: 42px; }
+  @media (max-width: 1100px) {
+    #controls:not(.compact) { font-size: 24px; padding: 6px 10px; }
+    #controls:not(.compact) label { min-width: 150px; }
+    #controls:not(.compact) input[type=range] { width: 150px; }
+  }
+  /* colors of a group of controls (the class given in C++ by .with_class("time")): add yours here */
+</style>
+<script>
+  // The navigation keys go to the deck when the demo has the focus
+  window.addEventListener('keydown', function (e) {
+    if (window.parent === window || CONFIG.navigationKeys.indexOf(e.key) < 0) return;
+    e.stopImmediatePropagation(); e.preventDefault();
+    try { window.parent.document.dispatchEvent(new KeyboardEvent('keydown', {key: e.key, bubbles: true})); }
+    catch (err) { window.parent.postMessage({slide: {key: e.key}}, '*'); }   // another origin
+  }, true);
+</script>
+</head>
+<body>
+<canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+<div id="status">Loading...</div>
+<div id="controls"></div>
+<script>
+(function () {
+  var RESERVED = ['controls', 'compact', 'panel', 'build'];
+  var canvas = document.getElementById('canvas');
+  var statusBox = document.getElementById('status');
+  var panel = document.getElementById('controls');
+  var query = new URLSearchParams(window.location.search);
+
+  // The canvas keeps its image after each frame, so that it can be captured (PDF export, tests).
+  // The GLFW of Emscripten builds the attributes of its WebGL context from its hints only, and
+  // ignores Module.webglContextAttributes: they are added here, for this canvas.
+  if (CONFIG.capture) {
+    var getContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (type, attributes) {
+      if (this === canvas && /webgl/.test(type))
+        attributes = Object.assign({}, attributes, {preserveDrawingBuffer: true});
+      return getContext.call(this, type, attributes);
+    };
+  }
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Arguments of the program: the defaults, then the address
+  var options = {};
+  Object.keys(CONFIG.defaults).forEach(function (key) { options[key] = String(CONFIG.defaults[key]); });
+  query.forEach(function (value, key) { if (RESERVED.indexOf(key) < 0) options[key] = value; });
+  var args = [];
+  Object.keys(options).forEach(function (key) { args.push('--' + key, options[key]); });
+
+  // Ready: the runtime started and a few frames are drawn (the PDF export of lhtml-site waits for it)
+  var started = false, params = [], pending = [];
+  var markReady;
+  var ready = new Promise(function (done) { markReady = done; });
+  window.__lhtmlReady = {version: 1, ready: function () { return ready; }};
+
+  var build = (query.get('build') || '').replace(/[^A-Za-z0-9_-]/g, '');
+  var prefix = build ? build + '/' : '';
+  window.Module = {
+    canvas: canvas,
+    arguments: args,
+    locateFile: function (path) { return prefix + path; },
+    print: function (text) { console.log(text); },
+    printErr: function (text) { console.warn(text); },
+    // Called before main(): the parameters are declared by main, so they are read a few frames later
+    onRuntimeInitialized: function () {
+      var frames = 0;
+      (function count() {
+        if (++frames < CONFIG.readyFrames) { requestAnimationFrame(count); return; }
+        started = true;
+        resize();   // a program may have created its window at a fixed size (glfwCreateWindow resizes the canvas)
+        refresh();
+        buildPanel();
+        pending.forEach(function (m) { receive(m); });
+        pending = [];
+        canvas.classList.add('ready');
+        statusBox.style.display = 'none';
+        markReady();
+        tellParent({ready: true});
+      })();
+    },
+    onAbort: function (what) { fail('The demo stopped: ' + what); }
+  };
+
+  function fail(message) {
+    statusBox.textContent = message;
+    statusBox.className = 'error';
+    statusBox.style.display = 'block';
+    markReady();   // the export prints the slide anyway, with the message
+  }
+
+  function refresh() {
+    try { params = JSON.parse(Module.ccall('slide_describe', 'string', [], [])).params; }
+    catch (e) { params = []; console.warn('slide_describe: ' + e); }
+  }
+  function find(key) { for (var k = 0; k < params.length; ++k) if (params[k].key === key) return params[k]; return null; }
+
+  function setValue(key, value) {
+    var ok = Module.ccall('slide_set', 'number', ['string', 'string'], [key, String(value)]);
+    refresh();          // a change may change other parameters (a preset): show them all again
+    updatePanel();
+    tellParent({changed: {key: key, value: value, accepted: !!ok}});
+    return ok;
+  }
+
+  function tellParent(message) {
+    if (window.parent === window) return;
+    message.params = params;
+    window.parent.postMessage({slide: message}, '*');
+  }
+
+  // Messages of the slide: {slide: {set: {key: value, ...}}} or {slide: {describe: true}}
+  function receive(m) {
+    if (m.set) Object.keys(m.set).forEach(function (key) { setValue(key, m.set[key]); });
+    if (m.describe) tellParent({described: true});
+  }
+  window.addEventListener('message', function (event) {
+    var m = event.data && event.data.slide;
+    if (!m || typeof m !== 'object') return;
+    if (started) receive(m); else pending.push(m);
+  });
+
+  // The panel: controls=key1,key2,choice:value1:value2
+  var widgets = [];
+  function buildPanel() {
+    var list = (query.get('controls') || '').split(',').filter(function (s) { return s; });
+    if (list.length === 0) return;
+    var compact = query.get('compact') === '1';
+    if (compact) panel.classList.add('compact');
+    var corner = query.get('panel');
+    if (['tl', 'bl', 'br'].indexOf(corner) >= 0) panel.classList.add(corner);
+    list.forEach(function (entry) {
+      var parts = entry.split(':');
+      var p = find(parts[0]);
+      if (!p) { console.warn('controls: no parameter ' + parts[0]); return; }
+      var row = document.createElement('div');
+      row.className = 'row' + (p.class ? ' ' + p.class : '');
+      var label = (compact && p.short) ? p.short : p.label;
+      if (p.type === 'number' || p.type === 'integer') {
+        row.innerHTML = '<label></label><input type="range"><span class="value"></span>';
+        row.querySelector('label').innerHTML = label;
+        var input = row.querySelector('input');
+        input.min = p.min; input.max = p.max;
+        input.step = p.step > 0 ? p.step : (p.max - p.min) / 100;
+        input.addEventListener('input', function () { setValue(p.key, input.value); });
+        widgets.push({key: p.key, update: function (q) {
+          if (document.activeElement !== input) input.value = q.value;
+          row.querySelector('.value').textContent = formatNumber(q.value, input.step);
+        }});
+      }
+      else if (p.type === 'choice') {
+        var keep = parts.slice(1);
+        var buttons = [];
+        p.choices.forEach(function (c) {
+          if (keep.length > 0 && keep.indexOf(c[0]) < 0) return;
+          var b = document.createElement('button');
+          b.innerHTML = c[1];
+          b.addEventListener('click', function () { setValue(p.key, c[0]); });
+          row.appendChild(b);
+          buttons.push([c[0], b]);
+        });
+        widgets.push({key: p.key, update: function (q) {
+          buttons.forEach(function (x) { x[1].classList.toggle('on', x[0] === q.value); });
+        }});
+      }
+      else if (p.type === 'toggle') {
+        var t = document.createElement('button');
+        t.innerHTML = label;
+        t.addEventListener('click', function () { setValue(p.key, find(p.key).value ? '0' : '1'); });
+        row.appendChild(t);
+        widgets.push({key: p.key, update: function (q) { t.classList.toggle('on', !!q.value); }});
+      }
+      else if (p.type === 'action') {
+        var a = document.createElement('button');
+        a.innerHTML = label;
+        a.addEventListener('click', function () { setValue(p.key, ''); });
+        row.appendChild(a);
+      }
+      panel.appendChild(row);
+    });
+    panel.style.display = 'block';
+    updatePanel();
+  }
+  function updatePanel() {
+    widgets.forEach(function (w) { var q = find(w.key); if (q) w.update(q); });
+  }
+  function formatNumber(value, step) {
+    var decimals = Math.max(0, Math.min(4, Math.ceil(-Math.log10(Number(step) || 1))));
+    return Number(value).toFixed(decimals);
+  }
+
+  // The program itself
+  var script = document.createElement('script');
+  script.src = prefix + CONFIG.script;
+  script.async = true;
+  script.onerror = function () { fail('Cannot load ' + script.src + ' (open this page with a web server, not as a file)'); };
+  document.body.appendChild(script);
+})();
+</script>
+</body>
+</html>

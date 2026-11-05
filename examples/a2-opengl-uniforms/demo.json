@@ -1,0 +1,21 @@
+{
+  "title": "Raw OpenGL 3.3: uniforms driven live",
+  "query": "twist=0.8&controls=twist,hue,speed,light,reset",
+  "panel": 5,
+  "steps": [
+    {"expect": {"twist": 0.8, "speed": 0.15, "light": true}},
+    {"set": {"speed": 0}}, {"wait": 0.2},
+    {"snapshot": "a"}, {"wait": 0.3}, {"snapshot": "a2"},
+    {"same": ["a", "a2"]},
+    {"set": {"twist": 2.0}}, {"snapshot": "twisted"},
+    {"differ": ["a", "twisted"]},
+    {"set": {"hue": 0.05}}, {"snapshot": "red"},
+    {"differ": ["twisted", "red"]},
+    {"click": "light"}, {"snapshot": "flat"},
+    {"expect": {"light": false}},
+    {"differ": ["red", "flat"]},
+    {"click": "reset"},
+    {"expect": {"twist": 0, "hue": 0.58, "speed": 0.15, "light": true}}
+  ],
+  "poster": {"query": "twist=1.1&speed=0.05", "wait": 1.0}
+}
