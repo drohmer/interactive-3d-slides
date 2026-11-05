@@ -89,7 +89,21 @@ demo::../../_demo/index.html?model=spot&freq=2&controls=freq,model&compact=1
 
 ### Driving the demo from the slide
 
-The slide talks to the demo with `postMessage`, which also works when the demo is hosted elsewhere:
+With [bridge/slide-controls.js](bridge/slide-controls.js), buttons in the text of the slide drive the demo
+with HTML attributes only:
+
+```html
+<script src="slide-controls.js"></script>
+<button data-demo-set="shape=waves">Waves</button>        <!-- sets a parameter -->
+<button data-demo-set="ampl=0.25&k=14">Strong</button>    <!-- several at once -->
+<button data-demo-set="drop">Drop</button>                <!-- an action -->
+A = <span data-demo-value="ampl" data-digits="2"></span>  <!-- a value, live -->
+```
+
+A button gets the class `on` while its settings are the current values of the demo. The demo is the first
+`iframe.demo` of the page (or the first iframe); `data-demo="#id"` names another.
+
+Underneath, the slide talks to the demo with `postMessage`, which also works when the demo is hosted elsewhere:
 
 ```js
 const demo = document.querySelector('iframe').contentWindow;
