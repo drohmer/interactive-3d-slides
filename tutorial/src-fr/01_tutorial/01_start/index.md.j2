@@ -1,0 +1,95 @@
+---
+title: Avant de commencer
+section: Tutoriel
+description: "Ce qu'il vous faut, comment récupérer le code des exemples, et le principe : un programme C++ compilé en WebAssembly, dans un cadre d'une slide reveal.js ou lhtml-site."
+---
+
+# Avant de commencer
+
+Le tutoriel est une suite d'exemples complets, du plus simple au plus avancé. Chacun est un dossier que vous
+pouvez télécharger, compiler et montrer tel quel dans une slide ; chaque page montre tous ses fichiers.
+Commencez par le premier, puis allez aussi loin que nécessaire.
+
+## Le principe
+
+Une slide montre de la 3D interactive comme le fait un navigateur : sous forme de page web, dans un cadre
+(`<iframe>`).
+
+<div class="outputs">
+<div class="output"><div class="output-name">1. Votre programme, pour le web</div><p>Votre programme C++ OpenGL, compilé en WebAssembly par Emscripten : <code>project.js</code>, <code>project.wasm</code>.</p></div>
+<div class="output"><div class="output-name">2. La page de la démo</div><p><code>slide-frame.html</code> : elle fait tourner le programme dans le cadre, et lui transmet les réglages de son adresse.</p></div>
+<div class="output"><div class="output-name">3. La slide</div><p>Un cadre affiche cette page ; des boutons de la slide peuvent la piloter, et les flèches passent toujours à la slide suivante.</p></div>
+</div>
+
+Les slides du tutoriel sont faites avec [reveal.js](https://revealjs.com/) (chaque exemple a sa slide,
+`slides.html`), et les mêmes démos sont dans un exposé fait avec [lhtml-site](https://scholartools.fr/lhtml/fr/).
+Les deux sont en HTML, où le cadre est natif.
+
+## Ce qu'il vous faut
+
+- **Un compilateur C++ et CMake**, et GLFW pour la version bureau des exemples
+  (`brew install glfw` sur macOS, `sudo apt install libglfw3-dev` sur Ubuntu).
+- **Le SDK Emscripten**, pour la version web :
+
+  ```
+  git clone https://github.com/emscripten-core/emsdk.git
+  cd emsdk
+  ./emsdk install latest
+  ./emsdk activate latest
+  source ./emsdk_env.sh        # in each new terminal, before building for the web
+  ```
+
+  (voir [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
+- **Python 3**, pour un serveur web local : un navigateur refuse de charger `project.wasm` depuis une page
+  ouverte comme fichier.
+- Pour les exemples 3 à 6 : la bibliothèque [CGP](https://github.com/drohmer/cgp-2027), une bibliothèque C++
+  faite pour enseigner l'informatique graphique. Les deux premiers exemples n'ont besoin que de GLFW.
+
+## Récupérer le code
+
+Chaque page d'exemple a un zip de l'exemple et de ce dont il a besoin. Ou prenez tout d'un coup :
+[interactive-3d-slides.zip](../../../code/interactive-3d-slides.zip) (le pont, les six exemples avec leurs
+compilations web, les tests). Chaque fichier peut aussi s'ouvrir seul : [tous les fichiers](../../02_more/01_files/index.html).
+
+Les compilations web sont dans les zips (`examples/<exemple>/web/`) : vous pouvez montrer une démo avant de
+compiler quoi que ce soit. Depuis la racine du dossier décompressé :
+
+```
+python3 -m http.server
+```
+
+puis ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+
+## Dans reveal.js ou dans lhtml-site
+
+**reveal.js :** un cadre dans une `<section>`. `data-src` le charge quand sa slide approche, et le décharge
+ensuite :
+
+```html
+<section>
+  <iframe class="demo" data-src="web/index.html?speed=0.2"
+          style="width: 100%; height: 540px; border: 0"></iframe>
+</section>
+```
+
+**lhtml-site :** la macro `demo::` écrit le cadre et le dimensionne selon la mise en page de la slide :
+
+```
+media::
+demo::../_demo/cube/index.html?speed=0.2
+::
+```
+
+Les réglages de la démo vont dans son adresse (`?speed=0.2`) : une seule compilation sert plusieurs slides.
+[L'exposé d'exemple en reveal.js](../../../decks/reveal.js/index.html) et
+[celui en lhtml-site](../../../decks/lhtml-site/html/index.html) montrent les mêmes démos (en anglais).
+
+<div class="callout warn"><div class="callout-title">Le cadre prend le clavier</div>
+
+Dès que vous cliquez dans une démo, le clavier va au cadre : les flèches et la télécommande ne changent plus de
+slide. C'est le fonctionnement des navigateurs. La page de la démo (`slide-frame.html`) renvoie les touches aux
+slides, dans les deux outils.
+
+</div>
+
+**Ensuite :** [1. Un cube qui tourne](../02_cube/index.html), le plus petit exemple.

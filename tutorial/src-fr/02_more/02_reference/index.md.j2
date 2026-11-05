@@ -4,11 +4,10 @@ section: Ressources
 description: "Le pont entre une démo et une slide : l'API C++ (slide_bridge.hpp), les réglages de l'adresse de la démo (slide-frame.html), les messages, et les attributs de slide-controls.js."
 wide: true
 ---
-{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
 
 # Référence
 
-Le pont tient en quatre fichiers [du dépôt]({{ repo }}/tree/main/bridge), à copier dans votre projet :
+Le pont tient en quatre fichiers [du dépôt](#le-code-du-pont), à copier dans votre projet :
 
 | Fichier | Côté | Rôle |
 |---|---|---|
@@ -86,3 +85,31 @@ parmi `number`, `integer`, `toggle`, `choice`, `action`, `readout`.
 
 Depuis un script : `slideDemo.set({ampl: 0.2}, frame)`, `slideDemo.params(frame)`. Le script rejoue aussi les
 touches de navigation postées par une démo d'un autre site, comme des appuis de touche dans la slide.
+
+## Le code du pont
+
+Les quatre fichiers, tels qu'ils sont dans le dépôt.
+
+<details><summary><strong>bridge/slide_bridge.hpp</strong> (<a href="../../../code/bridge/slide_bridge.hpp">télécharger</a>)</summary>
+
+{% include "_code/bridge/slide_bridge.hpp.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide_bridge.cpp</strong> (<a href="../../../code/bridge/slide_bridge.cpp">télécharger</a>)</summary>
+
+{% include "_code/bridge/slide_bridge.cpp.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide-frame.html</strong> (<a href="../../../code/bridge/slide-frame.html">télécharger</a>)</summary>
+
+{% include "_code/bridge/slide-frame.html.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide-controls.js</strong> (<a href="../../../code/bridge/slide-controls.js">télécharger</a>)</summary>
+
+{% include "_code/bridge/slide-controls.js.md" %}
+
+</details>

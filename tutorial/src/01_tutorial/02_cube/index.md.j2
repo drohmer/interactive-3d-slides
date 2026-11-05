@@ -1,0 +1,118 @@
+---
+title: 1. A turning cube
+section: Tutorial
+description: 'The smallest complete example: a cube in raw OpenGL 3.3, compiled to WebAssembly, in a reveal.js slide that sets it by the address of its frame. All the code, to download.'
+---
+{% set code = '../../code/examples/a1-opengl-cube/' %}
+
+# 1. A turning cube
+
+The smallest program for a slide: a cube that turns by itself, in raw OpenGL 3.3 with GLFW, about 200
+lines. The slide sets its speed and its tilt through the address of the frame; there is no control on
+screen. One source builds for the desktop and for the web.
+
+<div class="live">
+<iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="A turning cube, raw OpenGL compiled to WebAssembly"></iframe>
+<div class="live-note">Live: the web build of this example, set by <code>?speed=0.2&amp;tilt=25</code>.
+<a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
+</div>
+
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>, the example and what it needs (the bridge, the CMake module, glad)</span><span><strong>Graphics:</strong> basic</span><span><strong>Interface:</strong> none; settings in the address</span></div>
+
+## The files
+
+```
+examples/a1-opengl-cube/
+  main.cpp           the program
+  CMakeLists.txt     its build, desktop and web
+  slides.html        the slide that shows it (reveal.js)
+  web/               the web build: index.html (slide-frame.html), project.js, project.wasm
+examples/cmake/raw_opengl_demo.cmake    the build of the raw OpenGL examples
+examples/third_party/glad/              the OpenGL loader, for the desktop
+bridge/                                 the bridge between the program and the slide
+```
+
+### main.cpp
+
+One source for the desktop (OpenGL 3.3 core, GLFW, glad) and for the web (WebGL 2, which is OpenGL ES 3.0).
+The four differences are marked with `#ifdef __EMSCRIPTEN__`:
+
+1. **The headers:** `<GLES3/gl3.h>` on the web, glad on the desktop.
+2. **The first line of the shaders:** `#version 300 es` and a `precision` on the web, `#version 330 core`
+   on the desktop. The body of the shaders is the same; the program prepends the right line
+   (`shader_header`).
+3. **The size of the drawing:** the canvas of the page. The window is created at its size, otherwise
+   `glfwCreateWindow` resizes the canvas, and the size is read at each frame (`surface_size`).
+4. **The main loop:** on the web the browser calls `frame()` at each refresh (`emscripten_set_main_loop`).
+
+The settings come from the command line, which the page of the demo builds from its address
+(`?speed=0.2` gives `--speed 0.2`): three lines with the bridge, at the start of `main()`.
+
+[main.cpp]({{ code }}main.cpp)
+
+{% include "_code/examples/a1-opengl-cube/main.cpp.md" %}
+
+### CMakeLists.txt
+
+[CMakeLists.txt]({{ code }}CMakeLists.txt), and the module it includes,
+[raw_opengl_demo.cmake](../../code/examples/cmake/raw_opengl_demo.cmake): on the desktop it links GLFW and
+glad; on the web it adds the options of Emscripten and copies the page of the demo next to the build.
+
+{% include "_code/examples/a1-opengl-cube/CMakeLists.txt.md" %}
+
+{% include "_code/examples/cmake/raw_opengl_demo.cmake.md" %}
+
+### slides.html
+
+The slide: reveal.js, and a frame whose address gives the settings. `data-src` loads the demo when its slide
+comes near. [slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a1-opengl-cube/slides.html.md" %}
+
+The page of the demo, `web/index.html`, is [slide-frame.html](../../code/bridge/slide-frame.html) of the
+bridge, copied by the build; its code and that of the two C++ files of the bridge are in the
+[reference](../../02_more/02_reference/index.html#the-code-of-the-bridge).
+
+## Build and run
+
+On the desktop, from `examples/a1-opengl-cube/`:
+
+```
+cmake -S . -B build
+cmake --build build
+./build/project --speed 0.3 --tilt 40
+```
+
+For the web, with the Emscripten SDK activated:
+
+```
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```
+
+`build_web/` then holds `index.html`, `project.js` and `project.wasm`: the same files as `web/`. Show the slide
+through a web server, from the root of the repository:
+
+```
+python3 -m http.server
+```
+
+and open `http://localhost:8000/examples/a1-opengl-cube/slides.html`. Click in the cube, press the right
+arrow: the slide changes all the same.
+
+## In lhtml-site
+
+The same frame, written by `demo::` in a slide whose layout puts the text on the left and the demo on the
+right ([the slide in the example talk](../../decks/lhtml-site/html/01_address/index.html)):
+
+```
+{% raw %}{% set layout = 'side' %}
+
+= A turning cube
+
+media::
+demo::../_demo/a1/index.html?speed=0.2&tilt=25
+::{% endraw %}
+```
+
+**Next:** [2. Uniforms driven live](../03_panel/index.html): the same cube, changed while it runs.

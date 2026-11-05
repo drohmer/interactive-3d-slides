@@ -1,0 +1,90 @@
+---
+title: 5. ImGui in the room
+section: Tutorial
+description: 'Interactive marching cubes in CGP, with its ImGui window enlarged for the projector and the same variables driven from the slide. All the code, to download.'
+---
+{% set code = '../../code/examples/c6-cgp-marching-cubes/' %}
+
+# 5. ImGui in the room
+
+An implicit surface, a sum of blobs and Perlin noise, meshed by marching cubes at each change. The interface is
+the ImGui window of the program, the quickest one to write: no HTML, every setting at hand. In a slide it needs
+two things: to be readable from the back of the room, and to stay in agreement with the buttons of the slide.
+
+<div class="live">
+<iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Marching cubes with the ImGui window"></iframe>
+<div class="live-controls">
+<button data-demo="#mc" data-demo-set="power_c=1.2">Third blob</button>
+<button data-demo="#mc" data-demo-set="isovalue=0.3">Larger</button>
+<button data-demo="#mc" data-demo-set="power_c=0&amp;isovalue=0.5">Back</button>
+</div>
+<div class="live-note">Live: the buttons change the same variables as the ImGui window, which shows the new values. <a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a></span><span><strong>Graphics:</strong> a scalar field, marching cubes, recomputed live</span><span><strong>Interface:</strong> ImGui, and buttons in the slide</span></div>
+
+The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
+(`examples/02_marching_cubes/02_marching_cube_dynamic`).
+
+## What is new
+
+- **ImGui readable in the room:** `?gui_scale=1.4` enlarges its text, through `project::gui_scale`, which the
+  template of CGP gives to ImGui at each frame. Its sections stay closed at start: a long window goes out of the
+  frame.
+- **The same variables for ImGui and the slide:** they are declared to the bridge, with what to recompute when
+  the slide changes them. ImGui shows the new values at the next frame, as it reads them.
+- **Two controls hidden on the web:** the wireframe (`glPolygonMode`, see [example 4](../05_buttons/index.html))
+  and the export of the mesh to a file, which would land in the memory of the page.
+- **Mouse:** in CGP, ImGui takes the clicks over its window; elsewhere the mouse turns the camera.
+
+## The files
+
+```
+examples/c6-cgp-marching-cubes/src/
+  scene.cpp, scene.hpp            the scene, and the parameters declared to the bridge
+  main.cpp                        the main() of the template, plus slide::parse
+  implicit_surface/               the field, the marching cubes, and the ImGui window (gui_helper.cpp)
+```
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp): the declarations are at the end of `initialize()`.
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/scene.cpp.md" %}
+
+### src/implicit_surface/gui_helper.cpp
+
+The ImGui window; the two controls hidden on the web are marked `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp.md" %}
+
+<details><summary><strong>The other files</strong>: main.cpp, scene.hpp, implicit_surface.cpp/.hpp, field_function.cpp/.hpp</summary>
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/main.cpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/scene.hpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/implicit_surface.hpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/implicit_surface.cpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/field_function.hpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/field_function.cpp.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c6-cgp-marching-cubes/slides.html.md" %}
+
+## Build and run
+
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c6-cgp-marching-cubes`.
+
+**Next:** [6. Values sent back to the slide](../07_readout/index.html).

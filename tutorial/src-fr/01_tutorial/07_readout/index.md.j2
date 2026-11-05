@@ -1,0 +1,73 @@
+---
+title: 6. Des valeurs renvoyées vers la slide
+section: Tutoriel
+description: "Déplacez à la souris les points de contrôle d'une courbe de Bézier ou d'une spline ; le programme calcule la longueur de la courbe et la slide l'affiche, en direct. Tout le code, à télécharger."
+---
+{% set code = '../../../code/examples/c7-cgp-drag-points/' %}
+
+# 6. Des valeurs renvoyées vers la slide
+
+Les points de contrôle d'une courbe, déplacés à la souris : une courbe de Bézier, qui approche ses points, ou une
+spline de Catmull-Rom, qui passe par eux. Le programme calcule la longueur de la courbe, et la slide l'affiche
+pendant que vous déplacez : une valeur qui va de la démo vers la slide.
+
+<div class="live">
+<iframe id="curve" class="demo" src="{{ code }}web/index.html?controls=points,polygon,reset&compact=1&panel=br" title="Une courbe dont on déplace les points de contrôle à la souris"></iframe>
+<div class="live-controls">
+<button data-demo="#curve" data-demo-set="curve=bezier">B&eacute;zier</button>
+<button data-demo="#curve" data-demo-set="curve=spline">Spline</button>
+<span>Longueur de la courbe : <span class="value" data-demo="#curve" data-demo-value="length" data-digits="2"></span></span>
+</div>
+<div class="live-note">En direct : déplacez un point bleu, et regardez la longueur. <a href="{{ code }}slides.html">Ouvrir sa slide (reveal.js)</a>.</div>
+</div>
+<script src="../../../code/bridge/slide-controls.js"></script>
+
+<div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a></span><span><strong>Rendu :</strong> des courbes de tout degré, la sélection en 3D</span><span><strong>Interface :</strong> manipulation directe ; une valeur envoyée à la slide</span></div>
+
+## Ce qui est nouveau
+
+- **Une valeur calculée par le programme :** déclarée en lecture seule, `slide::readout("length", ...)`. Le
+  panneau peut l'afficher (`controls=length`), et la slide avec `<span data-demo-value="length">`.
+- **Le programme prévient la page :** quand la longueur change (un déplacement, une autre courbe),
+  `slide::notify()` ; la page affiche les nouvelles valeurs et les envoie à la slide, au plus une fois par image.
+- **La sélection :** au clic, `picking_spheres` trouve le point sous la souris ; tant que le bouton est enfoncé, le
+  point suit la souris dans le plan face à la caméra, et la caméra reste immobile.
+
+<div class="callout warn"><div class="callout-title">Des lignes d'un pixel</div>
+
+La plupart des navigateurs dessinent les lignes WebGL sur un pixel de large, quoi que demande `glLineWidth` : la
+courbe est fine au projecteur. Une courbe qui doit se voir du fond de la salle se dessine mieux en tube, un maillage.
+
+</div>
+
+## Les fichiers
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+{% include "_code/examples/c7-cgp-drag-points/src/scene.cpp.md" %}
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+{% include "_code/examples/c7-cgp-drag-points/src/scene.hpp.md" %}
+
+### src/main.cpp
+
+[main.cpp]({{ code }}src/main.cpp) : celui de l'exemple 4.
+
+{% include "_code/examples/c7-cgp-drag-points/src/main.cpp.md" %}
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c7-cgp-drag-points/slides.html.md" %}
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c7-cgp-drag-points`.
+
+**Ensuite :** [Le jour de l'exposé](../08_talk-day/index.html).

@@ -1,0 +1,92 @@
+---
+title: 4. Buttons in the slide
+section: Tutorial
+description: 'A waving surface in CGP, driven from buttons written in the text of the slide, from a panel in the demo, and from ImGui; the wireframe drawn as lines for WebGL. All the code, to download.'
+---
+{% set code = '../../code/examples/c3-cgp-waving-surface/' %}
+
+# 4. Buttons in the slide
+
+A grid of 120 x 120 vertices moved at each frame: a ripple from the center, or parallel waves. You change it
+while you speak, with buttons written in the text of the slide, outside the demo: the audience sees which
+state is shown, and the slide shows a value of the program.
+
+<div class="live">
+<iframe id="surface" class="demo" src="{{ code }}web/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="A waving surface, driven by buttons outside its frame"></iframe>
+<div class="live-controls">
+<button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+<button data-demo="#surface" data-demo-set="drop">Drop</button>
+<button data-demo="#surface" data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+<span>Amplitude: <span class="value" data-demo="#surface" data-demo-value="ampl" data-digits="2"></span></span>
+</div>
+<div class="live-note">Live: these buttons are outside the frame, as in a slide. <a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a></span><span><strong>Graphics:</strong> a mesh updated at each frame</span><span><strong>Interface:</strong> buttons in the slide, a panel, ImGui</span></div>
+
+## What is new
+
+- **Buttons in the slide,** in HTML only, with `slide-controls.js`: `data-demo-set` gives the settings to apply,
+  `data-demo-value` shows a value live, and a button gets the class `on` while its settings are the current
+  values of the demo.
+- **A CGP scene of its own:** three files replace those of the template. `main.cpp` changes by one line
+  (`slide::parse(argc, argv)`); the parameters are declared in `scene.cpp`.
+- **The ImGui window of the template** is hidden in a slide (the page has its panel), unless `?gui=1`.
+
+<div class="callout warn"><div class="callout-title">A trap of the web: the wireframe</div>
+
+`draw_wireframe()` of CGP uses `glPolygonMode`, which WebGL does not have: on the web it draws nothing, without
+an error. The wireframe here is a `curve_drawable` of segments (`GL_LINES`), drawn the same way on the desktop
+and on the web. The browser test of the example caught it: the image did not change when the wireframe was
+turned on.
+
+</div>
+
+## The files
+
+```
+examples/c3-cgp-waving-surface/
+  src/main.cpp       the main() of the template, plus slide::parse
+  src/scene.hpp      the parameters of the wave
+  src/scene.cpp      the scene: the grid, the wave, the wireframe, the declared parameters
+  slides.html        the slide, with its buttons
+  demo.json          the browser test of the example
+```
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/scene.cpp.md" %}
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/scene.hpp.md" %}
+
+### src/main.cpp
+
+[main.cpp]({{ code }}src/main.cpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/main.cpp.md" %}
+
+### slides.html
+
+The buttons below the frame, and `slide-controls.js`. [slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c3-cgp-waving-surface/slides.html.md" %}
+
+In reveal.js all the slides are in one page: with several demos, give each frame an `id` and name it on its
+buttons, `data-demo="#surface"`.
+
+## Build and run
+
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c3-cgp-waving-surface`. Its browser
+test, [demo.json]({{ code }}demo.json), clicks the buttons of a slide and checks the images and the values:
+
+{% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
+
+**Next:** [5. ImGui in the room](../06_imgui/index.html).

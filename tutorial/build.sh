@@ -8,6 +8,7 @@ set -euo pipefail
 #   .site/demos/<id>/   the live demos (a1, a2, c1, c3, c6, c7) and slide-controls.js
 #   .site/decks/lhtml-site/   an example talk made with lhtml-site (html/, slides.pdf)
 #   .site/decks/reveal.js/    the same demos in a reveal.js talk
+#   .site/code/               the files of the repository (to see, to download, the slides of the examples live) and zips
 # Preview: python3 -m http.server -d <a folder holding interactive-3d-slides -> .site> and open
 # http://localhost:8000/interactive-3d-slides/ (the pages are made for that path).
 
@@ -15,10 +16,15 @@ cd "$(dirname "$0")"
 LHTML_SITE="${LHTML_SITE:-lhtml-site}"
 
 rm -rf .site .site-fr .work
+echo "==> the code shown in the pages (src/_code/, from the files of the repository)"
+python3 scripts/prepare_code.py fragments
 echo "==> pages, English and French"
 "$LHTML_SITE" -i configure.yaml
 "$LHTML_SITE" -i configure.fr.yaml
 cp -R .site-fr .site/fr
+
+echo "==> the code to download, and the slides of the examples, live (.site/code/)"
+python3 scripts/prepare_code.py publish .site
 
 echo "==> live demos"
 mkdir -p .site/demos

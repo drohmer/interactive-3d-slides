@@ -4,11 +4,10 @@ section: Resources
 description: 'The bridge between a demo and a slide: the C++ API (slide_bridge.hpp), the settings of the address of the demo (slide-frame.html), the messages, and the attributes of slide-controls.js.'
 wide: true
 ---
-{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
 
 # Reference
 
-The bridge is four files of [the repository]({{ repo }}/tree/main/bridge), to copy into your project:
+The bridge is four files of [the repository](#the-code-of-the-bridge), to copy into your project:
 
 | File | Side | Role |
 |---|---|---|
@@ -86,3 +85,31 @@ Each parameter in `params`: `{key, type, label, short, class, value, min, max, s
 
 From a script: `slideDemo.set({ampl: 0.2}, frame)`, `slideDemo.params(frame)`. The script also replays the
 navigation keys posted by a demo of another site, as key presses in the slide.
+
+## The code of the bridge
+
+The four files, as they are in the repository.
+
+<details><summary><strong>bridge/slide_bridge.hpp</strong> (<a href="../../code/bridge/slide_bridge.hpp">download</a>)</summary>
+
+{% include "_code/bridge/slide_bridge.hpp.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide_bridge.cpp</strong> (<a href="../../code/bridge/slide_bridge.cpp">download</a>)</summary>
+
+{% include "_code/bridge/slide_bridge.cpp.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide-frame.html</strong> (<a href="../../code/bridge/slide-frame.html">download</a>)</summary>
+
+{% include "_code/bridge/slide-frame.html.md" %}
+
+</details>
+
+<details><summary><strong>bridge/slide-controls.js</strong> (<a href="../../code/bridge/slide-controls.js">download</a>)</summary>
+
+{% include "_code/bridge/slide-controls.js.md" %}
+
+</details>

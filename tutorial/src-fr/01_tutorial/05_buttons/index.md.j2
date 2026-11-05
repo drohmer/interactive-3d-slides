@@ -1,0 +1,93 @@
+---
+title: 4. Des boutons dans la slide
+section: Tutoriel
+description: "Une surface qui ondule en CGP, pilotée depuis des boutons écrits dans le texte de la slide, depuis un panneau dans la démo, et depuis ImGui ; le fil de fer dessiné en lignes pour WebGL. Tout le code, à télécharger."
+---
+{% set code = '../../../code/examples/c3-cgp-waving-surface/' %}
+
+# 4. Des boutons dans la slide
+
+Une grille de 120 x 120 sommets déplacés à chaque image : une ride depuis le centre, ou des vagues parallèles.
+Vous la changez en parlant, avec des boutons écrits dans le texte de la slide, en dehors de la démo : le public
+voit quel état est montré, et la slide affiche une valeur du programme.
+
+<div class="live">
+<iframe id="surface" class="demo" src="{{ code }}web/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="Une surface qui ondule, pilotée par des boutons hors de son cadre"></iframe>
+<div class="live-controls">
+<button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+<button data-demo="#surface" data-demo-set="drop">Drop</button>
+<button data-demo="#surface" data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+<span>Amplitude : <span class="value" data-demo="#surface" data-demo-value="ampl" data-digits="2"></span></span>
+</div>
+<div class="live-note">En direct : ces boutons sont hors du cadre, comme dans une slide. <a href="{{ code }}slides.html">Ouvrir sa slide (reveal.js)</a>.</div>
+</div>
+<script src="../../../code/bridge/slide-controls.js"></script>
+
+<div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a></span><span><strong>Rendu :</strong> un maillage mis à jour à chaque image</span><span><strong>Interface :</strong> des boutons dans la slide, un panneau, ImGui</span></div>
+
+## Ce qui est nouveau
+
+- **Des boutons dans la slide,** en HTML seulement, avec `slide-controls.js` : `data-demo-set` donne les réglages
+  à appliquer, `data-demo-value` affiche une valeur en direct, et un bouton reçoit la classe `on` tant que ses
+  réglages sont les valeurs courantes de la démo.
+- **Une scène CGP à elle :** trois fichiers remplacent ceux du modèle. `main.cpp` change d'une ligne
+  (`slide::parse(argc, argv)`) ; les paramètres sont déclarés dans `scene.cpp`.
+- **La fenêtre ImGui du modèle** est cachée dans une slide (la page a son panneau), sauf avec `?gui=1`.
+
+<div class="callout warn"><div class="callout-title">Un piège du web : le fil de fer</div>
+
+`draw_wireframe()` de CGP utilise `glPolygonMode`, que WebGL n'a pas : sur le web, il ne dessine rien, sans
+erreur. Le fil de fer est ici un `curve_drawable` de segments (`GL_LINES`), dessiné de la même façon sur le bureau
+et sur le web. Le test de l'exemple dans le navigateur l'a repéré : l'image ne changeait pas quand on activait le
+fil de fer.
+
+</div>
+
+## Les fichiers
+
+```
+examples/c3-cgp-waving-surface/
+  src/main.cpp       the main() of the template, plus slide::parse
+  src/scene.hpp      the parameters of the wave
+  src/scene.cpp      the scene: the grid, the wave, the wireframe, the declared parameters
+  slides.html        the slide, with its buttons
+  demo.json          the browser test of the example
+```
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/scene.cpp.md" %}
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/scene.hpp.md" %}
+
+### src/main.cpp
+
+[main.cpp]({{ code }}src/main.cpp)
+
+{% include "_code/examples/c3-cgp-waving-surface/src/main.cpp.md" %}
+
+### slides.html
+
+Les boutons sous le cadre, et `slide-controls.js`. [slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c3-cgp-waving-surface/slides.html.md" %}
+
+Dans reveal.js, toutes les slides sont dans une même page : avec plusieurs démos, donnez un `id` à chaque cadre
+et nommez-le sur ses boutons, `data-demo="#surface"`.
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c3-cgp-waving-surface`.
+Son test dans le navigateur, [demo.json]({{ code }}demo.json), clique sur les boutons d'une slide et vérifie les
+images et les valeurs :
+
+{% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
+
+**Ensuite :** [5. ImGui dans la salle](../06_imgui/index.html).

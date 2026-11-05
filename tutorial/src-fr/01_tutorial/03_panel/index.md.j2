@@ -1,0 +1,68 @@
+---
+title: 2. Des uniforms pilotés en direct
+section: Tutoriel
+description: "Le cube de l'exemple 1, tordu dans son vertex shader et piloté pendant qu'il tourne depuis un panneau que la page construit à partir des déclarations en C++. Tout le code, à télécharger."
+---
+{% set code = '../../../code/examples/a2-opengl-uniforms/' %}
+
+# 2. Des uniforms pilotés en direct
+
+Le cube de l'[exemple 1](../02_cube/index.html), subdivisé et tordu dans son vertex shader, changé pendant qu'il
+tourne : la torsion, la teinte, la vitesse, l'éclairage, et un bouton de remise à zéro. Le panneau est construit
+par la page à partir des paramètres que déclare le programme : aucun HTML à écrire.
+
+<div class="live">
+<iframe class="demo" src="{{ code }}web/index.html?twist=0.8&controls=twist,hue,speed,light,reset" title="Une boîte tordue, pilotée par un panneau"></iframe>
+<div class="live-note">En direct : déplacez les curseurs du panneau. <a href="{{ code }}slides.html">Ouvrir sa slide (reveal.js)</a>.</div>
+</div>
+
+<div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a></span><span><strong>Rendu :</strong> simple, une déformation dans le vertex shader</span><span><strong>Interface :</strong> un panneau construit à partir du C++</span></div>
+
+## Ce qui est nouveau
+
+- **Des paramètres déclarés une seule fois,** avec leur intervalle : l'adresse du cadre, le panneau et la slide
+  passent par ces déclarations.
+
+  ```cpp
+  slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
+  slide::param("light", light);
+  slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
+  ```
+
+- **Le panneau :** `controls=twist,hue,speed,light,reset` dans l'adresse du cadre liste les contrôles, dans
+  leur ordre. Un nombre donne un curseur, un booléen un interrupteur, une action un bouton.
+- **Des uniforms envoyés à chaque image :** le programme ne fait que lire ses variables ; il n'a pas besoin de
+  savoir que la slide les a changées.
+- **Un angle accumulé,** `angle += 2 pi speed dt`, pour qu'un changement de vitesse ne fasse pas sauter la boîte.
+- **Un éclairage sans normales :** le fragment shader tire la normale des dérivées de la position
+  (`cross(dFdx(p), dFdy(p))`) ; chaque triangle est plat, ce qui donne de fines bandes sur les faces tordues.
+
+## Les fichiers
+
+Les mêmes que dans l'[exemple 1](../02_cube/index.html#les-fichiers) : la compilation est le même `CMakeLists.txt`.
+
+### main.cpp
+
+[main.cpp]({{ code }}main.cpp)
+
+{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
+
+## Compiler et lancer
+
+Comme l'[exemple 1](../02_cube/index.html#compiler-et-lancer), depuis `examples/a2-opengl-uniforms/` ; sur le
+bureau, `./build/project --twist 1.2`. Le panneau n'existe que sur le web : la version bureau prend ses réglages
+de la ligne de commande.
+
+| Dans l'adresse | Effet |
+|---|---|
+| `controls=twist,hue` | les contrôles du panneau, dans cet ordre |
+| `compact=1` | libellés courts, petit panneau (pour un petit cadre) |
+| `panel=tl`, `tr`, `bl`, `br` | le coin du panneau (`tr` par défaut) |
+
+**Ensuite :** [3. Un programme CGP](../04_cgp/index.html) : la même chose avec une bibliothèque.

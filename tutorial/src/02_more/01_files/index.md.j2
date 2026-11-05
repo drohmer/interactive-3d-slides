@@ -1,0 +1,47 @@
+---
+title: All the files
+section: Resources
+description: 'Everything of the tutorial to download: the zip of the whole repository, a zip per example, each file alone, and the two example talks.'
+---
+
+# All the files
+
+## Download
+
+| Zip | What |
+|---|---|
+| [interactive-3d-slides.zip](../../code/interactive-3d-slides.zip) | Everything: the bridge, the six examples with their web builds, the tests and the build scripts |
+| [a1-opengl-cube.zip](../../code/a1-opengl-cube.zip) | [1. A turning cube](../../01_tutorial/02_cube/index.html), with the CMake module and glad |
+| [a2-opengl-uniforms.zip](../../code/a2-opengl-uniforms.zip) | [2. Uniforms driven live](../../01_tutorial/03_panel/index.html) |
+| [c1-cgp-template.zip](../../code/c1-cgp-template.zip) | [3. A CGP program](../../01_tutorial/04_cgp/index.html), with the build script of the CGP examples |
+| [c3-cgp-waving-surface.zip](../../code/c3-cgp-waving-surface.zip) | [4. Buttons in the slide](../../01_tutorial/05_buttons/index.html) |
+| [c6-cgp-marching-cubes.zip](../../code/c6-cgp-marching-cubes.zip) | [5. ImGui in the room](../../01_tutorial/06_imgui/index.html) |
+| [c7-cgp-drag-points.zip](../../code/c7-cgp-drag-points.zip) | [6. Values sent back to the slide](../../01_tutorial/07_readout/index.html) |
+
+Each zip unpacks into `interactive-3d-slides/`, with the same folders as the repository: the commands of the
+pages work from there.
+
+## Each file
+
+The files as they are in the repository, to open or to download one by one:
+
+| Folder | Files |
+|---|---|
+| [bridge/](../../code/bridge/slide_bridge.hpp) | [slide_bridge.hpp](../../code/bridge/slide_bridge.hpp), [slide_bridge.cpp](../../code/bridge/slide_bridge.cpp), [slide-frame.html](../../code/bridge/slide-frame.html), [slide-controls.js](../../code/bridge/slide-controls.js) |
+| examples/a1-opengl-cube/ | [main.cpp](../../code/examples/a1-opengl-cube/main.cpp), [CMakeLists.txt](../../code/examples/a1-opengl-cube/CMakeLists.txt), [slides.html](../../code/examples/a1-opengl-cube/slides.html), [demo.json](../../code/examples/a1-opengl-cube/demo.json), [README.md](../../code/examples/a1-opengl-cube/README.md) |
+| examples/a2-opengl-uniforms/ | [main.cpp](../../code/examples/a2-opengl-uniforms/main.cpp), [CMakeLists.txt](../../code/examples/a2-opengl-uniforms/CMakeLists.txt), [slides.html](../../code/examples/a2-opengl-uniforms/slides.html), [demo.json](../../code/examples/a2-opengl-uniforms/demo.json), [README.md](../../code/examples/a2-opengl-uniforms/README.md) |
+| examples/c1-cgp-template/ | [slides.html](../../code/examples/c1-cgp-template/slides.html), [demo.json](../../code/examples/c1-cgp-template/demo.json), [README.md](../../code/examples/c1-cgp-template/README.md) |
+| examples/c3-cgp-waving-surface/ | [src/main.cpp](../../code/examples/c3-cgp-waving-surface/src/main.cpp), [src/scene.hpp](../../code/examples/c3-cgp-waving-surface/src/scene.hpp), [src/scene.cpp](../../code/examples/c3-cgp-waving-surface/src/scene.cpp), [slides.html](../../code/examples/c3-cgp-waving-surface/slides.html), [demo.json](../../code/examples/c3-cgp-waving-surface/demo.json) |
+| examples/c6-cgp-marching-cubes/ | [src/main.cpp](../../code/examples/c6-cgp-marching-cubes/src/main.cpp), [src/scene.cpp](../../code/examples/c6-cgp-marching-cubes/src/scene.cpp), [src/implicit_surface/](../../code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp), [slides.html](../../code/examples/c6-cgp-marching-cubes/slides.html), [demo.json](../../code/examples/c6-cgp-marching-cubes/demo.json) |
+| examples/c7-cgp-drag-points/ | [src/main.cpp](../../code/examples/c7-cgp-drag-points/src/main.cpp), [src/scene.hpp](../../code/examples/c7-cgp-drag-points/src/scene.hpp), [src/scene.cpp](../../code/examples/c7-cgp-drag-points/src/scene.cpp), [slides.html](../../code/examples/c7-cgp-drag-points/slides.html), [demo.json](../../code/examples/c7-cgp-drag-points/demo.json) |
+| examples/cmake/, third_party/ | [raw_opengl_demo.cmake](../../code/examples/cmake/raw_opengl_demo.cmake), [glad](../../code/examples/third_party/glad/README.md) |
+| scripts/, tests/ | [build_examples.py](../../code/scripts/build_examples.py), [test_demo.py](../../code/tests/test_demo.py), [test_slide_bridge.cpp](../../code/tests/test_slide_bridge.cpp), [Makefile](../../code/Makefile) |
+
+## The example talks
+
+The same demos in two slide tools:
+
+- [in reveal.js](../../decks/reveal.js/index.html), four slides: plain `<iframe>`s, and buttons that name their
+  demo (`data-demo="#surface"`);
+- [in lhtml-site](../../decks/lhtml-site/html/index.html), five slides, and [their PDF](../../decks/lhtml-site/slides.pdf),
+  where each demo is replaced by its poster.

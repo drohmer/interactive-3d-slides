@@ -1,0 +1,73 @@
+---
+title: 6. Values sent back to the slide
+section: Tutorial
+description: 'Drag the control points of a Bezier curve or a spline with the mouse; the program computes the length of the curve and the slide shows it, live. All the code, to download.'
+---
+{% set code = '../../code/examples/c7-cgp-drag-points/' %}
+
+# 6. Values sent back to the slide
+
+The control points of a curve, dragged with the mouse: a Bezier curve, which approaches its points, or a
+Catmull-Rom spline, which goes through them. The program computes the length of the curve, and the slide shows
+it while you drag: a value that goes from the demo to the slide.
+
+<div class="live">
+<iframe id="curve" class="demo" src="{{ code }}web/index.html?controls=points,polygon,reset&compact=1&panel=br" title="A curve whose control points are dragged with the mouse"></iframe>
+<div class="live-controls">
+<button data-demo="#curve" data-demo-set="curve=bezier">B&eacute;zier</button>
+<button data-demo="#curve" data-demo-set="curve=spline">Spline</button>
+<span>Length of the curve: <span class="value" data-demo="#curve" data-demo-value="length" data-digits="2"></span></span>
+</div>
+<div class="live-note">Live: drag a blue point, and watch the length. <a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a></span><span><strong>Graphics:</strong> curves of any degree, picking in 3D</span><span><strong>Interface:</strong> direct manipulation; a value sent to the slide</span></div>
+
+## What is new
+
+- **A value computed by the program:** declared read only, `slide::readout("length", ...)`. The panel can show
+  it (`controls=length`), and the slide with `<span data-demo-value="length">`.
+- **The program tells the page:** when the length changes (a drag, another curve), `slide::notify()`; the page
+  shows the new values and sends them to the slide, at most once a frame.
+- **Picking:** at the click, `picking_spheres` finds the point under the mouse; while the button is down, the
+  point follows the mouse in the plane facing the camera, and the camera stays still.
+
+<div class="callout warn"><div class="callout-title">Lines of 1 pixel</div>
+
+Most browsers draw WebGL lines one pixel wide, whatever `glLineWidth` asks: the curve is thin on a projector. A
+curve that must be seen from the back of the room is better drawn as a tube, a mesh.
+
+</div>
+
+## The files
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+{% include "_code/examples/c7-cgp-drag-points/src/scene.cpp.md" %}
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+{% include "_code/examples/c7-cgp-drag-points/src/scene.hpp.md" %}
+
+### src/main.cpp
+
+[main.cpp]({{ code }}src/main.cpp): the one of example 4.
+
+{% include "_code/examples/c7-cgp-drag-points/src/main.cpp.md" %}
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c7-cgp-drag-points/slides.html.md" %}
+
+## Build and run
+
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c7-cgp-drag-points`.
+
+**Next:** [On the day of the talk](../08_talk-day/index.html).

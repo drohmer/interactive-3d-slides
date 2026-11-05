@@ -1,0 +1,92 @@
+---
+title: Before you start
+section: Tutorial
+description: 'What you need, how to get the code of the examples, and the principle: a C++ program compiled to WebAssembly, in a frame of a reveal.js or lhtml-site slide.'
+---
+
+# Before you start
+
+The tutorial is a series of complete examples, from the simplest to the most advanced. Each one is a
+folder you can download, build and show in a slide as it is; each page shows all its files. Start with the
+first one, then go as far as you need.
+
+## The principle
+
+A slide shows interactive 3D the way a browser does: as a web page, in a frame (`<iframe>`).
+
+<div class="outputs">
+<div class="output"><div class="output-name">1. Your program, for the web</div><p>Your C++ OpenGL program, compiled to WebAssembly by Emscripten: <code>project.js</code>, <code>project.wasm</code>.</p></div>
+<div class="output"><div class="output-name">2. The page of the demo</div><p><code>slide-frame.html</code>: it runs the program in the frame, and passes it the settings of its address.</p></div>
+<div class="output"><div class="output-name">3. The slide</div><p>A frame shows that page; buttons in the slide can drive it, and the arrow keys still go to the next slide.</p></div>
+</div>
+
+The slides of the tutorial are made with [reveal.js](https://revealjs.com/) (each example comes with a
+slide, `slides.html`), and the same demos are in a talk made with [lhtml-site](https://scholartools.fr/lhtml/).
+Both are HTML, where the frame is native.
+
+## What you need
+
+- **A C++ compiler and CMake**, and GLFW for the desktop version of the examples
+  (`brew install glfw` on macOS, `sudo apt install libglfw3-dev` on Ubuntu).
+- **The Emscripten SDK**, for the web version:
+
+  ```
+  git clone https://github.com/emscripten-core/emsdk.git
+  cd emsdk
+  ./emsdk install latest
+  ./emsdk activate latest
+  source ./emsdk_env.sh        # in each new terminal, before building for the web
+  ```
+
+  (see [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
+- **Python 3**, for a local web server: a browser refuses to load `project.wasm` from a page opened as a file.
+- For the examples 3 to 6: the [CGP](https://github.com/drohmer/cgp-2027) library, a C++ library made for
+  teaching computer graphics. The two first examples need no library but GLFW.
+
+## Get the code
+
+Each example page has a zip of the example and of what it needs. Or take everything at once:
+[interactive-3d-slides.zip](../../code/interactive-3d-slides.zip) (the bridge, the six examples with their web
+builds, the tests). Every file can also be opened alone: [all the files](../../02_more/01_files/index.html).
+
+The web builds are in the zips (`examples/<example>/web/`): you can show a demo before compiling anything.
+From the root of the unzipped folder:
+
+```
+python3 -m http.server
+```
+
+then open `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+
+## In reveal.js or in lhtml-site
+
+**reveal.js:** a frame in a `<section>`. `data-src` loads it when its slide comes near, and unloads it after:
+
+```html
+<section>
+  <iframe class="demo" data-src="web/index.html?speed=0.2"
+          style="width: 100%; height: 540px; border: 0"></iframe>
+</section>
+```
+
+**lhtml-site:** the macro `demo::` writes the frame and sizes it in the layout of the slide:
+
+```
+media::
+demo::../_demo/cube/index.html?speed=0.2
+::
+```
+
+The settings of the demo go in its address (`?speed=0.2`): one build serves several slides. The
+[example talk in reveal.js](../../decks/reveal.js/index.html) and the
+[one in lhtml-site](../../decks/lhtml-site/html/index.html) show the same demos.
+
+<div class="callout warn"><div class="callout-title">The frame takes the keyboard</div>
+
+Once you click in a demo, the keyboard goes to the frame: the arrow keys and the remote control stop
+changing the slide. This is how browsers work. The page of the demo (`slide-frame.html`) sends the keys back
+to the slides, in both tools.
+
+</div>
+
+**Next:** [1. A turning cube](../02_cube/index.html), the smallest example.

@@ -5,14 +5,15 @@
 
 How to put interactive 3D models, typically made with OpenGL, in your presentations: a C++ program
 (raw OpenGL 3.3, or a library such as CGP) compiled to WebAssembly with [Emscripten](https://emscripten.org/),
-shown in a slide as an iframe, and driven from the slide while you speak. It works with any slide tool that
-shows a web page (reveal.js, Slidev, Quarto, Marp, lhtml-site...).
+shown in a slide as an iframe, and driven from the slide while you speak, in reveal.js or lhtml-site. The tutorial
+goes through complete examples, from a turning cube in raw OpenGL to marching cubes with ImGui: each one with
+all its code, to download, a slide (`slides.html`) and a live demo.
 
 This repository holds the tutorial and its code:
 
 | Folder | What |
 |---|---|
-| [tutorial/](tutorial/) | The pages of the tutorial (English `src/`, French `src-fr/`), two example talks (lhtml-site, reveal.js), and `build.sh` that builds the site |
+| [tutorial/](tutorial/) | The pages of the tutorial (English `src/`, French `src-fr/`), two example talks (lhtml-site, reveal.js), `build.sh` that builds the site (the code of the pages is included from the files of the repository), and `deploy.sh` |
 | [bridge/](bridge/) | The bridge between a program and a slide: `slide_bridge.hpp/.cpp`, `slide-frame.html`, `slide-controls.js` |
 | [examples/](examples/) | Six example programs, from a cube in raw OpenGL 3.3 to marching cubes with ImGui, with their web builds, posters and tests |
 | [tests/](tests/), [scripts/](scripts/) | The tests of the bridge and of the examples, and the build of the examples |

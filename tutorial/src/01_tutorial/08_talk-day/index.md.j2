@@ -1,11 +1,11 @@
 ---
-title: 4. On the day of the talk
+title: On the day of the talk
 section: Tutorial
 description: 'Make the demo safe on the day: offline, on the machine of the talk, readable on the projector, an image in the PDF, a video as plan B, and automatic tests.'
 ---
 {% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
 
-# 4. On the day of the talk
+# On the day of the talk
 
 A live demo is the best moment of a talk, and the riskiest. Most of the risks are known in advance.
 
@@ -81,14 +81,20 @@ no GPU needed):
 
 Each demo is also checked for: it starts, it fills its frame, it draws something, the arrow key reaches the
 slide, no error in the console. Copy an example and its `demo.json` to test your own program:
-[tests/test_demo.py]({{ repo }}/blob/main/tests/test_demo.py).
+[tests/test_demo.py](../../code/tests/test_demo.py).
+
+<details><summary><strong>tests/test_demo.py</strong>, the browser test of a demo</summary>
+
+{% include "_code/tests/test_demo.py.md" %}
+
+</details>
 
 ## In case of trouble
 
 - **The frame is empty:** open the page of the demo alone, through the server, and read the console of the
   browser. `Cannot load project.js`: a file name, or a page opened as a file.
 - **The drawing takes a corner of the frame:** the program created its window at a fixed size; create it at
-  the size of the canvas ([step 1](../01_web-page/index.html#your-c-opengl-program)).
+  the size of the canvas ([example 1](../02_cube/index.html#main-cpp)).
 - **A control does nothing:** in the console of the demo, `Module.ccall('slide_describe', 'string', [], [])`
   lists the declared parameters; a key of `controls=` that is not declared is skipped, with a warning.
 - **The arrows stop at the demo:** the page of the demo is not `slide-frame.html`.

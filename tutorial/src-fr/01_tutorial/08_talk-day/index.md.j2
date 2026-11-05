@@ -1,11 +1,11 @@
 ---
-title: 4. Le jour de l'exposé
+title: Le jour de l'exposé
 section: Tutoriel
 description: "Sécurisez la démo le jour J : hors ligne, sur la machine de l'exposé, lisible au projecteur, une image dans le PDF, une vidéo en plan B, et des tests automatiques."
 ---
 {% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
 
-# 4. Le jour de l'exposé
+# Le jour de l'exposé
 
 Une démo en direct est le meilleur moment d'un exposé, et le plus risqué. La plupart des risques se
 connaissent à l'avance.
@@ -89,14 +89,20 @@ pas besoin de carte graphique) :
 
 Chaque démo est aussi vérifiée sur ces points : elle démarre, remplit son cadre, dessine quelque chose, la
 flèche atteint la slide, aucune erreur dans la console. Copiez un exemple et son `demo.json` pour tester
-votre propre programme : [tests/test_demo.py]({{ repo }}/blob/main/tests/test_demo.py).
+votre propre programme : [tests/test_demo.py](../../../code/tests/test_demo.py).
+
+<details><summary><strong>tests/test_demo.py</strong>, le test d'une démo dans le navigateur</summary>
+
+{% include "_code/tests/test_demo.py.md" %}
+
+</details>
 
 ## En cas de problème
 
 - **Le cadre est vide :** ouvrez la page de la démo seule, à travers le serveur, et lisez la console du
   navigateur. `Cannot load project.js` : un nom de fichier, ou une page ouverte comme fichier.
 - **Le dessin occupe un coin du cadre :** le programme a créé sa fenêtre à une taille fixe ; créez-la à la
-  taille du canvas ([étape 1](../01_web-page/index.html#votre-programme-c-opengl)).
+  taille du canvas ([exemple 1](../02_cube/index.html#main-cpp)).
 - **Un contrôle ne fait rien :** dans la console de la démo, `Module.ccall('slide_describe', 'string', [], [])`
   liste les paramètres déclarés ; une clé de `controls=` qui n'est pas déclarée est ignorée, avec un
   avertissement.

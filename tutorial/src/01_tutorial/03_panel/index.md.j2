@@ -1,0 +1,68 @@
+---
+title: 2. Uniforms driven live
+section: Tutorial
+description: 'The cube of example 1, twisted in its vertex shader and driven while it runs from a panel that the page builds from the C++ declarations. All the code, to download.'
+---
+{% set code = '../../code/examples/a2-opengl-uniforms/' %}
+
+# 2. Uniforms driven live
+
+The cube of [example 1](../02_cube/index.html), subdivided and twisted in its vertex shader, changed while it
+runs: the twist, the hue, the speed, the light, and a reset button. The panel is built by the page from the
+parameters the program declares: there is no HTML to write.
+
+<div class="live">
+<iframe class="demo" src="{{ code }}web/index.html?twist=0.8&controls=twist,hue,speed,light,reset" title="A twisted box, driven by a panel"></iframe>
+<div class="live-note">Live: move the sliders of the panel. <a href="{{ code }}slides.html">Open its slide (reveal.js)</a>.</div>
+</div>
+
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a></span><span><strong>Graphics:</strong> basic, a deformation in the vertex shader</span><span><strong>Interface:</strong> a panel built from the C++</span></div>
+
+## What is new
+
+- **Parameters declared once,** with their range: the address of the frame, the panel and the slide go
+  through these declarations.
+
+  ```cpp
+  slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
+  slide::param("light", light);
+  slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
+  ```
+
+- **The panel:** `controls=twist,hue,speed,light,reset` in the address of the frame lists the controls, in
+  their order. A number gives a slider, a bool a toggle, an action a button.
+- **Uniforms sent at each frame:** the program only reads its variables; it does not need to know that the
+  slide changed them.
+- **An accumulated angle,** `angle += 2 pi speed dt`, so that a change of speed does not make the box jump.
+- **Lighting without normals:** the fragment shader takes the normal from the derivatives of the position
+  (`cross(dFdx(p), dFdy(p))`); each triangle is flat, which shows as thin bands on the twisted faces.
+
+## The files
+
+The same as [example 1](../02_cube/index.html#the-files): the build is the same `CMakeLists.txt`.
+
+### main.cpp
+
+[main.cpp]({{ code }}main.cpp)
+
+{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
+
+## Build and run
+
+As [example 1](../02_cube/index.html#build-and-run), from `examples/a2-opengl-uniforms/`; on the desktop,
+`./build/project --twist 1.2`. The panel exists only on the web: the desktop version takes its settings from
+the command line.
+
+| In the address | Effect |
+|---|---|
+| `controls=twist,hue` | the controls of the panel, in this order |
+| `compact=1` | short labels, small panel (for a small frame) |
+| `panel=tl`, `tr`, `bl`, `br` | the corner of the panel (default `tr`) |
+
+**Next:** [3. A CGP program](../04_cgp/index.html): the same with a library.
