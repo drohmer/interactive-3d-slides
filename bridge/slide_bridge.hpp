@@ -30,7 +30,7 @@
 
 namespace slide {
 
-enum class kind { number, integer, toggle, choice, action };
+enum class kind { number, integer, toggle, choice, action, readout };
 
 // One choice of a parameter: a value, and the label of its button (the value by default).
 //   {"spot", "bunny"}                       two choices, labelled by their values
@@ -80,6 +80,14 @@ parameter& param(std::string const& key, std::function<float()> get, std::functi
 parameter& param(std::string const& key, std::function<bool()> get, std::function<void(bool)> set);
 // A button without a value (reset, next step...)
 parameter& action(std::string const& key, std::function<void()> callback);
+// A value computed by the program, shown by the page or the slide, not set by them
+// (the length of a curve, the number of vertices...)
+parameter& readout(std::string const& key, std::function<float()> get);
+
+// Tell the page that the program changed values by itself (a drag with the mouse, a
+// readout that changed): the page and the slide show them again. Cheap; at most once a
+// frame is useful. Does nothing in a native build.
+void notify();
 
 // Change a parameter as the slide does: converts the text, then calls its
 // callbacks. Returns false for an unknown key or a value that cannot be read.

@@ -22,6 +22,8 @@
     frame.contentWindow.postMessage({slide: {set: {freq: 3, mode: 'ds'}}}, '*')
     frame.contentWindow.postMessage({slide: {describe: true}}, '*')
   and the demo answers each change, and its start, with {slide: {ready|changed: ..., params: [...]}}.
+  When the program changes values by itself (slide::notify(), a drag with the mouse, a readout), the
+  page sends {slide: {notified: true, params: [...]}}, at most once a frame.
 
   The arrow keys and Page Up/Down go to the deck even when the demo has the focus, and the PDF export of
   lhtml-site waits for the first frames (window.__lhtmlReady).
@@ -144,8 +146,21 @@
         tellParent({ready: true});
       })();
     },
-    onAbort: function (what) { fail('The demo stopped: ' + what); }
+    onAbort: function (what) { fail('The demo stopped: ' + what); },
+    // slide::notify() of the program: values changed by the program itself (a drag, a readout);
+    // shown again at most once a frame
+    slideNotify: function () {
+      if (!started || notifyPending) return;
+      notifyPending = true;
+      requestAnimationFrame(function () {
+        notifyPending = false;
+        refresh();
+        updatePanel();
+        tellParent({notified: true});
+      });
+    }
   };
+  var notifyPending = false;
 
   function fail(message) {
     statusBox.textContent = message;
@@ -234,6 +249,13 @@
         t.addEventListener('click', function () { setValue(p.key, find(p.key).value ? '0' : '1'); });
         row.appendChild(t);
         widgets.push({key: p.key, update: function (q) { t.classList.toggle('on', !!q.value); }});
+      }
+      else if (p.type === 'readout') {
+        row.innerHTML = '<label></label><span class="value"></span>';
+        row.querySelector('label').innerHTML = label;
+        widgets.push({key: p.key, update: function (q) {
+          row.querySelector('.value').textContent = formatNumber(q.value, 0.01);
+        }});
       }
       else if (p.type === 'action') {
         var a = document.createElement('button');

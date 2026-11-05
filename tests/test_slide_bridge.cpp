@@ -133,8 +133,22 @@ static void test_describe()
 	CHECK(again.find("\"key\":\"freq\"") == again.rfind("\"key\":\"freq\""));
 }
 
+static void test_readout()
+{
+	slide::reset();
+	float length = 2.5f;
+	slide::readout("length", [&] { return length; }).with_label("length");
+	CHECK(contains(slide::describe(), "{\"key\":\"length\",\"type\":\"readout\",\"label\":\"length\",\"value\":2.5}"));
+	length = 3.25f;
+	CHECK(contains(slide::describe(), "\"value\":3.25"));
+	CHECK(!slide::set("length", "1"));            // read only
+	CHECK(std::fabs(length - 3.25f) < 1e-6f);
+	slide::notify();                              // no effect in a native build
+}
+
 int main()
 {
+	test_readout();
 	test_arguments_before_and_after_declaration();
 	test_set_from_the_slide();
 	test_getter_setter_with_units();

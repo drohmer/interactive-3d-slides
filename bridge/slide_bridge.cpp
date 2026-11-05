@@ -122,6 +122,7 @@ char const* type_name(kind type)
 	case kind::toggle: return "toggle";
 	case kind::choice: return "choice";
 	case kind::action: return "action";
+	case kind::readout: return "readout";
 	}
 	return "number";
 }
@@ -265,6 +266,22 @@ parameter& action(std::string const& key, std::function<void()> callback)
 }
 
 
+parameter& readout(std::string const& key, std::function<float()> get)
+{
+	auto p = make(key, kind::readout);
+	p->get = [get] { return number_text(get()); };
+	p->set = [](std::string const&) { return false; };   // read only
+	return declare(std::move(p));
+}
+
+void notify()
+{
+#ifdef __EMSCRIPTEN__
+	EM_ASM({ if (Module.slideNotify) Module.slideNotify(); });
+#endif
+}
+
+
 bool set(std::string const& key, std::string const& value)
 {
 	parameter* p = find(key);
@@ -297,6 +314,9 @@ std::string describe()
 		if (!p->css.empty()) out += ",\"class\":" + json_string(p->css);
 		std::string const value = p->get();
 		switch (p->type) {
+		case kind::readout:
+			out += ",\"value\":" + value;
+			break;
 		case kind::number:
 		case kind::integer:
 			out += ",\"value\":" + value;

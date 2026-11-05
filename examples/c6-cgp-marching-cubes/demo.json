@@ -1,0 +1,23 @@
+{
+  "title": "CGP: interactive marching cubes, with ImGui",
+  "kind": "cgp",
+  "query": "gui_scale=1.4",
+  "steps": [
+    {"expect": {"isovalue": 0.5, "power_c": 0, "gui_scale": 1.4, "samples": 30}},
+    {"snapshot": "start"}, {"wait": 0.3}, {"snapshot": "start2"},
+    {"same": ["start", "start2"]},
+    {"set": {"isovalue": 0.3}}, {"snapshot": "iso"},
+    {"differ": ["start2", "iso"]},
+    {"set": {"power_c": 1.5}}, {"snapshot": "blob"},
+    {"differ": ["iso", "blob"]},
+    {"set": {"samples": 60}}, {"snapshot": "fine"},
+    {"differ": ["blob", "fine"]},
+    {"set": {"gui_scale": 1.0}}, {"snapshot": "small_gui"},
+    {"differ": ["fine", "small_gui"]},
+    {"drag": [[1000, 400], [850, 300]]},
+    {"snapshot": "turned"},
+    {"differ": ["small_gui", "turned"]},
+    {"expect": {"isovalue": 0.3, "power_c": 1.5, "samples": 60, "gui_scale": 1.0}}
+  ],
+  "poster": {"query": "gui_scale=1.4&power_c=0.9&noise=0.25", "wait": 1.0}
+}

@@ -8,8 +8,8 @@ The repository holds a small bridge between the program and the slide, and (soon
 examples. It goes with the recipes of [lhtml-site](https://scholartools.fr/lhtml/), but the demos are
 plain web pages: any slide tool that can show an iframe can use them.
 
-> Status: work in progress. The bridge is written and tested on a real talk; four examples (raw OpenGL 3.3
-> and CGP) are in [examples/](examples/), two more are next.
+> Status: work in progress. The bridge is written and tested on a real talk; the first six examples (raw
+> OpenGL 3.3 and CGP) are in [examples/](examples/).
 
 ## What the bridge does
 
@@ -59,6 +59,13 @@ int main(int argc, char* argv[])
   ```
 
 - `.with_class("time")` gives a CSS class to the row of the control, to color a group of controls.
+- A value computed by the program, shown by the page and the slide but not set by them, is a readout;
+  when the program changes values by itself (a drag with the mouse), `slide::notify()` tells the page:
+
+  ```cpp
+  slide::readout("length", [&] { return curve_length; });
+  slide::notify();   // after a change made by the program; the page shows it at the next frame
+  ```
 - The web build exports `slide_set(key, value)` and `slide_describe()` (JSON of the parameters).
   Add them to the link options:
 
@@ -161,8 +168,8 @@ First examples, from basic to advanced, each with another kind of interface:
 | A2 | [A1 with uniforms driven live](examples/a2-opengl-uniforms/) | panel in the iframe, or the slide | done |
 | C1 | [The CGP template, as is](examples/c1-cgp-template/) | mouse in the canvas, ImGui | done |
 | C3 | [A waving surface](examples/c3-cgp-waving-surface/) | panel in the iframe, and buttons in the slide | done |
-| C6 | Interactive marching cubes | ImGui | to do |
-| C7 | Select and drag points | direct manipulation | to do |
+| C6 | [Interactive marching cubes](examples/c6-cgp-marching-cubes/) | ImGui, enlarged for the projector | done |
+| C7 | [Select and drag points](examples/c7-cgp-drag-points/) | direct manipulation; a value sent to the slide | done |
 
 ## License
 

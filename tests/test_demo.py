@@ -11,6 +11,10 @@ Usage: python test_demo.py <web_dir> <demo.json> [--poster out.png]
                        {"slide_text": [sel, text]}  text of an element of the slide
                        {"slide_on": ["text", ...]}  the buttons of the slide shown as on
                        {"drag": [[x0, y0], [x1, y1]]}  mouse drag in the demo (pixels of the frame)
+                       {"drag_pixels": {"pixels": "b > 150 && b - r > 80", "by": [dx, dy]}}
+                                                    drag from the leftmost group of pixels that match
+                       {"remember": key}, {"changed": key}   a value changed since it was remembered
+                       {"slide_shows": [sel, key, digits]}   the slide shows the current value of key
                        {"wait": seconds}
                        {"snapshot": "name"}         keep the image of the canvas
                        {"same": ["a", "b"]}         the two images are equal
@@ -112,7 +116,7 @@ def main():
             rows = demo.evaluate("document.querySelectorAll('#controls .row').length")
             check(f'panel has {spec["panel"]} rows', rows == spec['panel'], rows)
 
-        snapshots = {}
+        snapshots, remembered = {}, {}
         for step in spec.get('steps', []):
             if 'set' in step:
                 page.evaluate("(s) => document.getElementById('demo').contentWindow.postMessage({slide: {set: s}}, '*')", step['set'])
@@ -130,6 +134,46 @@ def main():
                 selector, text = step['slide_text']
                 got = page.locator('#slide ' + selector).first.text_content()
                 check(f'slide shows {selector} = {text}', got == text, got)
+            elif 'remember' in step:
+                remembered[step['remember']] = params()[step['remember']]['value']
+            elif 'changed' in step:
+                key = step['changed']
+                now = params()[key]['value']
+                check(f'{key} changed', now != remembered.get(key), (remembered.get(key), now))
+            elif 'slide_shows' in step:
+                selector, key, digits = step['slide_shows']
+                expected = f"{params()[key]['value']:.{digits}f}"
+                got = page.locator('#slide ' + selector).first.text_content()
+                check(f'slide shows the current {key}', got == expected, (got, expected))
+            elif 'drag_pixels' in step:
+                # drag from the leftmost group of pixels of the canvas that match a condition on r, g, b
+                spec_drag = step['drag_pixels']
+                start = demo.evaluate("""(test) => {
+                    const c = document.getElementById('canvas'), t = document.createElement('canvas');
+                    t.width = c.width; t.height = c.height;
+                    const g = t.getContext('2d'); g.drawImage(c, 0, 0);
+                    const d = g.getImageData(0, 0, t.width, t.height).data, keep = new Function('r', 'g', 'b', 'return ' + test);
+                    let points = [];
+                    for (let y = 0; y < t.height; y += 2) for (let x = 0; x < t.width; x += 2) {
+                        const i = 4 * (y * t.width + x);
+                        if (keep(d[i], d[i + 1], d[i + 2])) points.push([x, y]);
+                    }
+                    if (points.length === 0) return null;
+                    const left = Math.min(...points.map(p => p[0]));
+                    points = points.filter(p => p[0] < left + 40);
+                    return [points.reduce((s, p) => s + p[0], 0) / points.length, points.reduce((s, p) => s + p[1], 0) / points.length];
+                }""", spec_drag['pixels'])
+                check('pixels found for the drag', start is not None)
+                if start:
+                    x0, y0 = start
+                    dx, dy = spec_drag['by']
+                    page.mouse.move(x0, y0)
+                    page.mouse.down()
+                    for k in range(1, 11):
+                        page.mouse.move(x0 + dx * k / 10, y0 + dy * k / 10)
+                        time.sleep(0.03)
+                    page.mouse.up()
+                    time.sleep(0.3)
             elif 'drag' in step:
                 (x0, y0), (x1, y1) = step['drag']
                 page.mouse.move(x0, y0)
