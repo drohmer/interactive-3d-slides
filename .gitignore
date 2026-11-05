@@ -3,3 +3,10 @@ build_*/
 *.o
 .DS_Store
 __pycache__/
+
+tutorial/.site/
+tutorial/.site-fr/
+tutorial/.work/
+.structure/
+.verification/
+.layout/

@@ -1,0 +1,30 @@
+{% set layout = 'side' %}
+
+= Buttons in the slide
+
+The buttons below are in the slide, outside the demo: HTML with `data-demo-set`.
+
+<div class="controls">
+<p>
+<button data-demo-set="shape=ripple">Ripple</button>
+<button data-demo-set="shape=waves">Waves</button>
+<button data-demo-set="drop">Drop</button>
+<button data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+</p>
+<p>Amplitude: <span data-demo-value="ampl" data-digits="2"></span></p>
+</div>
+
+media::
+demo::../_demo/c3/index.html?controls=ampl,k,speed,wireframe&panel=bl(.live)
+img::../_demo/c3/poster.png(.still)
+::
+
+<script src="../_demo/slide-controls.js"></script>
+
+<style>
+  .controls button { font: inherit; font-size: 80%; padding: 4px 16px; margin-right: 8px; cursor: pointer;
+                     border: 2px solid #999; border-radius: 8px; background: white; }
+  .controls button.on { background: #333; color: white; border-color: #333; }
+  @media screen { .still { display: none; } }
+  @media print { .live, .controls { display: none; } }
+</style>

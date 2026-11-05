@@ -1,0 +1,114 @@
+---
+title: 2. Put it in your slides
+section: Tutorial
+description: 'Show the web page of your demo in a slide: an iframe in reveal.js, Quarto, Slidev, Marp or lhtml-site; what PowerPoint, Keynote, Google Slides, Impress and Beamer allow, and the workarounds.'
+---
+
+# 2. Put it in your slides
+
+The demo is now a web page. A slide shows it in a frame, an `<iframe>`, if the slide tool can show a web
+page while presenting. HTML slides can, natively; most other tools cannot, or only through an add-in.
+Checked in November 2026, with the sources below.
+
+| Tool | A live web page in a slide | How |
+|---|---|---|
+| reveal.js, Quarto, Slidev, Marp, lhtml-site | yes | an `<iframe>`, or the syntax of the tool |
+| PowerPoint | only through a third-party add-in | a paid add-in, HTTPS addresses only |
+| Keynote, Google Slides | no | a video, or a link to the page |
+| LibreOffice Impress | no, in practice | a video, or a link |
+| Beamer (PDF) | no | a video, or a link |
+
+If your slides are not in HTML, the simplest is often to put the one slide with the demo in a small HTML
+deck, or to switch to the browser for the demo (see [the other tools](#powerpoint-keynote-google-slides)).
+
+## HTML slides
+
+All of them show the page of the demo in an `<iframe>`. Serve the slides and the demo from the same web
+server (a folder `demo/` next to the slides): the frame can then be driven from the slide, and the keys
+reach the slides (step 3).
+
+**reveal.js.** A frame in a slide, loaded when its slide comes near and unloaded when it leaves (`data-src`,
+see [Media](https://revealjs.com/media/)):
+
+```html
+<section>
+  <h3>A ripple</h3>
+  <iframe class="demo" id="surface" data-src="demo/index.html?ampl=0.2"
+          style="width: 100%; height: 520px; border: 0"></iframe>
+</section>
+```
+
+A demo can also fill the whole slide as its background (`data-background-iframe`, with
+`data-background-interactive` to use the mouse in it: [Backgrounds](https://revealjs.com/backgrounds/)).
+reveal.js puts all the slides in one page: give each frame an `id`, and name it on the buttons of the
+slide (`data-demo="#surface"`, step 3). [The example talk in reveal.js](../../decks/reveal.js/index.html).
+
+**Quarto** (format `revealjs`): a raw `<iframe>` in the slide, or the whole slide,
+`## A ripple {background-iframe="demo/index.html" background-interactive="true"}`
+([Quarto presentations](https://quarto.org/docs/presentations/revealjs/index.html)).
+
+**Slidev:** the layouts `iframe` (the page fills the slide), `iframe-left` and `iframe-right` (the page on
+one side, your text on the other), in the front matter of the slide
+([layouts](https://sli.dev/builtin/layouts)). With the demo in the folder `public/demo/` of the slides:
+
+```yaml
+---
+layout: iframe-right
+url: /demo/index.html?ampl=0.2
+---
+```
+
+**Marp:** `<iframe>` is not in the HTML that Marp keeps by default: allow HTML (`html: true`, or
+`marp --html`), then write the frame in the slide
+([configuration](https://github.com/marp-team/marp-core/blob/main/docs/configuration.md)).
+
+**lhtml-site:** the macro `demo::` writes the frame and sizes it in the layout of the slide, and the PDF of
+the talk can show an image instead ([the example talk](../../decks/lhtml-site/html/index.html), its
+[PDF](../../decks/lhtml-site/slides.pdf)):
+
+```
+media::
+demo::demo/index.html?ampl=0.2
+::
+```
+
+<div class="callout warn"><div class="callout-title">The frame takes the keyboard</div>
+
+Once you click in a demo, the keyboard goes to the frame: the arrow keys and the remote control stop
+changing the slide. This is how browsers work, in every HTML slide tool. The page of the demo of this
+tutorial sends the keys back to the slides ([step 3](../03_drive/index.html#the-keys-of-the-slides)).
+
+</div>
+
+## PowerPoint, Keynote, Google Slides
+
+**PowerPoint.** Microsoft retired its own *Web Viewer* add-in in December 2024
+([MC921112](https://mc.merill.net/message/MC921112)); PowerPoint has no built-in web page object. A
+third-party add-in, [Web Viewer 2.0](https://marketplace.microsoft.com/en-us/product/wa200010526) (paid,
+by 1990quebec), shows a live page in a slide, on Windows, Mac and the web according to its listing, with
+`https://` addresses. Not documented: whether it shows `http://localhost`, works offline, or runs WebGL and
+WebAssembly. The add-ins of Office run in Edge WebView2 on Windows and in Safari WKWebView on Mac
+([Microsoft Learn](https://learn.microsoft.com/en-us/office/dev/add-ins/concepts/browsers-used-by-office-web-add-ins)),
+which both have WebGL 2 and WebAssembly: a demo served over HTTPS may work, to be tested on your machine
+before the talk.
+
+**Keynote** inserts web videos from YouTube and Vimeo only, and needs a connection to play them
+([Keynote guide](https://support.apple.com/guide/keynote/tan63d61519a/mac)). **Google Slides** inserts
+videos from YouTube and Google Drive ([help](https://support.google.com/docs/answer/97447?hl=en)). Neither
+shows a live web page.
+
+**LibreOffice Impress** has *Insert > Floating Frame*, but its content is reported not to be shown during the
+slide show ([bug 76962](https://www.libreoffice.org/bugzilla/show_bug.cgi?id=76962)).
+
+**Beamer** makes a PDF: no live web page. Its packages embed videos; the 3D of
+[media9](https://ctan.org/pkg/media9) needs Adobe Reader.
+
+What works with all of them:
+
+- **A link to the page**, on the slide (a button, a QR code for the audience): the demo opens in the browser,
+  in full screen (F11), and you come back to the slides after. Serve it locally (`python3 -m http.server`).
+- **A video of the demo**, played in the slide. The demo can record itself frame by frame, with a fixed time
+  step, so that the video is smooth ([step 4](../04_talk-day/index.html#a-video-as-plan-b)).
+- **One HTML slide** for the demo, in a small reveal.js deck that you open when you reach it.
+
+**Next:** [3. Drive it during the talk](../03_drive/index.html).

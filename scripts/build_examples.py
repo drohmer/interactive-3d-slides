@@ -31,7 +31,7 @@ OUTPUTS = ['index.html', 'project.js', 'project.wasm', 'project.data']
 
 # Appended to the CMakeLists.txt of CGP in a staged project
 CGP_CMAKE_SUFFIX = '''
-# ---- slide-demos: the bridge, and the page of the demo for a slide
+# ---- interactive-3d-slides: the bridge, and the page of the demo for a slide
 if(EMSCRIPTEN)
     target_link_options(${{PROJECT_NAME}} PRIVATE
         -sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall)

@@ -1,0 +1,76 @@
+---
+title: Accueil
+pagetype: home
+description: "Un tutoriel pour intégrer des modèles 3D interactifs, typiquement générés en OpenGL, dans vos présentations : un programme C++ compilé en WebAssembly, montré dans une slide et piloté pendant que vous parlez."
+---
+{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
+
+<div class="hero">
+<span class="hero-kicker">Tutoriel · pour les chercheurs et enseignants en informatique graphique</span>
+</div>
+
+# Créez des slides avec de la 3D interactive
+
+<p class="hero-lead">Ce tutoriel décrit comment intégrer des modèles 3D interactifs, typiquement générés en
+OpenGL, dans vos présentations : un modèle qui tourne, une simulation que vous réglez, une courbe que vous
+déformez, en direct dans la slide pendant que vous parlez. Il fonctionne avec les outils de slides qui
+affichent une page web, et avec votre propre code C++.</p>
+
+<div class="hero-actions">
+<a class="btn btn-primary" href="01_tutorial/01_web-page/index.html">Commencer le tutoriel →</a>
+<a class="btn" href="02_more/01_examples/index.html">Voir les exemples</a>
+</div>
+
+## Ce que vous allez faire
+
+Un programme C++, compilé pour le web, dans un cadre. Les boutons ci-dessous sont en dehors, comme ils le
+seraient dans le texte de votre slide : ils changent le programme pendant qu'il tourne, et affichent une
+valeur qu'il renvoie.
+
+<div class="live">
+<iframe id="surface" class="demo" src="../demos/c3/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="Une surface qui ondule, un programme C++ compilé en WebAssembly"></iframe>
+<div class="live-controls">
+<button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+<button data-demo="#surface" data-demo-set="drop">Drop</button>
+<button data-demo="#surface" data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+<span>Amplitude : <span class="value" data-demo="#surface" data-demo-value="ampl" data-digits="2"></span></span>
+</div>
+<div class="live-note">Faites glisser la souris dans le cadre pour tourner la caméra. La même démo dans des slides :
+<a href="../decks/lhtml-site/html/03_slide-buttons/index.html">avec lhtml-site</a>,
+<a href="../decks/reveal.js/index.html#/2">avec reveal.js</a> (en anglais).</div>
+</div>
+<script src="../demos/slide-controls.js"></script>
+
+## Comment ça marche
+
+<div class="outputs">
+<div class="output"><div class="output-name">1. Une page web</div><p>Votre programme OpenGL, compilé en WebAssembly, tourne dans un navigateur. Ou un fichier de modèle montré par un visualiseur.</p></div>
+<div class="output"><div class="output-name">2. Un cadre dans la slide</div><p>La slide affiche cette page dans un <code>&lt;iframe&gt;</code> : les slides HTML le font nativement.</p></div>
+<div class="output"><div class="output-name">3. Piloté depuis la slide</div><p>Des réglages dans son adresse, un panneau, des boutons dans la slide, des valeurs renvoyées, les flèches gardées.</p></div>
+</div>
+
+## Le tutoriel
+
+<div class="cards">
+<a class="card" href="01_tutorial/01_web-page/index.html"><div class="card-step">Étape 1</div><div class="card-title">Faire une page web 3D</div><p>D'un fichier de modèle à votre propre programme C++ OpenGL, compilé avec Emscripten.</p></a>
+<a class="card" href="01_tutorial/02_in-your-slides/index.html"><div class="card-step">Étape 2</div><div class="card-title">La mettre dans vos slides</div><p>reveal.js, lhtml-site, Slidev, Quarto, PowerPoint et les autres : ce que chacun permet.</p></a>
+<a class="card" href="01_tutorial/03_drive/index.html"><div class="card-step">Étape 3</div><div class="card-title">La piloter pendant l'exposé</div><p>Des préréglages par slide, un panneau, des boutons dans la slide, ImGui, des valeurs renvoyées vers la slide.</p></a>
+<a class="card" href="01_tutorial/04_talk-day/index.html"><div class="card-step">Étape 4</div><div class="card-title">Le jour de l'exposé</div><p>Hors ligne, le projecteur, une image dans le PDF, une vidéo en plan B, des tests.</p></a>
+</div>
+
+**Exemples :** [six programmes](02_more/01_examples/index.html), d'un cube en OpenGL brut aux marching cubes
+avec ImGui, chacun avec une autre interface et le piège qu'il enseigne. **Référence :**
+[le pont](02_more/02_reference/index.html) entre le programme et la slide (deux fichiers C++, une page
+HTML, un script).
+
+## Ce qu'il vous faut
+
+- Un outil de slides qui affiche une page web : des slides HTML ([reveal.js](https://revealjs.com/),
+  [Slidev](https://sli.dev/), [Quarto](https://quarto.org/), [lhtml-site](https://scholartools.fr/lhtml/fr/)...),
+  ou un autre outil avec les solutions de l'[étape 2](01_tutorial/02_in-your-slides/index.html).
+- Pour votre propre programme : du C++ avec OpenGL 3.3 (avec GLFW, ou une bibliothèque comme
+  [CGP](https://github.com/drohmer/cgp-2027)), et le [SDK Emscripten](https://emscripten.org/).
+- Pour un simple fichier de modèle : rien à compiler.
+
+Le code du tutoriel, ses exemples et leurs tests : [interactive-3d-slides]({{ repo }}) (en anglais).

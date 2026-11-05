@@ -1,0 +1,19 @@
+{% set layout = 'side' %}
+
+= A program, set by the address of the slide
+
+A C++ program in raw OpenGL 3.3, compiled to WebAssembly, shown by `demo::`.
+
+* The address gives its settings: `?speed=0.2&tilt=25`
+* One build, a preset per slide
+* Click in it: the arrows still go to the next slide
+
+media::
+demo::../_demo/a1/index.html?speed=0.2&tilt=25(.live)
+img::../_demo/a1/poster.png(.still)
+::
+
+<style>
+  @media screen { .still { display: none; } }
+  @media print { .live { display: none; } }
+</style>

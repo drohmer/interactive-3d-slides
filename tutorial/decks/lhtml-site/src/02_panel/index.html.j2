@@ -1,0 +1,19 @@
+{% set layout = 'side' %}
+
+= A panel built from the program
+
+The program declares its parameters once, in C++; the page builds the panel.
+
+* `controls=twist,hue,speed,light,reset`
+* Each slider changes a uniform while the demo runs
+* No HTML to write
+
+media::
+demo::../_demo/a2/index.html?twist=0.8&controls=twist,hue,speed,light,reset(.live)
+img::../_demo/a2/poster.png(.still)
+::
+
+<style>
+  @media screen { .still { display: none; } }
+  @media print { .live { display: none; } }
+</style>

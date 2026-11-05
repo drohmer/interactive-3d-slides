@@ -1,0 +1,26 @@
+# The tutorial "Create slides with interactive 3D", built with lhtml-site (theme docs).
+#
+#   ./build.sh                      both languages, the live demos and the example talks, into .site/
+#   lhtml-site -i configure.yaml    the English pages only
+#
+# Served at https://scholartools.fr/interactive-3d-slides/ (the French pages at .../fr/).
+
+source_directory: 'src/'
+site_directory: '.site/'
+theme: 'docs'
+base_url: '/interactive-3d-slides/'
+
+keywords:
+  docs:
+    name: Interactive 3D slides
+    title: Interactive 3D in slides
+    logo_svg: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>'
+    repo_url: https://github.com/drohmer/interactive-3d-slides
+    repo_label: The code on GitHub
+    footer: 'A tutorial of <a href="https://scholartools.fr/">ScholarTools</a>. Built with lhtml-site.'
+    lang: en
+    storage: i3d-slides
+    css: [assets/site.css]
+    js: [assets/site.js]
+    menu:
+      sections: [Tutorial, Resources]

@@ -76,8 +76,14 @@
     if (!m || typeof m !== 'object') return;
     if (m.key) {   // a navigation key from a demo of another origin
       // a deck of lhtml-site handles these messages itself (window.__lhtmlNavigation)
-      if (!window.__lhtmlNavigation)
-        document.dispatchEvent(new KeyboardEvent('keydown', {key: m.key, bubbles: true}));
+      if (!window.__lhtmlNavigation) {
+        // with keyCode and which: some slide tools (reveal.js) read them
+        var copy = new KeyboardEvent('keydown', {key: m.key, bubbles: true, cancelable: true});
+        var code = {ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40, PageUp: 33, PageDown: 34}[m.key] || 0;
+        Object.defineProperty(copy, 'keyCode', {get: function () { return code; }});
+        Object.defineProperty(copy, 'which', {get: function () { return code; }});
+        document.dispatchEvent(copy);
+      }
       return;
     }
     if (m.params) {

@@ -9,7 +9,7 @@ void display_gui_implicit_surface(bool& is_update_field, bool& is_update_marchin
 		ImGui::Checkbox("Frame", &gui.display.frame);
 		ImGui::Checkbox("Surface", &gui.display.surface);
 #ifndef __EMSCRIPTEN__
-		// slide-demos: draw_wireframe uses glPolygonMode, which WebGL does not have
+		// interactive-3d-slides: draw_wireframe uses glPolygonMode, which WebGL does not have
 		ImGui::Checkbox("Wireframe", &gui.display.wireframe);
 #endif
 		ImGui::Checkbox("Domain", &gui.display.domain);
@@ -53,7 +53,7 @@ void display_gui_implicit_surface(bool& is_update_field, bool& is_update_marchin
 	is_update_marching_cube |= ImGui::SliderFloat("Isovalue", &gui.isovalue, 0.0f, 1.0f);
 
 #ifndef __EMSCRIPTEN__
-	// slide-demos: on the web, the file would be written in the memory of the page
+	// interactive-3d-slides: on the web, the file would be written in the memory of the page
 	ImGui::Spacing();
 	is_save_obj = ImGui::Button("Export mesh as obj");
 #else

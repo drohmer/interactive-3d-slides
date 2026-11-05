@@ -1,0 +1,8 @@
+# An example talk of the tutorial "Create slides with interactive 3D", made with lhtml-site.
+# Built by ../../build.sh into .site/decks/lhtml-site/: html/ in the browser, slides.pdf.
+# The demos (src/_demo/) are copied there by build.sh from ../../../examples/*/web.
+source_directory: 'src/'
+site_directory: '.site/'
+targets:
+  html: {theme: slides}
+  pdf: {theme: slides-pdf}

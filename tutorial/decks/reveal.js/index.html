@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interactive 3D in reveal.js slides</title>
+<!--
+  The same demos as in the other example talk, in reveal.js: nothing in the demos depends on the
+  slide tool. Each demo is an <iframe> (data-src: reveal.js loads it when its slide is near, and
+  unloads it after), the buttons are in the slide, with slide-controls.js. Several demos are in the
+  same page here, so each button names its demo: data-demo="#surface".
+  reveal.js comes from a CDN: for a talk without network, download it next to this page.
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  .reveal iframe.demo { width: 100%; height: 520px; border: 0; }
+  .reveal .controls-row { font-size: 0.6em; margin-top: 12px; }
+  .reveal .controls-row button { font: inherit; padding: 4px 14px; margin: 0 4px; border-radius: 8px;
+                                  border: 2px solid #999; background: white; cursor: pointer; }
+  .reveal .controls-row button.on { background: #333; color: white; border-color: #333; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section>
+  <h2>Interactive 3D in reveal.js</h2>
+  <p>C++ programs compiled to WebAssembly, in plain <code>&lt;iframe&gt;</code>s.</p>
+</section>
+
+<section>
+  <h3>Set by the address</h3>
+  <iframe class="demo" id="cube" data-src="../../demos/a1/index.html?speed=0.2&tilt=25"></iframe>
+</section>
+
+<section>
+  <h3>Buttons in the slide</h3>
+  <iframe class="demo" id="surface" data-src="../../demos/c3/index.html?controls=ampl,k,speed&panel=bl"></iframe>
+  <div class="controls-row">
+    <button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+    <button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+    <button data-demo="#surface" data-demo-set="drop">Drop</button>
+    Amplitude: <span data-demo="#surface" data-demo-value="ampl" data-digits="2"></span>
+  </div>
+</section>
+
+<section>
+  <h3>A value sent back to the slide</h3>
+  <iframe class="demo" id="curve" data-src="../../demos/c7/index.html?controls=points,polygon,reset&panel=br"></iframe>
+  <div class="controls-row">
+    Length of the curve: <span data-demo="#curve" data-demo-value="length" data-digits="2"></span>
+  </div>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="../../demos/slide-controls.js"></script>
+<script>Reveal.initialize({hash: true});</script>
+</body>
+</html>

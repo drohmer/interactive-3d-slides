@@ -1,0 +1,95 @@
+---
+title: 4. On the day of the talk
+section: Tutorial
+description: 'Make the demo safe on the day: offline, on the machine of the talk, readable on the projector, an image in the PDF, a video as plan B, and automatic tests.'
+---
+{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
+
+# 4. On the day of the talk
+
+A live demo is the best moment of a talk, and the riskiest. Most of the risks are known in advance.
+
+## Before you leave
+
+- **A local web server.** The demo is a web page that loads `project.wasm`: open the slides through a server,
+  not as files. `python3 -m http.server` in the folder of the slides is enough, and works without network.
+- **Offline.** Everything the demo needs is in its folder: no CDN. Check what the slides load from the
+  network (a slide framework from a CDN, fonts) and copy it locally. The `.data` files are downloaded at the
+  first visit of the slide: keep them small.
+- **On the machine of the talk.** Another GPU, another browser, another screen resolution. Open each slide
+  with a demo there once, and go through the slides with the remote control, after a click in each demo.
+- **Several demos in one page** (reveal.js loads its slides together): a browser limits the number of WebGL
+  contexts. Load the frames with the slide (`data-src` in reveal.js) rather than all at start.
+
+## Readable from the back of the room
+
+- **The panel:** keep the default size on a full slide; `compact=1` only for a small demo.
+- **ImGui:** enlarge it (`gui_scale=1.4`), and keep its sections closed at start.
+- **Lines:** WebGL draws lines one pixel wide in most browsers. Draw what must be seen as tubes or meshes.
+- **Colors:** the light of a projector washes out the dark shades; a white or light background usually
+  reads better than a dark one.
+
+## An image in the PDF
+
+The organizers ask for the PDF of the talk, and a PDF cannot run a program. Put an image of the demo in
+the slide, shown in print only, with the frame shown on screen only:
+
+```html
+<iframe class="demo live" src="demo/index.html?ampl=0.2"></iframe>
+<img class="still" src="demo/poster.png" alt="A ripple on a surface">
+
+<style>
+  @media screen { .still { display: none; } }
+  @media print  { .live, .controls { display: none; } }
+</style>
+```
+
+`poster.png` is a screenshot of the demo. The tests of the repository capture it for each example (below).
+
+## A video as plan B
+
+Keep a video of each demo, ready to play if the live one fails. The best video comes from the program
+itself, not from a screen recording: run it natively with a fixed time step, save each frame to an image,
+then make the video:
+
+```
+./project --dt 0.0166667 --record frames/ --frames 300
+ffmpeg -framerate 60 -i frames/frame_%05d.png -pix_fmt yuv420p demo.mp4
+```
+
+(`--dt`, `--record` and `--frames` are options to add to your program: a fixed step instead of the clock,
+`glReadPixels` after each frame, a stop after N frames.) The motion is then exactly that of the live demo,
+smooth whatever the speed of the machine, and several videos are synchronized frame by frame.
+
+## Test it automatically
+
+A test in a browser catches what you would see too late: the demo that does not start, the frame filled in
+one corner, the button that does nothing, the arrow key that stays in the demo. The repository has one for
+each example, described in a few lines (`demo.json`), run by Playwright in Chromium (WebGL by SwiftShader,
+no GPU needed):
+
+```json
+{
+  "query": "controls=ampl,k&panel=bl",
+  "steps": [
+    {"set": {"play": 0}}, {"snapshot": "a"},
+    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
+    {"differ": ["a", "b"]}
+  ]
+}
+```
+
+Each demo is also checked for: it starts, it fills its frame, it draws something, the arrow key reaches the
+slide, no error in the console. Copy an example and its `demo.json` to test your own program:
+[tests/test_demo.py]({{ repo }}/blob/main/tests/test_demo.py).
+
+## In case of trouble
+
+- **The frame is empty:** open the page of the demo alone, through the server, and read the console of the
+  browser. `Cannot load project.js`: a file name, or a page opened as a file.
+- **The drawing takes a corner of the frame:** the program created its window at a fixed size; create it at
+  the size of the canvas ([step 1](../01_web-page/index.html#your-c-opengl-program)).
+- **A control does nothing:** in the console of the demo, `Module.ccall('slide_describe', 'string', [], [])`
+  lists the declared parameters; a key of `controls=` that is not declared is skipped, with a warning.
+- **The arrows stop at the demo:** the page of the demo is not `slide-frame.html`.
+- **The wireframe is missing on the web:** `glPolygonMode` does not exist in WebGL; draw lines.

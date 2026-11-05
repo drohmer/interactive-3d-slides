@@ -1,15 +1,26 @@
-# slide-demos
+# Create slides with interactive 3D
 
-Interactive 3D in a slide: a C++ program (raw OpenGL 3.3, or the CGP library),
-compiled to WebAssembly with [Emscripten](https://emscripten.org/), shown in a slide as an iframe,
-and driven by the slide while you speak.
+**The tutorial: [scholartools.fr/interactive-3d-slides](https://scholartools.fr/interactive-3d-slides/)**
+(in English, and [in French](https://scholartools.fr/interactive-3d-slides/fr/)).
 
-The repository holds a small bridge between the program and the slide, and (soon) a gallery of
-examples. It goes with the recipes of [lhtml-site](https://scholartools.fr/lhtml/), but the demos are
-plain web pages: any slide tool that can show an iframe can use them.
+How to put interactive 3D models, typically made with OpenGL, in your presentations: a C++ program
+(raw OpenGL 3.3, or a library such as CGP) compiled to WebAssembly with [Emscripten](https://emscripten.org/),
+shown in a slide as an iframe, and driven from the slide while you speak. It works with any slide tool that
+shows a web page (reveal.js, Slidev, Quarto, Marp, lhtml-site...).
 
-> Status: work in progress. The bridge is written and tested on a real talk; the first six examples (raw
-> OpenGL 3.3 and CGP) are in [examples/](examples/).
+This repository holds the tutorial and its code:
+
+| Folder | What |
+|---|---|
+| [tutorial/](tutorial/) | The pages of the tutorial (English `src/`, French `src-fr/`), two example talks (lhtml-site, reveal.js), and `build.sh` that builds the site |
+| [bridge/](bridge/) | The bridge between a program and a slide: `slide_bridge.hpp/.cpp`, `slide-frame.html`, `slide-controls.js` |
+| [examples/](examples/) | Six example programs, from a cube in raw OpenGL 3.3 to marching cubes with ImGui, with their web builds, posters and tests |
+| [tests/](tests/), [scripts/](scripts/) | The tests of the bridge and of the examples, and the build of the examples |
+
+> Status: work in progress, not published yet. The bridge is tested on a real talk; the six examples and
+> the two example talks pass their browser tests.
+
+The rest of this README is the reference of the bridge; the tutorial explains how to use it.
 
 ## What the bridge does
 
@@ -174,3 +185,12 @@ First examples, from basic to advanced, each with another kind of interface:
 ## License
 
 To be decided.
+
+## Build the site of the tutorial
+
+```sh
+tutorial/build.sh
+```
+
+builds the pages (English and French), copies the live demos (`examples/*/web`) and builds the two example
+talks into `tutorial/.site/`, to serve at `/interactive-3d-slides/`. Needs lhtml-site.

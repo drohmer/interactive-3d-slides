@@ -7,7 +7,7 @@
 // Custom scene of this code
 #include "scene.hpp"
 
-// slide-demos: the parameters of the demo, set from the slide
+// interactive-3d-slides: the parameters of the demo, set from the slide
 #include "slide_bridge.hpp"
 
 

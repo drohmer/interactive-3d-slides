@@ -1,0 +1,88 @@
+---
+title: Reference
+section: Resources
+description: 'The bridge between a demo and a slide: the C++ API (slide_bridge.hpp), the settings of the address of the demo (slide-frame.html), the messages, and the attributes of slide-controls.js.'
+wide: true
+---
+{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
+
+# Reference
+
+The bridge is four files of [the repository]({{ repo }}/tree/main/bridge), to copy into your project:
+
+| File | Side | Role |
+|---|---|---|
+| `slide_bridge.hpp`, `slide_bridge.cpp` | your program | the parameters, declared once; standard library only |
+| `slide-frame.html` | the page of the demo | as `index.html` next to `project.js`; adapt its `CONFIG` |
+| `slide-controls.js` | the slide | buttons and values in the text of the slide |
+
+## C++: slide_bridge.hpp
+
+| Function | Effect |
+|---|---|
+| `slide::parse(argc, argv)` | Keeps the `--key value` pairs (a lone `--key` is `1`) and gives their values to the parameters already declared |
+| `slide::arg(key, fallback)`, `slide::has_arg(key)` | An argument, declared or not (a window size, before anything exists) |
+| `slide::param(key, float& v, min, max, step)` | A number, a slider in the panel |
+| `slide::param(key, int& v, min, max)` | An integer |
+| `slide::param(key, bool& v)` | A toggle |
+{% raw %}| `slide::param(key, std::string& v, {"a", "b"})` | A choice; `{{"a", "Label A"}, ...}` gives the labels of the buttons |{% endraw %}
+| `slide::param(key, getter, setter, min, max, step)` | A number with other units than the variable (`float` or `bool`) |
+| `slide::action(key, callback)` | A button without a value |
+| `slide::readout(key, getter)` | A value computed by the program, shown by the page and the slide, read only |
+| `.with_label(label, short_label)` | The label of the control (HTML allowed), and the one of the compact panel |
+| `.with_class(css)` | A class on the row of the control in the panel |
+| `.on_change(callback)` | Code run after a change from the slide |
+| `slide::set(key, value)` | Changes a parameter as the slide does (converts the text, runs the callbacks); `false` if refused |
+| `slide::describe()` | The parameters, their values, ranges and choices, as JSON |
+| `slide::notify()` | Tells the page that the program changed values by itself (a drag, a readout); nothing in a native build |
+| `slide::on_any_change(callback)` | Called with the key after every change from the slide |
+
+A parameter declared after `parse()` takes the value of the address, without calling `on_change`. The web
+build exports `slide_set(key, value)` and `slide_describe()`; link with
+`-sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall`.
+
+## The address of the demo: slide-frame.html
+
+| In the address | Effect |
+|---|---|
+| `?key=value&...` | Arguments of the program: `--key value` |
+| `controls=a,b,c` | The controls of the panel, in this order; `mode:x:y` keeps the buttons `x` and `y` of the choice `mode` |
+| `compact=1` | Short labels, small panel |
+| `panel=tl`, `tr`, `bl`, `br` | The corner of the panel (default `tr`) |
+| `build=name` | Loads `name/project.js`: several builds in one folder |
+
+In `CONFIG`, at the top of the file: `script` (default `project.js`), `defaults` (arguments when the address
+gives none, `{gui: '0'}`), `readyFrames` (frames drawn before the demo is shown), `capture` (keep the image
+of the canvas, default `true`), `navigationKeys`.
+
+The page also sets `window.__lhtmlReady` (a promise resolved once the demo is drawn, for a PDF export), and
+shows an error in the frame if the program cannot load or stops.
+
+## Messages
+
+The slide and the demo talk with `postMessage`, which also works when the demo is on another site.
+
+| From | Message | Meaning |
+|---|---|---|
+| slide | `{slide: {set: {ampl: 0.2, shape: 'waves'}}}` | Set parameters (applied once the demo is ready if sent before) |
+| slide | `{slide: {describe: true}}` | Ask for the parameters |
+| demo | `{slide: {ready: true, params: [...]}}` | The demo started |
+| demo | `{slide: {changed: {key, value, accepted}, params: [...]}}` | After each set |
+| demo | `{slide: {notified: true, params: [...]}}` | The program changed values itself (at most once a frame) |
+| demo | `{slide: {described: true, params: [...]}}` | The answer to `describe` |
+| demo | `{slide: {key: 'ArrowRight'}}` | A navigation key, when the slide is on another site |
+
+Each parameter in `params`: `{key, type, label, short, class, value, min, max, step, choices}`, `type` one of
+`number`, `integer`, `toggle`, `choice`, `action`, `readout`.
+
+## The slide: slide-controls.js
+
+| Attribute | Effect |
+|---|---|
+| `data-demo-set="a=1&b=2"` | On a button: sets the parameters; `data-demo-set="drop"` runs an action |
+| `data-demo-value="key"` | Shows the current value; `data-digits="2"` for a number |
+| `data-demo="#id"` | The demo of a button or a value (default: the first `iframe.demo`, else the first iframe) |
+| class `on` | Given to a button while its settings are the current values of the demo |
+
+From a script: `slideDemo.set({ampl: 0.2}, frame)`, `slideDemo.params(frame)`. The script also replays the
+navigation keys posted by a demo of another site, as key presses in the slide.

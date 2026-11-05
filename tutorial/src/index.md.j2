@@ -1,0 +1,73 @@
+---
+title: Home
+pagetype: home
+description: 'A tutorial to put interactive 3D models, typically made with OpenGL, in your presentations: a C++ program compiled to WebAssembly, shown in a slide and driven while you speak.'
+---
+{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
+
+<div class="hero">
+<span class="hero-kicker">Tutorial · for researchers and teachers in computer graphics</span>
+</div>
+
+# Create slides with interactive 3D
+
+<p class="hero-lead">This tutorial shows how to put interactive 3D models, typically made with OpenGL, in
+your presentations: a model that turns, a simulation you tune, a curve you drag, live in the slide
+while you speak. It works with the slide tools that show a web page, and with your own C++ code.</p>
+
+<div class="hero-actions">
+<a class="btn btn-primary" href="01_tutorial/01_web-page/index.html">Start the tutorial →</a>
+<a class="btn" href="02_more/01_examples/index.html">See the examples</a>
+</div>
+
+## What you will make
+
+A C++ program, compiled for the web, in a frame. The buttons below are outside it, as they would be in
+the text of your slide: they change the program while it runs, and show a value it sends back.
+
+<div class="live">
+<iframe id="surface" class="demo" src="demos/c3/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="A waving surface, a C++ program compiled to WebAssembly"></iframe>
+<div class="live-controls">
+<button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+<button data-demo="#surface" data-demo-set="drop">Drop</button>
+<button data-demo="#surface" data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+<span>Amplitude: <span class="value" data-demo="#surface" data-demo-value="ampl" data-digits="2"></span></span>
+</div>
+<div class="live-note">Drag in the frame to turn the camera. The same demo in slides:
+<a href="decks/lhtml-site/html/03_slide-buttons/index.html">with lhtml-site</a>,
+<a href="decks/reveal.js/index.html#/2">with reveal.js</a>.</div>
+</div>
+<script src="demos/slide-controls.js"></script>
+
+## How it works
+
+<div class="outputs">
+<div class="output"><div class="output-name">1. A web page</div><p>Your OpenGL program, compiled to WebAssembly, runs in a browser. Or a model file shown by a viewer.</p></div>
+<div class="output"><div class="output-name">2. A frame in the slide</div><p>The slide shows that page in an <code>&lt;iframe&gt;</code>: HTML slides do it natively.</p></div>
+<div class="output"><div class="output-name">3. Driven from the slide</div><p>Settings in its address, a panel, buttons in the slide, values sent back, the arrow keys kept.</p></div>
+</div>
+
+## The tutorial
+
+<div class="cards">
+<a class="card" href="01_tutorial/01_web-page/index.html"><div class="card-step">Step 1</div><div class="card-title">Make a 3D web page</div><p>From a model file to your own C++ OpenGL program, compiled with Emscripten.</p></a>
+<a class="card" href="01_tutorial/02_in-your-slides/index.html"><div class="card-step">Step 2</div><div class="card-title">Put it in your slides</div><p>reveal.js, lhtml-site, Slidev, Quarto, PowerPoint and the others: what each one allows.</p></a>
+<a class="card" href="01_tutorial/03_drive/index.html"><div class="card-step">Step 3</div><div class="card-title">Drive it during the talk</div><p>Presets per slide, a panel, buttons in the slide, ImGui, values sent back to the slide.</p></a>
+<a class="card" href="01_tutorial/04_talk-day/index.html"><div class="card-step">Step 4</div><div class="card-title">On the day of the talk</div><p>Offline, the projector, an image in the PDF, a video as plan B, tests.</p></a>
+</div>
+
+**Examples:** [six programs](02_more/01_examples/index.html), from a cube in raw OpenGL to marching cubes with ImGui,
+each with another interface and the trap it teaches. **Reference:** [the bridge](02_more/02_reference/index.html)
+between the program and the slide (two C++ files, one HTML page, one script).
+
+## What you need
+
+- A slide tool that can show a web page: HTML slides ([reveal.js](https://revealjs.com/),
+  [Slidev](https://sli.dev/), [Quarto](https://quarto.org/), [lhtml-site](https://scholartools.fr/lhtml/)...),
+  or another tool with the workarounds of [step 2](01_tutorial/02_in-your-slides/index.html).
+- For your own program: C++ with OpenGL 3.3 (with GLFW, or a library such as
+  [CGP](https://github.com/drohmer/cgp-2027)), and the [Emscripten SDK](https://emscripten.org/).
+- For a model file only: nothing to compile.
+
+The code of the tutorial, its examples and their tests: [interactive-3d-slides]({{ repo }}).

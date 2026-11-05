@@ -1,0 +1,104 @@
+---
+title: 4. Le jour de l'exposé
+section: Tutoriel
+description: "Sécurisez la démo le jour J : hors ligne, sur la machine de l'exposé, lisible au projecteur, une image dans le PDF, une vidéo en plan B, et des tests automatiques."
+---
+{% set repo = 'https://github.com/drohmer/interactive-3d-slides' %}
+
+# 4. Le jour de l'exposé
+
+Une démo en direct est le meilleur moment d'un exposé, et le plus risqué. La plupart des risques se
+connaissent à l'avance.
+
+## Avant de partir
+
+- **Un serveur web local.** La démo est une page web qui charge `project.wasm` : ouvrez les slides à travers
+  un serveur, pas comme des fichiers. `python3 -m http.server` dans le dossier des slides suffit, et marche
+  sans réseau.
+- **Hors ligne.** Tout ce dont la démo a besoin est dans son dossier : pas de CDN. Vérifiez ce que les slides
+  chargent depuis le réseau (un framework de slides depuis un CDN, des polices) et copiez-le en local. Les
+  fichiers `.data` sont téléchargés à la première visite de la slide : gardez-les petits.
+- **Sur la machine de l'exposé.** Une autre carte graphique, un autre navigateur, une autre résolution
+  d'écran. Ouvrez-y une fois chaque slide avec une démo, et parcourez les slides à la télécommande, après un
+  clic dans chaque démo.
+- **Plusieurs démos dans une même page** (reveal.js charge ses slides ensemble) : un navigateur limite le
+  nombre de contextes WebGL. Chargez les cadres avec leur slide (`data-src` dans reveal.js) plutôt que tous
+  au départ.
+
+## Lisible du fond de la salle
+
+- **Le panneau :** gardez la taille par défaut sur une slide entière ; `compact=1` seulement pour une petite
+  démo.
+- **ImGui :** agrandissez-le (`gui_scale=1.4`), et gardez ses sections fermées au départ.
+- **Les lignes :** WebGL dessine les lignes sur un pixel de large dans la plupart des navigateurs. Dessinez ce
+  qui doit se voir en tubes ou en maillages.
+- **Les couleurs :** la lumière d'un projecteur délave les tons sombres ; un fond blanc ou clair se lit
+  généralement mieux qu'un fond sombre.
+
+## Une image dans le PDF
+
+Les organisateurs demandent le PDF de l'exposé, et un PDF ne peut pas faire tourner un programme. Mettez une
+image de la démo dans la slide, montrée seulement à l'impression, avec le cadre montré seulement à l'écran :
+
+```html
+<iframe class="demo live" src="demo/index.html?ampl=0.2"></iframe>
+<img class="still" src="demo/poster.png" alt="A ripple on a surface">
+
+<style>
+  @media screen { .still { display: none; } }
+  @media print  { .live, .controls { display: none; } }
+</style>
+```
+
+`poster.png` est une capture d'écran de la démo. Les tests du dépôt la capturent pour chaque exemple
+(ci-dessous).
+
+## Une vidéo en plan B
+
+Gardez une vidéo de chaque démo, prête à être jouée si la démo en direct échoue. La meilleure vidéo vient du
+programme lui-même, pas d'un enregistrement d'écran : lancez-le en natif avec un pas de temps fixe,
+enregistrez chaque image, puis faites la vidéo :
+
+```
+./project --dt 0.0166667 --record frames/ --frames 300
+ffmpeg -framerate 60 -i frames/frame_%05d.png -pix_fmt yuv420p demo.mp4
+```
+
+(`--dt`, `--record` et `--frames` sont des options à ajouter à votre programme : un pas fixe au lieu de
+l'horloge, `glReadPixels` après chaque image, un arrêt après N images.) Le mouvement est alors exactement
+celui de la démo en direct, fluide quelle que soit la vitesse de la machine, et plusieurs vidéos sont
+synchronisées image par image.
+
+## Le tester automatiquement
+
+Un test dans un navigateur repère ce que vous verriez trop tard : la démo qui ne démarre pas, le cadre rempli
+dans un coin, le bouton qui ne fait rien, la flèche qui reste dans la démo. Le dépôt en a un pour chaque
+exemple, décrit en quelques lignes (`demo.json`), lancé par Playwright dans Chromium (WebGL par SwiftShader,
+pas besoin de carte graphique) :
+
+```json
+{
+  "query": "controls=ampl,k&panel=bl",
+  "steps": [
+    {"set": {"play": 0}}, {"snapshot": "a"},
+    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
+    {"differ": ["a", "b"]}
+  ]
+}
+```
+
+Chaque démo est aussi vérifiée sur ces points : elle démarre, remplit son cadre, dessine quelque chose, la
+flèche atteint la slide, aucune erreur dans la console. Copiez un exemple et son `demo.json` pour tester
+votre propre programme : [tests/test_demo.py]({{ repo }}/blob/main/tests/test_demo.py).
+
+## En cas de problème
+
+- **Le cadre est vide :** ouvrez la page de la démo seule, à travers le serveur, et lisez la console du
+  navigateur. `Cannot load project.js` : un nom de fichier, ou une page ouverte comme fichier.
+- **Le dessin occupe un coin du cadre :** le programme a créé sa fenêtre à une taille fixe ; créez-la à la
+  taille du canvas ([étape 1](../01_web-page/index.html#votre-programme-c-opengl)).
+- **Un contrôle ne fait rien :** dans la console de la démo, `Module.ccall('slide_describe', 'string', [], [])`
+  liste les paramètres déclarés ; une clé de `controls=` qui n'est pas déclarée est ignorée, avec un
+  avertissement.
+- **Les flèches s'arrêtent à la démo :** la page de la démo n'est pas `slide-frame.html`.
+- **Le fil de fer manque sur le web :** `glPolygonMode` n'existe pas en WebGL ; dessinez des lignes.

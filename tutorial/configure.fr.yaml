@@ -1,0 +1,28 @@
+# Le tutoriel « Créez des slides avec de la 3D interactive » : les pages de src/, traduites dans src-fr/
+# (mêmes chemins, pour que le changement de langue mène à la même page). src-fr/assets est un lien vers
+# src/assets : images et styles communs.
+#
+#   lhtml-site -i configure.fr.yaml     construit .site-fr/ (./build.sh construit les deux)
+#
+# Servi à https://scholartools.fr/interactive-3d-slides/fr/.
+
+source_directory: 'src-fr/'
+site_directory: '.site-fr/'
+theme: 'docs'
+base_url: '/interactive-3d-slides/fr/'
+
+keywords:
+  docs:
+    name: Slides 3D interactives
+    title: La 3D interactive dans vos slides
+    logo_svg: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>'
+    repo_url: https://github.com/drohmer/interactive-3d-slides
+    repo_label: Le code sur GitHub
+    footer: 'Un tutoriel de <a href="https://scholartools.fr/">ScholarTools</a>. Construit avec lhtml-site.'
+    lang: fr
+    storage: i3d-slides
+    css: [assets/site.css]
+    js: [assets/site.js]
+    menu:
+      sections: [Tutoriel, Ressources]
+      home_label: Accueil

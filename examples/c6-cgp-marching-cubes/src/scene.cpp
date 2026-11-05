@@ -1,6 +1,6 @@
 // Origin: the CGP example of github.com/drohmer/epita_ani3d_lab_code-2027
 // (examples/02_marching_cubes/02_marching_cube_dynamic), as in the documentation of CGP.
-// slide-demos: the parameters declared to the bridge (end of initialize()), the size of the
+// interactive-3d-slides: the parameters declared to the bridge (end of initialize()), the size of the
 // ImGui window set from the slide, and two controls hidden on the web (gui_helper.cpp).
 #include "scene.hpp"
 #include "slide_bridge.hpp"
@@ -15,7 +15,7 @@ void scene_structure::initialize()
 {
 	camera_control.initialize(inputs, window); // Give access to the inputs and window global state to the camera controler
 	camera_control.set_rotation_axis_y();
-	// slide-demos: farther than the original { 3.0f, 2.0f, 2.0f }, so that the whole domain fits a wide slide
+	// interactive-3d-slides: farther than the original { 3.0f, 2.0f, 2.0f }, so that the whole domain fits a wide slide
 	camera_control.look_at({ 6.0f, 4.5f, 3.5f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
@@ -23,7 +23,7 @@ void scene_structure::initialize()
 	// Initialization for the Implicit Surface
 	// ***************************************** //
 
-	// slide-demos: the same variables as the ImGui window, declared to the bridge. The slide
+	// interactive-3d-slides: the same variables as the ImGui window, declared to the bridge. The slide
 	// changes them (address of the iframe, postMessage, slide-controls.js); the ImGui window
 	// shows the new values by itself at the next frame, as it reads the variables.
 	// Their values given at start (?isovalue=0.3) are applied here, before the first field.
