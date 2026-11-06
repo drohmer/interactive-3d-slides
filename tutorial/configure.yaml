@@ -23,4 +23,4 @@ keywords:
     css: [assets/site.css]
     js: [assets/site.js]
     menu:
-      sections: [Tutorial, Resources]
+      sections: [Tutorial, More examples, Resources]

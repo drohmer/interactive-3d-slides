@@ -20,7 +20,7 @@ TUTORIAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(TUTORIAL)
 
 LANGUAGES = {'.cpp': 'cpp', '.hpp': 'cpp', '.txt': 'cmake', '.cmake': 'cmake', '.html': 'html',
-             '.js': 'javascript', '.json': 'json', '.py': 'python', '.sh': 'bash', '.conf': 'nginx', '.yaml': 'yaml', '.css': 'css', '.j2': 'html'}
+             '.js': 'javascript', '.json': 'json', '.py': 'python', '.sh': 'bash', '.conf': 'nginx', '.yaml': 'yaml', '.css': 'css', '.j2': 'html', '.glsl': 'glsl'}
 
 # What each example needs, besides its own folder (repository-relative paths)
 BRIDGE = ['bridge/slide_bridge.hpp', 'bridge/slide_bridge.cpp', 'bridge/slide-frame.html', 'bridge/slide-controls.js']
@@ -34,6 +34,9 @@ TITLES = {
     'c3-cgp-waving-surface': (4, 'Buttons in the slide', '05_buttons'),
     'c6-cgp-marching-cubes': (5, 'GUI with ImGui', '06_imgui'),
     'c7-cgp-drag-points': (6, 'Values sent back to the slide', '07_readout'),
+    'c4-cgp-load-obj': (7, 'Models from files', '../03_examples/01_models'),
+    'c8-cgp-sketch': (8, 'Sketch with the mouse', '../03_examples/02_sketch'),
+    'c9-cgp-compare': (9, 'Two demos side by side', '../03_examples/03_compare'),
 }
 SITE = 'https://scholartools.fr/interactive-3d-slides/'
 # Not in the zips: the configuration of the web server of the tutorial
@@ -45,6 +48,9 @@ EXAMPLES = {
     'c3-cgp-waving-surface': CGP,
     'c6-cgp-marching-cubes': CGP,
     'c7-cgp-drag-points': CGP,
+    'c4-cgp-load-obj': CGP,
+    'c8-cgp-sketch': CGP,
+    'c9-cgp-compare': CGP,
 }
 
 
@@ -107,6 +113,7 @@ def lhtml_demo(example, files):
 def example_readme(example):
     """The README at the top of the zip of an example: what is inside, and the steps in order."""
     number, title, page = TITLES[example]
+    url = SITE + os.path.normpath('01_tutorial/' + page) + '/index.html'
     slide = sorted(x for x in os.listdir(os.path.join(REPO, 'examples', example, 'lhtml-site', 'src')) if not x.startswith('_'))[0]
     cgp = example.startswith('c')
     build = (f"""```sh
@@ -159,7 +166,7 @@ cmake --build build_web
 ```""")
     return f"""# Example {number}: {title}
 
-From the tutorial *Create slides with interactive 3D*: {SITE}01_tutorial/{page}/index.html
+From the tutorial *Create slides with interactive 3D*: {url}
 
 ## What is in this folder
 

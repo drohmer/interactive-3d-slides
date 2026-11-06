@@ -1,0 +1,91 @@
+---
+title: 7. Models from files
+section: More examples
+description: 'OBJ models read from files, with their materials and textures, in a slide: the files packed with the demo for the web, and the model chosen by the buttons of the slide. All the code, to download.'
+---
+{% set code = '../../code/examples/c4-cgp-load-obj/' %}
+
+# 7. Models from files
+
+This example shows models read from files: a camel (a single OBJ file, without texture) and the atrium of
+Sponza (an OBJ file, its materials and 14 textures). The buttons of the slide choose the model, and the slide
+displays its number of triangles. The point of the example is the files: how a demo for the web reads them,
+and what it costs.
+
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c4-cgp-load-obj.zip">c4-cgp-load-obj.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<p class="try"><strong>Try it:</strong> unzip it, and in the unzipped folder run <code>python3 -m http.server 8080</code>; then open <code>http://localhost:8080/examples/c4-cgp-load-obj/slides.html</code>, the slide with its demo. To change the program: <a href="#build-and-run">build and run</a>.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> meshes and textures read from files</span><span><strong>Interface:</strong> buttons in the slide; a value sent to the slide</span></div>
+</div>
+
+<div class="live">
+<iframe id="models" class="demo" src="{{ code }}web/index.html?controls=turn&compact=1&panel=bl" title="OBJ models read from files"></iframe>
+<div class="live-controls">
+<button data-demo="#models" data-demo-set="model=camel">Camel</button>
+<button data-demo="#models" data-demo-set="model=sponza">Sponza</button>
+<span>Triangles: <span class="value" data-demo="#models" data-demo-value="triangles"></span></span>
+</div>
+<div class="live-note">Live: choose a model, and drag in the frame to turn the camera.</div>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+## What is new
+
+- **Files read as on the desktop:** the program reads `project::path + "assets/camel.obj"`. For the web, the
+  `CMakeLists.txt` of CGP packs the folder `assets/` into `project.data` (`--preload-file`), a file next to
+  `project.js` that the page downloads before the program starts.
+- **The size of the demo:** `project.data` is about 4 MB here, downloaded at the first display of the slide. The
+  files of Sponza were reduced for the web (coordinates rounded, images of 512 pixels at most).
+- **The names of the files:** the file system of the browser is case-sensitive, as on Linux. The names written in
+  `sponza.mtl` must be exactly those of the image files.
+- **The model chosen by the slide:** a choice `slide::param("model", ...)` whose `on_change` places the camera for
+  each model; the number of triangles is a readout (as in [example 6](../../01_tutorial/07_readout/index.html)).
+
+## Build and run
+
+As [example 3](../../01_tutorial/04_cgp/index.html#how-the-cgp-examples-are-built), with `c4-cgp-load-obj`.
+
+## The files
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+<details><summary>Show the full file: <strong>scene.cpp</strong> (108 lines)</summary>
+
+{% include "_code/examples/c4-cgp-load-obj/src/scene.cpp.md" %}
+
+</details>
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+<details><summary>Show the full file: <strong>scene.hpp</strong> (46 lines)</summary>
+
+{% include "_code/examples/c4-cgp-load-obj/src/scene.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c4-cgp-load-obj/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), organized as in
+[example 1](../../01_tutorial/02_cube/index.html#lhtml-site); only the slide changes, `src/01_models/index.html.j2`:
+
+{% include "_code/examples/c4-cgp-load-obj/lhtml-site/src/01_models/index.html.j2.md" %}
+
+*Rem. The camel comes from [csc43043ep-lab-code](https://github.com/drohmer/csc43043ep-lab-code); Sponza was modeled
+by Marko Dabrovic ([its copyright](../../code/examples/c4-cgp-load-obj/assets/sponza/copyright.txt)).*
+
+**Next:** [8. Sketch with the mouse](../02_sketch/index.html).

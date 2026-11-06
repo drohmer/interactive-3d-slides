@@ -1,0 +1,20 @@
+= Two demos side by side
+
+<div class="pair">
+<div>
+demo::../_demo/index.html?normals=exact(.live #left)
+img::../_demo/poster.png(.still)
+<p>Exact normals</p>
+</div>
+<div>
+demo::../_demo/index.html?normals=plane(.live #right)
+img::../_demo/poster.png(.still)
+<p>Normals of the plane</p>
+</div>
+</div>
+
+<div class="controls">
+<p>Amplitude <input type="range" data-demo="#left, #right" data-demo-input="ampl" min="0" max="0.15" step="0.005">
+<span class="value" data-demo="#left" data-demo-value="ampl" data-digits="3"></span>
+<button data-demo="#left, #right" data-demo-set="restart">Restart both</button></p>
+</div>

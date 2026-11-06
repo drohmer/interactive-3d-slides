@@ -1,0 +1,23 @@
+{% set layout = 'side' %}
+
+= Sketch with the mouse
+
+* Draw in the frame with the mouse
+* Keys of the demo: Z undo, C clear, 1 2 3 colors, D draw or turn the camera
+* The arrow keys still change the slide
+
+<div class="controls">
+<p>
+<button data-demo-set="color=black">Black</button>
+<button data-demo-set="color=red">Red</button>
+<button data-demo-set="color=blue">Blue</button>
+<button data-demo-set="undo">Undo</button>
+<button data-demo-set="clear">Clear</button>
+</p>
+<p>Strokes: <span class="value" data-demo-value="strokes"></span></p>
+</div>
+
+media::
+demo::../_demo/index.html?controls=width,draw&panel=br(.live)
+img::../_demo/poster.png(.still)
+::

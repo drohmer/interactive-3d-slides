@@ -1,0 +1,100 @@
+---
+title: 9. Two demos side by side
+section: More examples
+description: 'The same demo twice in a slide, with two methods side by side, driven by the same slider and buttons of the slide. All the code, to download.'
+---
+{% set code = '../../code/examples/c9-cgp-compare/' %}
+
+# 9. Two demos side by side
+
+This example shows the same demo twice in a slide, to compare two methods: a plane deformed in its vertex shader,
+on the left with the exact normals of the deformed surface, on the right with the normals of the flat plane. The
+shape is the same, the lighting is not. One slider of the slide sets the amplitude of both.
+
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c9-cgp-compare.zip">c9-cgp-compare.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<p class="try"><strong>Try it:</strong> unzip it, and in the unzipped folder run <code>python3 -m http.server 8080</code>; then open <code>http://localhost:8080/examples/c9-cgp-compare/slides.html</code>, the slide with its demo. To change the program: <a href="#build-and-run">build and run</a>.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> a deformation in a vertex shader</span><span><strong>Interface:</strong> two frames of one slide, driven together</span></div>
+</div>
+
+<div class="live pair">
+<div><iframe id="left" class="demo" src="{{ code }}web/index.html?normals=exact" title="The deformed plane, exact normals"></iframe><div class="live-note">Exact normals</div></div>
+<div><iframe id="right" class="demo" src="{{ code }}web/index.html?normals=plane" title="The deformed plane, normals of the plane"></iframe><div class="live-note">Normals of the plane</div></div>
+</div>
+<div class="live-controls">
+<span>Amplitude</span> <input type="range" data-demo="#left, #right" data-demo-input="ampl" min="0" max="0.15" step="0.005">
+<span class="value" data-demo="#left" data-demo-value="ampl" data-digits="3"></span>
+<button data-demo="#left, #right" data-demo-set="restart">Restart both</button>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+## What is new
+
+- **One build, two addresses:** both frames load the same demo; `?normals=exact` and `?normals=plane` make the
+  difference.
+- **Controls that name both frames:** `data-demo="#left, #right"` (a CSS selector) on a button or a slider of the
+  slide sets both demos at once. The values shown come from the first one.
+- **A slider in the slide:** `<input type="range" data-demo-input="ampl">` sets the parameter while it moves, and
+  follows its value.
+- **Two clocks:** each copy runs its own time. "Restart both" sets them to the same time, so that the two
+  ripples stay in phase.
+- *Rem. Two demos are two WebGL contexts: the browser limits their number in a page (see
+  [On the day of the talk](../../01_tutorial/10_talk-day/index.html)).*
+
+## Build and run
+
+As [example 3](../../01_tutorial/04_cgp/index.html#how-the-cgp-examples-are-built), with `c9-cgp-compare`.
+
+## The files
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+<details><summary>Show the full file: <strong>scene.cpp</strong> (81 lines)</summary>
+
+{% include "_code/examples/c9-cgp-compare/src/scene.cpp.md" %}
+
+</details>
+
+### shaders/mesh_deformation/mesh_deformation.vert.glsl
+
+[mesh_deformation.vert.glsl]({{ code }}shaders/mesh_deformation/mesh_deformation.vert.glsl)
+
+<details><summary>Show the full file: <strong>mesh_deformation.vert.glsl</strong> (61 lines)</summary>
+
+{% include "_code/examples/c9-cgp-compare/shaders/mesh_deformation/mesh_deformation.vert.glsl.md" %}
+
+</details>
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+<details><summary>Show the full file: <strong>scene.hpp</strong> (44 lines)</summary>
+
+{% include "_code/examples/c9-cgp-compare/src/scene.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c9-cgp-compare/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), organized as in
+[example 1](../../01_tutorial/02_cube/index.html#lhtml-site); only the slide changes, `src/01_compare/index.html.j2`:
+
+{% include "_code/examples/c9-cgp-compare/lhtml-site/src/01_compare/index.html.j2.md" %}
+
+*Rem. The deformation comes from a CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027).*
+
+**Next:** [Complete presentations](../../01_tutorial/08_presentations/index.html): the demos in two complete talks.

@@ -99,3 +99,8 @@ article.doc tbody tr:nth-child(even) td { background: var(--bg-soft); }
 .get p { margin: 0.3em 0 0.6em; }
 .get-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0.4em 0 0.8em; }
 .get .needs { border: 0; padding: 0; margin: 0 0 6px; background: none; }
+
+/* two demos side by side (example 9) */
+.live.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.live.pair iframe.demo { aspect-ratio: 4 / 3; height: auto; }
+.live-controls input[type=range] { width: 200px; vertical-align: middle; }

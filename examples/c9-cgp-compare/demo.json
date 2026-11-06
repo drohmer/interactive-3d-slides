@@ -1,0 +1,114 @@
+{
+  "title": "CGP: two copies of a demo side by side, driven by the same controls of the slide",
+  "kind": "cgp",
+  "query": "controls=ampl,freq,restart&compact=1&panel=bl",
+  "panel": 3,
+  "slide": "<button data-demo-set=\"normals=exact\">Exact</button> <button data-demo-set=\"normals=plane\">Plane</button> <button data-demo-set=\"restart\">Restart</button> A = <span data-demo-value=\"ampl\" data-digits=\"3\"></span>",
+  "steps": [
+    {
+      "expect": {
+        "normals": "exact",
+        "ampl": 0.06,
+        "freq": 20,
+        "gui": false
+      }
+    },
+    {
+      "slide_on": [
+        "Exact"
+      ]
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "set": {
+        "play": 0
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "snapshot": "exact"
+    },
+    {
+      "slide_click": "Plane"
+    },
+    {
+      "expect": {
+        "normals": "plane"
+      }
+    },
+    {
+      "slide_on": [
+        "Plane"
+      ]
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "snapshot": "plane"
+    },
+    {
+      "differ": [
+        "exact",
+        "plane"
+      ]
+    },
+    {
+      "set": {
+        "ampl": 0.12
+      }
+    },
+    {
+      "expect": {
+        "ampl": 0.12
+      }
+    },
+    {
+      "slide_text": [
+        "[data-demo-value=ampl]",
+        "0.120"
+      ]
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "snapshot": "strong"
+    },
+    {
+      "differ": [
+        "plane",
+        "strong"
+      ]
+    },
+    {
+      "drag": [
+        [
+          700,
+          300
+        ],
+        [
+          500,
+          300
+        ]
+      ]
+    },
+    {
+      "snapshot": "turned"
+    },
+    {
+      "differ": [
+        "strong",
+        "turned"
+      ]
+    }
+  ],
+  "poster": {
+    "query": "ampl=0.06",
+    "wait": 1.0
+  }
+}

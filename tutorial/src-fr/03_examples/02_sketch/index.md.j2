@@ -1,0 +1,93 @@
+---
+title: 8. Dessiner à la souris
+section: Autres exemples
+description: "Des traits dessinés à la souris dans une slide, avec des touches propres à la démo qui laissent les flèches à la présentation, et des boutons de la slide pour les mêmes actions. Tout le code, à télécharger."
+---
+{% set code = '../../../code/examples/c8-cgp-sketch/' %}
+
+# 8. Dessiner à la souris
+
+Dans cet exemple, des traits sont dessinés à la souris sur une feuille. La démo a ses propres touches (annuler,
+effacer, changer de couleur), et la slide a des boutons pour les mêmes actions. L'intérêt de l'exemple tient au
+clavier : les touches de la démo ne doivent pas prendre celles de la présentation.
+
+<div class="get">
+<div class="get-title">Récupérer cet exemple</div>
+<p><strong>Télécharger :</strong> <a href="../../../code/c8-cgp-sketch.zip">c8-cgp-sketch.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le projet CGP n'est nécessaire que pour recompiler.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/c8-cgp-sketch/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
+</div>
+<div class="needs"><span><strong>Rendu :</strong> des maillages construits pendant le mouvement de la souris</span><span><strong>Interface :</strong> manipulation directe, touches propres à la démo, boutons dans la slide</span></div>
+</div>
+
+<div class="live">
+<iframe id="sketch" class="demo" src="{{ code }}web/index.html?controls=width,draw&compact=1&panel=br" title="Des traits dessinés à la souris"></iframe>
+<div class="live-controls">
+<button data-demo="#sketch" data-demo-set="color=black">Black</button>
+<button data-demo="#sketch" data-demo-set="color=red">Red</button>
+<button data-demo="#sketch" data-demo-set="color=blue">Blue</button>
+<button data-demo="#sketch" data-demo-set="undo">Undo</button>
+<button data-demo="#sketch" data-demo-set="clear">Clear</button>
+<span>Traits : <span class="value" data-demo="#sketch" data-demo-value="strokes"></span></span>
+</div>
+<div class="live-note">En direct : dessinez dans le cadre, puis essayez les touches Z (annuler), C (effacer), 1 2 3 (couleurs), D (dessiner ou tourner la caméra).</div>
+</div>
+<script src="../../../code/bridge/slide-controls.js"></script>
+
+## Ce qui est nouveau
+
+- **Des touches propres à la démo :** le programme lit ses touches dans `keyboard_event()`. Utilisez des lettres et
+  des chiffres : la page de la démo envoie les flèches et Page Down / Page Up aux slides, même après un clic dans la
+  démo, pour que la présentation les garde. Évitez la barre d'espace, que certains outils de slides utilisent aussi.
+- **Les codes des touches :** sur le web, comparez les codes GLFW (`key == GLFW_KEY_Z`) : les noms des touches
+  (`glfwGetKeyName`) ne sont pas connus dans un navigateur.
+- **Une touche et un bouton pour la même action :** les touches appellent `slide::set("undo", "")`, comme le font
+  les boutons de la slide ; après un changement fait par le programme, `slide::notify()` permet au panneau et à la
+  slide d'afficher les nouvelles valeurs.
+- **Des traits larges :** WebGL dessine les lignes sur un pixel de large. Chaque trait est un ruban, un maillage
+  reconstruit pendant le mouvement de la souris, aussi large que voulu.
+- **Une image pour le PDF :** `?sample=1` démarre avec une spirale déjà dessinée ; l'image fixe de la démo est prise
+  avec elle.
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../../01_tutorial/04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c8-cgp-sketch`.
+
+## Les fichiers
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+<details><summary>Afficher le fichier complet : <strong>scene.cpp</strong> (193 lignes)</summary>
+
+{% include "_code/examples/c8-cgp-sketch/src/scene.cpp.md" %}
+
+</details>
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+<details><summary>Afficher le fichier complet : <strong>scene.hpp</strong> (57 lignes)</summary>
+
+{% include "_code/examples/c8-cgp-sketch/src/scene.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c8-cgp-sketch/slides.html.md" %}
+
+### lhtml-site/
+
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../../01_tutorial/02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_sketch/index.html.j2` :
+
+{% include "_code/examples/c8-cgp-sketch/lhtml-site/src/01_sketch/index.html.j2.md" %}
+
+**Ensuite :** [9. Deux démos côte à côte](../03_compare/index.html).

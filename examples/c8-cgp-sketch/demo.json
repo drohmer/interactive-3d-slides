@@ -1,0 +1,155 @@
+{
+  "title": "CGP: sketch with the mouse, with the keys of the demo",
+  "kind": "cgp",
+  "query": "controls=width,draw,undo,clear,strokes&compact=1&panel=br",
+  "panel": 5,
+  "slide": "<button data-demo-set=\"color=black\">Black</button> <button data-demo-set=\"color=red\">Red</button> <button data-demo-set=\"color=blue\">Blue</button> <button data-demo-set=\"undo\">Undo</button> <button data-demo-set=\"clear\">Clear</button> strokes = <span data-demo-value=\"strokes\"></span>",
+  "steps": [
+    {
+      "expect": {
+        "color": "black",
+        "draw": true,
+        "strokes": 0,
+        "gui": false
+      }
+    },
+    {
+      "slide_on": [
+        "Black"
+      ]
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "snapshot": "empty"
+    },
+    {
+      "drag": [
+        [
+          350,
+          250
+        ],
+        [
+          750,
+          400
+        ]
+      ]
+    },
+    {
+      "expect": {
+        "strokes": 1
+      }
+    },
+    {
+      "snapshot": "one"
+    },
+    {
+      "differ": [
+        "empty",
+        "one"
+      ]
+    },
+    {
+      "slide_click": "Red"
+    },
+    {
+      "slide_on": [
+        "Red"
+      ]
+    },
+    {
+      "drag": [
+        [
+          400,
+          450
+        ],
+        [
+          800,
+          200
+        ]
+      ]
+    },
+    {
+      "expect": {
+        "strokes": 2
+      }
+    },
+    {
+      "slide_shows": [
+        "[data-demo-value=strokes]",
+        "strokes",
+        0
+      ]
+    },
+    {
+      "snapshot": "two"
+    },
+    {
+      "differ": [
+        "one",
+        "two"
+      ]
+    },
+    {
+      "key": "z"
+    },
+    {
+      "expect": {
+        "strokes": 1
+      }
+    },
+    {
+      "snapshot": "undone"
+    },
+    {
+      "same": [
+        "one",
+        "undone"
+      ]
+    },
+    {
+      "key": "3"
+    },
+    {
+      "expect": {
+        "color": "blue"
+      }
+    },
+    {
+      "key": "c"
+    },
+    {
+      "expect": {
+        "strokes": 0
+      }
+    },
+    {
+      "slide_click": "Black"
+    },
+    {
+      "drag": [
+        [
+          400,
+          300
+        ],
+        [
+          600,
+          300
+        ]
+      ]
+    },
+    {
+      "slide_click": "Undo"
+    },
+    {
+      "expect": {
+        "strokes": 0
+      }
+    }
+  ],
+  "poster": {
+    "query": "sample=1",
+    "wait": 0.5
+  }
+}

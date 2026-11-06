@@ -81,7 +81,8 @@ Each parameter in `params`: `{key, type, label, short, class, value, min, max, s
 |---|---|
 | `data-demo-set="a=1&b=2"` | On a button: sets the parameters; `data-demo-set="drop"` runs an action |
 | `data-demo-value="key"` | Shows the current value; `data-digits="2"` for a number |
-| `data-demo="#id"` | The demo of a button or a value (default: the first `iframe.demo`, else the first iframe) |
+| `data-demo-input="key"` | On an `<input type="range">` of the slide: sets the parameter while it moves, and follows its value |
+| `data-demo="#id"` | The demo of a button, a slider or a value (default: the first `iframe.demo`, else the first iframe); a CSS selector such as `"#left, #right"` drives several demos at once, and the values shown come from the first one |
 | class `on` | Given to a button while its settings are the current values of the demo |
 
 From a script: `slideDemo.set({ampl: 0.2}, frame)`, `slideDemo.params(frame)`. The script also replays the

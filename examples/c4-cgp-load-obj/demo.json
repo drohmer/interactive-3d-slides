@@ -1,0 +1,97 @@
+{
+  "title": "CGP: load OBJ models, with their materials and textures, chosen from the slide",
+  "kind": "cgp",
+  "query": "controls=model,turn,triangles&compact=1&panel=br",
+  "panel": 3,
+  "slide": "<button data-demo-set=\"model=camel\">Camel</button> <button data-demo-set=\"model=sponza\">Sponza</button> triangles = <span data-demo-value=\"triangles\"></span>",
+  "steps": [
+    {
+      "expect": {
+        "model": "camel",
+        "gui": false
+      }
+    },
+    {
+      "slide_on": [
+        "Camel"
+      ]
+    },
+    {
+      "wait": 1.0
+    },
+    {
+      "set": {
+        "turn": 0
+      }
+    },
+    {
+      "wait": 0.3
+    },
+    {
+      "snapshot": "camel"
+    },
+    {
+      "remember": "triangles"
+    },
+    {
+      "slide_click": "Sponza"
+    },
+    {
+      "expect": {
+        "model": "sponza"
+      }
+    },
+    {
+      "slide_on": [
+        "Sponza"
+      ]
+    },
+    {
+      "changed": "triangles"
+    },
+    {
+      "slide_shows": [
+        "[data-demo-value=triangles]",
+        "triangles",
+        0
+      ]
+    },
+    {
+      "wait": 0.5
+    },
+    {
+      "snapshot": "sponza"
+    },
+    {
+      "differ": [
+        "camel",
+        "sponza"
+      ]
+    },
+    {
+      "drag": [
+        [
+          700,
+          300
+        ],
+        [
+          500,
+          300
+        ]
+      ]
+    },
+    {
+      "snapshot": "turned"
+    },
+    {
+      "differ": [
+        "sponza",
+        "turned"
+      ]
+    }
+  ],
+  "poster": {
+    "query": "model=sponza",
+    "wait": 1.5
+  }
+}

@@ -1,0 +1,91 @@
+---
+title: 8. Sketch with the mouse
+section: More examples
+description: 'Strokes drawn with the mouse in a slide, with keys of the demo that leave the arrow keys to the presentation, and buttons of the slide for the same actions. All the code, to download.'
+---
+{% set code = '../../code/examples/c8-cgp-sketch/' %}
+
+# 8. Sketch with the mouse
+
+In this example, strokes are drawn with the mouse on a sheet. The demo has its own keys (undo, clear, change
+of color), and the slide has buttons for the same actions. The point of the example is the keyboard: the keys
+of the demo must not take the keys of the presentation.
+
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c8-cgp-sketch.zip">c8-cgp-sketch.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<p class="try"><strong>Try it:</strong> unzip it, and in the unzipped folder run <code>python3 -m http.server 8080</code>; then open <code>http://localhost:8080/examples/c8-cgp-sketch/slides.html</code>, the slide with its demo. To change the program: <a href="#build-and-run">build and run</a>.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> meshes built while the mouse moves</span><span><strong>Interface:</strong> direct manipulation, keys of the demo, buttons in the slide</span></div>
+</div>
+
+<div class="live">
+<iframe id="sketch" class="demo" src="{{ code }}web/index.html?controls=width,draw&compact=1&panel=br" title="Strokes drawn with the mouse"></iframe>
+<div class="live-controls">
+<button data-demo="#sketch" data-demo-set="color=black">Black</button>
+<button data-demo="#sketch" data-demo-set="color=red">Red</button>
+<button data-demo="#sketch" data-demo-set="color=blue">Blue</button>
+<button data-demo="#sketch" data-demo-set="undo">Undo</button>
+<button data-demo="#sketch" data-demo-set="clear">Clear</button>
+<span>Strokes: <span class="value" data-demo="#sketch" data-demo-value="strokes"></span></span>
+</div>
+<div class="live-note">Live: draw in the frame, then try the keys Z (undo), C (clear), 1 2 3 (colors), D (draw or turn the camera).</div>
+</div>
+<script src="../../code/bridge/slide-controls.js"></script>
+
+## What is new
+
+- **Keys of the demo:** the program reads its keys in `keyboard_event()`. Use letters and digits: the page of the
+  demo sends the arrow keys and Page Down / Page Up to the slides, even after a click in the demo, so that the
+  presentation keeps them. Avoid the space bar, which some slide tools also use.
+- **The codes of the keys:** on the web, compare the GLFW codes (`key == GLFW_KEY_Z`): the names of the keys
+  (`glfwGetKeyName`) are not known in a browser.
+- **A key and a button for the same action:** the keys call `slide::set("undo", "")`, as the buttons of the slide
+  do; after a change made by the program, `slide::notify()` lets the panel and the slide show the new values.
+- **Wide strokes:** WebGL draws lines one pixel wide. Each stroke is a ribbon, a mesh rebuilt while the mouse
+  moves, as wide as wanted.
+- **An image for the PDF:** `?sample=1` starts with a spiral already drawn; the poster of the demo is taken with it.
+
+## Build and run
+
+As [example 3](../../01_tutorial/04_cgp/index.html#how-the-cgp-examples-are-built), with `c8-cgp-sketch`.
+
+## The files
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+<details><summary>Show the full file: <strong>scene.cpp</strong> (193 lines)</summary>
+
+{% include "_code/examples/c8-cgp-sketch/src/scene.cpp.md" %}
+
+</details>
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+<details><summary>Show the full file: <strong>scene.hpp</strong> (57 lines)</summary>
+
+{% include "_code/examples/c8-cgp-sketch/src/scene.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c8-cgp-sketch/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), organized as in
+[example 1](../../01_tutorial/02_cube/index.html#lhtml-site); only the slide changes, `src/01_sketch/index.html.j2`:
+
+{% include "_code/examples/c8-cgp-sketch/lhtml-site/src/01_sketch/index.html.j2.md" %}
+
+**Next:** [9. Two demos side by side](../03_compare/index.html).

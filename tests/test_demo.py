@@ -15,6 +15,7 @@ Usage: python test_demo.py <web_dir> <demo.json> [--poster out.png]
                                                     drag from the leftmost group of pixels that match
                        {"remember": key}, {"changed": key}   a value changed since it was remembered
                        {"slide_shows": [sel, key, digits]}   the slide shows the current value of key
+                       {"key": "z"}                  a key pressed in the demo (after a click or a drag in it)
                        {"wait": seconds}
                        {"snapshot": "name"}         keep the image of the canvas
                        {"same": ["a", "b"]}         the two images are equal
@@ -183,6 +184,9 @@ def main():
                     time.sleep(0.02)
                 page.mouse.up()
                 time.sleep(0.2)
+            elif 'key' in step:   # a key pressed in the demo (the demo has the keyboard after a click in it)
+                page.keyboard.press(step['key'])
+                time.sleep(0.3)
             elif 'wait' in step:
                 time.sleep(step['wait'])
             elif 'snapshot' in step:

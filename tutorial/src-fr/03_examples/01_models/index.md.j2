@@ -1,0 +1,92 @@
+---
+title: 7. Modèles chargés depuis des fichiers
+section: Autres exemples
+description: "Des modèles OBJ lus depuis des fichiers, avec leurs matériaux et leurs textures, dans une slide : les fichiers empaquetés avec la démo pour le web, et le modèle choisi par les boutons de la slide. Tout le code, à télécharger."
+---
+{% set code = '../../../code/examples/c4-cgp-load-obj/' %}
+
+# 7. Modèles chargés depuis des fichiers
+
+Cet exemple montre des modèles lus depuis des fichiers : un chameau (un seul fichier OBJ, sans texture) et l'atrium
+de Sponza (un fichier OBJ, ses matériaux et 14 textures). Les boutons de la slide choisissent le modèle, et la slide
+affiche son nombre de triangles. L'intérêt de l'exemple tient aux fichiers : comment une démo pour le web les lit, et
+ce que cela coûte.
+
+<div class="get">
+<div class="get-title">Récupérer cet exemple</div>
+<p><strong>Télécharger :</strong> <a href="../../../code/c4-cgp-load-obj.zip">c4-cgp-load-obj.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le projet CGP n'est nécessaire que pour recompiler.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/c4-cgp-load-obj/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
+</div>
+<div class="needs"><span><strong>Rendu :</strong> des maillages et des textures lus depuis des fichiers</span><span><strong>Interface :</strong> des boutons dans la slide ; une valeur envoyée à la slide</span></div>
+</div>
+
+<div class="live">
+<iframe id="models" class="demo" src="{{ code }}web/index.html?controls=turn&compact=1&panel=bl" title="Des modèles OBJ lus depuis des fichiers"></iframe>
+<div class="live-controls">
+<button data-demo="#models" data-demo-set="model=camel">Camel</button>
+<button data-demo="#models" data-demo-set="model=sponza">Sponza</button>
+<span>Triangles : <span class="value" data-demo="#models" data-demo-value="triangles"></span></span>
+</div>
+<div class="live-note">En direct : choisissez un modèle, et faites glisser la souris dans le cadre pour tourner la caméra.</div>
+</div>
+<script src="../../../code/bridge/slide-controls.js"></script>
+
+## Ce qui est nouveau
+
+- **Des fichiers lus comme sur le bureau :** le programme lit `project::path + "assets/camel.obj"`. Pour le web, le
+  `CMakeLists.txt` de CGP empaquette le dossier `assets/` dans `project.data` (`--preload-file`), un fichier à côté
+  de `project.js` que la page télécharge avant le démarrage du programme.
+- **La taille de la démo :** `project.data` fait ici environ 4 Mo, téléchargés au premier affichage de la slide. Les
+  fichiers de Sponza ont été allégés pour le web (coordonnées arrondies, images de 512 pixels au plus).
+- **Les noms des fichiers :** le système de fichiers du navigateur distingue les majuscules des minuscules, comme
+  sous Linux. Les noms écrits dans `sponza.mtl` doivent être exactement ceux des fichiers images.
+- **Le modèle choisi par la slide :** un choix `slide::param("model", ...)` dont le `on_change` place la caméra pour
+  chaque modèle ; le nombre de triangles est une valeur en lecture seule (comme dans
+  l'[exemple 6](../../01_tutorial/07_readout/index.html)).
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../../01_tutorial/04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c4-cgp-load-obj`.
+
+## Les fichiers
+
+### src/scene.cpp
+
+[scene.cpp]({{ code }}src/scene.cpp)
+
+<details><summary>Afficher le fichier complet : <strong>scene.cpp</strong> (108 lignes)</summary>
+
+{% include "_code/examples/c4-cgp-load-obj/src/scene.cpp.md" %}
+
+</details>
+
+### src/scene.hpp
+
+[scene.hpp]({{ code }}src/scene.hpp)
+
+<details><summary>Afficher le fichier complet : <strong>scene.hpp</strong> (46 lignes)</summary>
+
+{% include "_code/examples/c4-cgp-load-obj/src/scene.hpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/c4-cgp-load-obj/slides.html.md" %}
+
+### lhtml-site/
+
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../../01_tutorial/02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_models/index.html.j2` :
+
+{% include "_code/examples/c4-cgp-load-obj/lhtml-site/src/01_models/index.html.j2.md" %}
+
+*Rem. Le chameau provient de [csc43043ep-lab-code](https://github.com/drohmer/csc43043ep-lab-code) ; Sponza a été
+modélisé par Marko Dabrovic ([son copyright](../../../code/examples/c4-cgp-load-obj/assets/sponza/copyright.txt)).*
+
+**Ensuite :** [8. Dessiner à la souris](../02_sketch/index.html).

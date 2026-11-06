@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two demos side by side</title>
+<!--
+  A slide of reveal.js with the demo of this example. Open it through a web server, from the root of
+  the repository: python3 -m http.server 8080, then http://localhost:8080/examples/c9-cgp-compare/slides.html
+  reveal.js comes from a CDN: for a talk without network, download it next to this file.
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  .reveal iframe.demo { width: 100%; height: 540px; border: 0; }
+  .reveal .row { font-size: 0.6em; margin-top: 12px; }
+  .reveal .row button { font: inherit; padding: 4px 14px; margin: 0 4px; border-radius: 8px;
+                        border: 2px solid #999; background: white; cursor: pointer; }
+  .reveal .row button.on { background: #333; color: white; border-color: #333; }
+  .reveal .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .reveal .pair iframe.demo { height: 460px; }
+  .reveal .pair p { font-size: 0.55em; margin: 4px 0 0; }
+  .reveal .row input[type=range] { width: 260px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+<section>
+  <h3>Two demos side by side</h3>
+  <div class="pair">
+    <div><iframe class="demo" id="left" data-src="web/index.html?normals=exact"></iframe><p>Exact normals</p></div>
+    <div><iframe class="demo" id="right" data-src="web/index.html?normals=plane"></iframe><p>Normals of the plane</p></div>
+  </div>
+  <div class="row">
+    Amplitude <input type="range" data-demo="#left, #right" data-demo-input="ampl" min="0" max="0.15" step="0.005">
+    <span data-demo="#left" data-demo-value="ampl" data-digits="3"></span>
+    <button data-demo="#left, #right" data-demo-set="restart">Restart both</button>
+  </div>
+</section>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="../../bridge/slide-controls.js"></script>
+<script>Reveal.initialize({hash: true});</script>
+</body>
+</html>

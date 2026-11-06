@@ -81,7 +81,8 @@ parmi `number`, `integer`, `toggle`, `choice`, `action`, `readout`.
 |---|---|
 | `data-demo-set="a=1&b=2"` | Sur un bouton : règle les paramètres ; `data-demo-set="drop"` lance une action |
 | `data-demo-value="clé"` | Affiche la valeur courante ; `data-digits="2"` pour un nombre |
-| `data-demo="#id"` | La démo d'un bouton ou d'une valeur (par défaut : le premier `iframe.demo`, sinon le premier iframe) |
+| `data-demo-input="key"` | Sur un `<input type="range">` de la slide : règle le paramètre pendant qu'il bouge, et suit sa valeur |
+| `data-demo="#id"` | La démo d'un bouton, d'un curseur ou d'une valeur (par défaut : le premier `iframe.demo`, sinon le premier iframe) ; un sélecteur CSS comme `"#left, #right"` pilote plusieurs démos à la fois, et les valeurs affichées viennent de la première |
 | classe `on` | Donnée à un bouton tant que ses réglages sont les valeurs courantes de la démo |
 
 Depuis un script : `slideDemo.set({ampl: 0.2}, frame)`, `slideDemo.params(frame)`. Le script rejoue aussi les
