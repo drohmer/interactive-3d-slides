@@ -185,7 +185,9 @@ First examples, from basic to advanced, each with another kind of interface:
 
 ## License
 
-To be decided.
+MIT, see [LICENSE](LICENSE). The third-party code keeps its own terms: glad and `khrplatform.hpp` in
+[examples/third_party/glad](examples/third_party/glad/README.md); the CGP examples build with the
+[CGP library](https://github.com/drohmer/cgp-2027) (MIT).
 
 ## Build the site of the tutorial
 

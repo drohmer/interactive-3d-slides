@@ -95,7 +95,7 @@ def publish(site):
         return os.path.getsize(os.path.join(code, name)) / 1e6
 
     for example, needs in EXAMPLES.items():
-        size = write_zip(example + '.zip', expand(['examples/' + example] + needs + ['README.md', 'Makefile'], files))
+        size = write_zip(example + '.zip', expand(['examples/' + example] + needs + ['README.md', 'LICENSE', 'Makefile'], files))
         print(f'zip: code/{example}.zip ({size:.1f} MB)')
     size = write_zip('interactive-3d-slides.zip', files)
     print(f'zip: code/interactive-3d-slides.zip ({size:.1f} MB), {len(files)} files in code/')
