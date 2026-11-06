@@ -24,6 +24,9 @@ The slides of the tutorial are made with [reveal.js](https://revealjs.com/) (eac
 slide, `slides.html`), and the same demos are in a talk made with [lhtml-site](https://scholartools.fr/lhtml/).
 Both are HTML, where the frame is native.
 
+The small amount of code that connects the program and the slide (two C++ files that read the settings in the
+program, and the page `slide-frame.html`) is called the *bridge* in this tutorial.
+
 ## What you need
 
 - **A C++ compiler and CMake**, and GLFW for the desktop version of the examples
@@ -38,10 +41,14 @@ Both are HTML, where the frame is native.
   source ./emsdk_env.sh        # in each new terminal, before building for the web
   ```
 
-  (see [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
+  (see [Download and install](https://emscripten.org/docs/getting_started/downloads.html)). Emscripten then
+  provides `emcmake`, which runs the usual `cmake` command so that it compiles for the web.
 - **Python 3**, for a local web server: a browser refuses to load `project.wasm` from a page opened as a file.
+- **lhtml-site**, only for the slides made with lhtml-site: `pipx install lhtml-site`
+  (see [lhtml-site](https://scholartools.fr/lhtml/)).
 - For the examples 3 to 6: the [CGP](https://github.com/drohmer/cgp-2027) library, a C++ library made for
-  teaching computer graphics. The two first examples need no library but GLFW.
+  teaching computer graphics, needed only to recompile them (`git clone https://github.com/drohmer/cgp-2027.git`).
+  The two first examples need no library but GLFW.
 
 ## Get the code
 
@@ -49,14 +56,15 @@ Each example page has a zip of the example and of what it needs. Or take everyth
 [interactive-3d-slides.zip](../../code/interactive-3d-slides.zip) (the bridge, the six examples with their web
 builds, the tests). Every file can also be opened alone: [all the files](../../02_more/01_files/index.html).
 
-The web builds are in the zips (`examples/<example>/web/`): you can show a demo before compiling anything.
-From the root of the unzipped folder:
+Each zip unpacks into a folder of its name, with a `README.md` at its top that gives the steps. The web builds
+are in the zips (`examples/<example>/web/`): you can show a demo before compiling anything. In the unzipped
+folder:
 
 ```
-python3 -m http.server
+python3 -m http.server 8080
 ```
 
-then open `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+then open `http://localhost:8080/examples/a1-opengl-cube/slides.html`.
 
 ## In reveal.js or in lhtml-site
 
@@ -69,11 +77,12 @@ then open `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
 </section>
 ```
 
-**lhtml-site:** the macro `demo::` writes the frame and sizes it in the layout of the slide:
+**lhtml-site:** the macro `demo::` writes the frame and sizes it in the layout of the slide (the web build of
+the demo is in the folder `src/_demo/` of the presentation):
 
 ```
 media::
-demo::../_demo/cube/index.html?speed=0.2
+demo::../_demo/index.html?speed=0.2
 ::
 ```
 

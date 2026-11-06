@@ -13,8 +13,10 @@ The picking comes from the How-to *Select and drag with the mouse* of the CGP do
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_drag-points/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/c7/index.html?controls=curve,points,polygon,reset,length&compact=1&panel=br
+demo::../_demo/index.html?controls=curve,points,polygon,reset,length&compact=1&panel=br
 ```
 
 ```html
@@ -61,8 +63,11 @@ The page groups the notifications: at most one message a frame.
 ## Build
 
 ```sh
+# from the root of the repository (or of the unzipped folder), the Emscripten SDK active
 source <emsdk>/emsdk_env.sh
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py c7-cgp-drag-points
+git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
+CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c7-cgp-drag-points
 ```
 
-[web/](web/) holds a built copy. Serve the folder with a web server, not as a file.
+The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
+Serve the folder with a web server (`python3 -m http.server`), not as a file.

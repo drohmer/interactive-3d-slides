@@ -1,8 +1,17 @@
 """Build the examples for the web, test them in a browser, and capture their posters.
 
-Usage (the Emscripten SDK active: source <emsdk>/emsdk_env.sh):
-  python3 scripts/build_examples.py [--native] [id ...]      all the examples by default
-  CGP_DIR=<cgp project> LHTML_PYTHON=<python with playwright> python3 scripts/build_examples.py
+Usage (the Emscripten SDK active: source <emsdk>/emsdk_env.sh), from the root of the repository:
+  git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     the CGP project, once
+  CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c3-cgp-waving-surface
+  CGP_DIR=../cgp-2027 python3 scripts/build_examples.py               all the examples
+
+Options:
+  --native    also build the desktop version, and run it for two seconds
+  --no-test   skip the browser test and the poster (they need Playwright: pip install playwright,
+              then python3 -m playwright install chromium); skipped anyway when Playwright is missing
+Environment:
+  CGP_DIR       a clone of the CGP project (needed for the CGP examples only)
+  LHTML_PYTHON  a Python with Playwright, for the browser test (default: this Python)
 
 Two kinds of examples, given by the field "kind" of their demo.json:
   "opengl"  examples/<id>/CMakeLists.txt (raw OpenGL 3.3, examples/cmake/raw_opengl_demo.cmake)
@@ -15,7 +24,8 @@ For each example:
   1. web build in build/<id>-web/ (and, with --native, a native build in build/<id>-native/,
      run for two seconds to check that it starts);
   2. copy of index.html and project.js/.wasm/.data into examples/<id>/web/ (committed: the
-     demos work without Emscripten, and offline);
+     demos work without Emscripten, and offline), and into examples/<id>/lhtml-site/src/_demo/ (with the
+     poster and slide-controls.js): after a build, both slides show the new version;
   3. test in a browser (tests/test_demo.py) and poster examples/<id>/poster.png (image for the PDF).
 Log: build/build_examples.log. Exit code 0 when every example builds and passes.
 """
@@ -25,8 +35,6 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXAMPLES = os.path.join(ROOT, 'examples')
 BRIDGE = os.path.join(ROOT, 'bridge')
 BUILD = os.path.join(ROOT, 'build')
-DEFAULT_PYTHON = os.path.expanduser('~/Library/Application Support/pipx/venvs/lhtml-site/bin/python')
-DEFAULT_CGP = os.path.expanduser('~/drives/damien/cgp_library/cgp_library/cgp-library')
 OUTPUTS = ['index.html', 'project.js', 'project.wasm', 'project.data']
 
 # Appended to the CMakeLists.txt of CGP in a staged project
@@ -91,13 +99,16 @@ def check_native(build, project, stream):
 def main():
     args = sys.argv[1:]
     native = '--native' in args
-    args = [a for a in args if a != '--native']
+    test = '--no-test' not in args
+    args = [a for a in args if a not in ('--native', '--no-test')]
     if shutil.which('emcmake') is None:
         sys.exit('emcmake not found: activate the Emscripten SDK first (source <emsdk>/emsdk_env.sh)')
-    python = os.environ.get('LHTML_PYTHON', DEFAULT_PYTHON)
-    if not os.path.exists(python):
-        python = sys.executable
-    cgp_dir = os.environ.get('CGP_DIR', DEFAULT_CGP)
+    python = os.environ.get('LHTML_PYTHON', sys.executable)
+    if test and subprocess.run([python, '-c', 'import playwright'], capture_output=True).returncode != 0:
+        print(f'Playwright is not installed for {python}: the browser test and the poster are skipped '
+              '(see --no-test in the help of this script)')
+        test = False
+    cgp_dir = os.environ.get('CGP_DIR', '')
     ids = args or sorted(d for d in os.listdir(EXAMPLES) if os.path.exists(os.path.join(EXAMPLES, d, 'demo.json')))
     os.makedirs(BUILD, exist_ok=True)
     failed = []
@@ -107,8 +118,9 @@ def main():
             source = os.path.join(EXAMPLES, ident)
             kind = json.load(open(os.path.join(source, 'demo.json'))).get('kind', 'opengl')
             if kind == 'cgp':
-                if not os.path.exists(os.path.join(cgp_dir, 'cgp')):
-                    log(f'{tag}: no CGP project in {cgp_dir} (set CGP_DIR)', stream)
+                if not cgp_dir or not os.path.exists(os.path.join(cgp_dir, 'cgp')):
+                    log(f'{tag}: no CGP project (CGP_DIR={cgp_dir!r}): clone it with '
+                        'git clone https://github.com/drohmer/cgp-2027.git, then set CGP_DIR to its folder', stream)
                     failed.append(ident)
                     continue
                 project = stage_cgp(ident, cgp_dir)
@@ -143,7 +155,18 @@ def main():
                 if os.path.exists(os.path.join(build, name)):
                     shutil.copy2(os.path.join(build, name), web)
             size = sum(os.path.getsize(os.path.join(web, f)) for f in os.listdir(web)) / 1e6
-            log(f'{tag}: web/ {size:.1f} MB; browser test', stream)
+            log(f'{tag}: web/ {size:.1f} MB', stream)
+            if os.path.isdir(os.path.join(source, 'lhtml-site')):
+                demo = os.path.join(source, 'lhtml-site', 'src', '_demo')
+                shutil.rmtree(demo, ignore_errors=True)
+                shutil.copytree(web, demo)
+                shutil.copy2(os.path.join(BRIDGE, 'slide-controls.js'), demo)
+                if os.path.exists(os.path.join(source, 'poster.png')):
+                    shutil.copy2(os.path.join(source, 'poster.png'), demo)
+                log(f'{tag}: copied into lhtml-site/src/_demo/', stream)
+            if not test:
+                continue
+            log(f'{tag}: browser test', stream)
             ok = run([python, os.path.join(ROOT, 'tests', 'test_demo.py'), web, os.path.join(source, 'demo.json'),
                       '--poster', os.path.join(source, 'poster.png')], stream)
             log(f'{tag}: ' + ('passed' if ok else 'TEST FAILED (see the log)'), stream)

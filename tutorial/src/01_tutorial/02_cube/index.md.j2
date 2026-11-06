@@ -86,7 +86,8 @@ bridge, copied by the build; its code and that of the two C++ files of the bridg
 
 The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
 ([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
-`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`. In the slide, `(.live)` and `(.still)` give a
+class to the frame and to the image: the frame is shown on screen, the image in a PDF (see `talk.css`).
 
 ```
 lhtml-site/
@@ -117,14 +118,16 @@ emcmake cmake -S . -B build_web
 cmake --build build_web
 ```
 
-`build_web/` then holds `index.html`, `project.js` and `project.wasm`: the same files as `web/`. Show the slide
-through a web server, from the root of the repository:
+`build_web/` then holds `index.html`, `project.js` and `project.wasm`, and the build copies them into `web/` and
+`lhtml-site/src/_demo/`: the slides show the new version of the program (to keep `web/` as it is, add
+`-DSLIDE_DEMO_PUBLISH=OFF` to the first command). Show the slide through a web server, from the root of the
+repository (or of the unzipped folder):
 
 ```
-python3 -m http.server
+python3 -m http.server 8080
 ```
 
-and open `http://localhost:8000/examples/a1-opengl-cube/slides.html`. After a click in the cube, the right
+and open `http://localhost:8080/examples/a1-opengl-cube/slides.html`. After a click in the cube, the right
 arrow still goes to the next slide.
 
 **Next:** [2. Uniforms driven live](../03_panel/index.html): the same cube, changed while it runs.

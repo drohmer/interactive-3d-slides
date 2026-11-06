@@ -15,15 +15,16 @@ The ImGui window of the template changes the same variables (`?gui=1`).
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_waving-surface/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/c3/index.html?controls=ampl,k,speed,damping,wireframe,play&compact=1&panel=bl
+demo::../_demo/index.html?controls=ampl,k,speed,damping,wireframe,play&compact=1&panel=bl
 ```
 
-Buttons in the slide, under the demo:
+Buttons in the slide, under the demo (`slide-controls.js` is loaded by `slides.html`, and by the
+`configure.yaml` of `lhtml-site/`):
 
 ```html
-<script src="../../_demo/slide-controls.js"></script>
-
 <button data-demo-set="shape=ripple">Ripple</button>
 <button data-demo-set="shape=waves">Waves</button>
 <button data-demo-set="drop">Drop</button>
@@ -73,8 +74,11 @@ The browser test of the example caught it (the image did not change when the wir
 ## Build
 
 ```sh
+# from the root of the repository (or of the unzipped folder), the Emscripten SDK active
 source <emsdk>/emsdk_env.sh
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py c3-cgp-waving-surface
+git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
+CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c3-cgp-waving-surface
 ```
 
-[web/](web/) holds a built copy. Serve the folder with a web server, not as a file.
+The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
+Serve the folder with a web server (`python3 -m http.server`), not as a file.

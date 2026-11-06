@@ -11,8 +11,10 @@ parameters the program declares: there is no HTML to write.
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_uniforms/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/a2/index.html?twist=0.8&controls=twist,hue,speed,light,reset
+demo::../_demo/index.html?twist=0.8&controls=twist,hue,speed,light,reset
 ```
 
 | Setting | Values | Default |

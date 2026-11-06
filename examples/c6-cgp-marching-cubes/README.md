@@ -16,8 +16,10 @@ The code comes from the CGP example of
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_marching-cubes/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/c6/index.html?gui_scale=1.4
+demo::../_demo/index.html?gui_scale=1.4
 ```
 
 | Setting | Values | Default |
@@ -68,8 +70,11 @@ The ImGui window shows the new values at the next frame: it reads the variables 
 ## Build
 
 ```sh
+# from the root of the repository (or of the unzipped folder), the Emscripten SDK active
 source <emsdk>/emsdk_env.sh
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py c6-cgp-marching-cubes
+git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
+CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c6-cgp-marching-cubes
 ```
 
-[web/](web/) holds a built copy. Serve the folder with a web server, not as a file.
+The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
+Serve the folder with a web server (`python3 -m http.server`), not as a file.

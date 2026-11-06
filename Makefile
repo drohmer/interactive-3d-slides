@@ -14,6 +14,7 @@ build/test_slide_bridge: bridge/slide_bridge.cpp bridge/slide_bridge.hpp tests/t
 clean:
 	rm -rf build
 
-# Web build, browser test and poster of each example (the Emscripten SDK active)
+# Web build, browser test and poster of each example (the Emscripten SDK active, and
+# CGP_DIR=<a clone of https://github.com/drohmer/cgp-2027> for the CGP examples)
 examples:
 	python3 scripts/build_examples.py

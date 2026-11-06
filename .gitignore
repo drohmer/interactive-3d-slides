@@ -7,8 +7,4 @@ __pycache__/
 tutorial/.site/
 tutorial/.site-fr/
 tutorial/.work/
-.structure/
-.verification/
-.layout/
 tutorial/src/_code/
-tutorial/.old/

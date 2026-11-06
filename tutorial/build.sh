@@ -52,27 +52,32 @@ for deck in ../examples/*/lhtml-site; do
 done
 
 echo "==> example talks"
+TALK_DEMOS="a1 a2 c3 c6 c7"                        # the demos used by the two talks
 mkdir -p .work .site/decks
-cp -R decks/lhtml-site .work/lhtml-site
-mkdir -p .work/lhtml-site/src/_demo
-cp -R .site/demos/. .work/lhtml-site/src/_demo/
+cp -R decks/lhtml-site .work/talk-lhtml-site
+mkdir -p .work/talk-lhtml-site/src/_demo
+for d in $TALK_DEMOS; do cp -R ".site/demos/$d" .work/talk-lhtml-site/src/_demo/; done
+cp .site/demos/slide-controls.js .work/talk-lhtml-site/src/_demo/
 if "$LHTML_SITE" doctor 2>/dev/null | grep -q '^PDF export.*: ready'; then
-    "$LHTML_SITE" -i .work/lhtml-site/configure.yaml
+    "$LHTML_SITE" -i .work/talk-lhtml-site/configure.yaml
 else
     echo "warning: no PDF export (lhtml-site doctor): the lhtml-site talk has no slides.pdf" >&2
-    "$LHTML_SITE" -i .work/lhtml-site/configure.yaml --target html
+    "$LHTML_SITE" -i .work/talk-lhtml-site/configure.yaml --target html
 fi
-cp -R .work/lhtml-site/.site .site/decks/lhtml-site
+cp -R .work/talk-lhtml-site/.site .site/decks/lhtml-site
 cp -R decks/reveal.js .site/decks/reveal.js
-cp -R .site/demos .site/decks/reveal.js/demos      # the talk is self-contained: its models next to it
+mkdir -p .site/decks/reveal.js/demos                # the talk is self-contained: its models next to it
+for d in $TALK_DEMOS; do cp -R ".site/demos/$d" .site/decks/reveal.js/demos/; done
+cp .site/demos/slide-controls.js .site/decks/reveal.js/demos/
 
 echo "==> the two talks to download (.site/code/talk-*.zip)"
 rm -f .site/code/talk-reveal.js.zip .site/code/talk-lhtml-site.zip
-# reveal.js: the talk as it is shown, index.html and demos/
-(cd .site/decks && zip -qr ../code/talk-reveal.js.zip reveal.js -x '*.DS_Store')
+# reveal.js: the talk as it is shown (README.md, index.html, demos/), in a folder talk-reveal/
+rm -rf .work/talk-reveal && cp -R .site/decks/reveal.js .work/talk-reveal
+(cd .work && zip -qr ../.site/code/talk-reveal.js.zip talk-reveal -x '*.DS_Store')
 # lhtml-site: the sources of the talk, with the demos in src/_demo/ (build it with lhtml-site)
-(cd .work && zip -qr ../.site/code/talk-lhtml-site.zip lhtml-site -x 'lhtml-site/.site/*' 'lhtml-site/.structure/*' \
-    'lhtml-site/.verification/*' 'lhtml-site/.layout/*' '*.DS_Store')
+(cd .work && zip -qr ../.site/code/talk-lhtml-site.zip talk-lhtml-site -x 'talk-lhtml-site/.site/*' \
+    'talk-lhtml-site/.structure/*' 'talk-lhtml-site/.verification/*' 'talk-lhtml-site/.layout/*' '*.DS_Store')
 ls -l .site/code/talk-*.zip | awk '{print "    " $5 " bytes  " $9}'
 
 echo "==> done: .site/"

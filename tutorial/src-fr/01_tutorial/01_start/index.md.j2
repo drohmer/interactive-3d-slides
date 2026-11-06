@@ -26,6 +26,9 @@ Les slides du tutoriel sont faites avec [reveal.js](https://revealjs.com/) (chaq
 `slides.html`), et les mêmes démos sont dans un exposé fait avec [lhtml-site](https://scholartools.fr/lhtml/fr/).
 Les deux sont en HTML, où le cadre est natif.
 
+Le petit morceau de code qui relie le programme et la slide (deux fichiers C++ qui lisent les réglages dans le
+programme, et la page `slide-frame.html`) est appelé le *pont* dans ce tutoriel.
+
 ## Ce qu'il vous faut
 
 - **Un compilateur C++ et CMake**, et GLFW pour la version bureau des exemples
@@ -40,11 +43,15 @@ Les deux sont en HTML, où le cadre est natif.
   source ./emsdk_env.sh        # in each new terminal, before building for the web
   ```
 
-  (voir [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
+  (voir [Download and install](https://emscripten.org/docs/getting_started/downloads.html)). Emscripten fournit
+  alors `emcmake`, qui lance la commande `cmake` habituelle de façon à compiler pour le web.
 - **Python 3**, pour un serveur web local : un navigateur refuse de charger `project.wasm` depuis une page
   ouverte comme fichier.
+- **lhtml-site**, seulement pour les slides faites avec lhtml-site : `pipx install lhtml-site`
+  (voir [lhtml-site](https://scholartools.fr/lhtml/fr/)).
 - Pour les exemples 3 à 6 : la bibliothèque [CGP](https://github.com/drohmer/cgp-2027), une bibliothèque C++
-  faite pour enseigner l'informatique graphique. Les deux premiers exemples n'ont besoin que de GLFW.
+  faite pour enseigner l'informatique graphique, nécessaire seulement pour les recompiler
+  (`git clone https://github.com/drohmer/cgp-2027.git`). Les deux premiers exemples n'ont besoin que de GLFW.
 
 ## Récupérer le code
 
@@ -52,14 +59,15 @@ Chaque page d'exemple a un zip de l'exemple et de ce dont il a besoin. Ou prenez
 [interactive-3d-slides.zip](../../../code/interactive-3d-slides.zip) (le pont, les six exemples avec leurs
 compilations web, les tests). Chaque fichier peut aussi s'ouvrir seul : [tous les fichiers](../../02_more/01_files/index.html).
 
-Les compilations web sont dans les zips (`examples/<exemple>/web/`) : vous pouvez montrer une démo avant de
-compiler quoi que ce soit. Depuis la racine du dossier décompressé :
+Chaque zip se décompresse dans un dossier de son nom, avec en haut un `README.md` qui donne les étapes. Les
+compilations web sont dans les zips (`examples/<exemple>/web/`) : vous pouvez montrer une démo avant de
+compiler quoi que ce soit. Dans le dossier décompressé :
 
 ```
-python3 -m http.server
+python3 -m http.server 8080
 ```
 
-puis ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+puis ouvrez `http://localhost:8080/examples/a1-opengl-cube/slides.html`.
 
 ## Dans reveal.js ou dans lhtml-site
 
@@ -73,11 +81,12 @@ ensuite :
 </section>
 ```
 
-**lhtml-site :** la macro `demo::` écrit le cadre et le dimensionne selon la mise en page de la slide :
+**lhtml-site :** la macro `demo::` écrit le cadre et le dimensionne selon la mise en page de la slide (la
+compilation web de la démo est dans le dossier `src/_demo/` de la présentation) :
 
 ```
 media::
-demo::../_demo/cube/index.html?speed=0.2
+demo::../_demo/index.html?speed=0.2
 ::
 ```
 

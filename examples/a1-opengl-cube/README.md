@@ -10,8 +10,10 @@ but GLFW. The slide sets it through the address of the iframe; there is no contr
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_rotating-cube/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/a1/index.html?speed=0.2&tilt=25
+demo::../_demo/index.html?speed=0.2&tilt=25
 ```
 
 | Setting | Values | Default |
@@ -50,5 +52,6 @@ cmake -S . -B build && cmake --build build && ./build/project --speed 0.3
 emcmake cmake -S . -B build_web && cmake --build build_web
 ```
 
-The web build gives `index.html`, `project.js` and `project.wasm`; [web/](web/) holds a built copy.
-Serve the folder with a web server (`python3 -m http.server`), not as a file.
+The web build gives `index.html`, `project.js` and `project.wasm` in `build_web/`, and copies them into
+[web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version (to keep `web/` as it is:
+`-DSLIDE_DEMO_PUBLISH=OFF`). Serve the folder with a web server (`python3 -m http.server`), not as a file.

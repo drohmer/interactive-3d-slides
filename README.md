@@ -17,9 +17,10 @@ This repository holds the tutorial and its code:
 | [bridge/](bridge/) | The bridge between a program and a slide: `slide_bridge.hpp/.cpp`, `slide-frame.html`, `slide-controls.js` |
 | [examples/](examples/) | Six example programs, from a cube in raw OpenGL 3.3 to marching cubes with ImGui, with their web builds, posters and tests |
 | [tests/](tests/), [scripts/](scripts/) | The tests of the bridge and of the examples, and the build of the examples |
+| [ops/](ops/) | The configuration of the web server of the tutorial (nginx) |
 
-> Status: work in progress, not published yet. The bridge is tested on a real talk; the six examples and
-> the two example talks pass their browser tests.
+The *bridge* is the small piece of code that connects a program to a slide: the settings given in the address
+of the frame, the controls of the panel, the buttons written in the slide, and the keyboard kept by the slides.
 
 The rest of this README is the reference of the bridge; the tutorial explains how to use it.
 
@@ -100,10 +101,10 @@ Copy it next to `project.js`, `project.wasm` and `project.data` as `index.html`,
 | `&panel=tl`, `tr`, `bl` or `br` | corner of the panel (default `tr`) |
 | `&build=name` | loads `name/project.js`: several builds in one folder |
 
-In a slide of lhtml-site:
+In a slide of lhtml-site, with the web build of the demo in `src/_demo/` (as in `examples/<id>/lhtml-site/`):
 
 ```
-demo::../../_demo/index.html?model=spot&freq=2&controls=freq,model&compact=1
+demo::../_demo/index.html?model=spot&freq=2&controls=freq,model&compact=1
 ```
 
 ### Driving the demo from the slide
@@ -151,19 +152,21 @@ runs the unit tests of the C++ bridge (with the address and undefined-behavior s
 
 ```sh
 source <emsdk>/emsdk_env.sh
-make examples
+git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
+CGP_DIR=../cgp-2027 make examples
 ```
 
 builds each example for the web (`--native`: also for the desktop, and runs it), copies the build into
-`examples/<id>/web/`, tests it in headless Chromium
+`examples/<id>/web/` and `examples/<id>/lhtml-site/src/_demo/`, tests it in headless Chromium
 and captures `examples/<id>/poster.png` (the image for the PDF). The checks of an example are listed in its
 `demo.json` (see [tests/test_demo.py](tests/test_demo.py)); every example is also checked for a canvas that
 is drawn and fills the frame, the arrow keys reaching the slide, and no JavaScript error. Playwright comes
-from the Python of lhtml-site, or from `LHTML_PYTHON`. Log: `build/build_examples.log`.
+from the Python that runs the script, or from `LHTML_PYTHON`; without it, the test and the poster are skipped
+(`--no-test` skips them too). Log: `build/build_examples.log`.
 
 The CGP examples hold only the files that differ from the template project of CGP: the script stages them
-over a copy of that project (`CGP_DIR`, the folder of the CGP project with its `CMakeLists.txt`, `cgp/`,
-`src/`, `shaders/`), adds the bridge, and builds with the `CMakeLists.txt` of CGP.
+over a copy of that project (`CGP_DIR`, a clone of [cgp-2027](https://github.com/drohmer/cgp-2027), with its
+`CMakeLists.txt`, `cgp/`, `src/`, `shaders/`), adds the bridge, and builds with the `CMakeLists.txt` of CGP.
 
 The bridge was checked end to end on the demo of the talk *Dynamic Skinning* (JFIG 2026) ported onto it:
 settings from the address, generated panel, sliders and buttons, `postMessage` from the parent page, a refused

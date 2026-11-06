@@ -15,8 +15,10 @@ template project of CGP (`CGP_DIR`), adds the two files of the bridge to `src/`,
 
 ## In a slide
 
+In reveal.js: [slides.html](slides.html), a frame on `web/index.html`. In lhtml-site: [lhtml-site/](lhtml-site/), the slide `src/01_cgp-template/index.html.j2`, with the demo in `src/_demo/`:
+
 ```
-demo::../../_demo/c1/index.html
+demo::../_demo/index.html
 ```
 
 ## What the page adds to a CGP build
@@ -34,8 +36,11 @@ To set the demo from the address of the slide, or to drive it live, see [C3](../
 ## Build
 
 ```sh
+# from the root of the repository (or of the unzipped folder), the Emscripten SDK active
 source <emsdk>/emsdk_env.sh
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py c1-cgp-template
+git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
+CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c1-cgp-template
 ```
 
-[web/](web/) holds a built copy. Serve the folder with a web server, not as a file.
+The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
+Serve the folder with a web server (`python3 -m http.server`), not as a file.

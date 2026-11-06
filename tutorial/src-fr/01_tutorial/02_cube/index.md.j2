@@ -87,7 +87,8 @@ copiée par la compilation ; son code et celui des deux fichiers C++ du pont son
 
 La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
 le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`.
+`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
+classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
 
 ```
 lhtml-site/
@@ -118,14 +119,16 @@ emcmake cmake -S . -B build_web
 cmake --build build_web
 ```
 
-`build_web/` contient alors `index.html`, `project.js` et `project.wasm` : les mêmes fichiers que `web/`.
-Montrez la slide à travers un serveur web, depuis la racine du dépôt :
+`build_web/` contient alors `index.html`, `project.js` et `project.wasm`, et la compilation les copie dans
+`web/` et `lhtml-site/src/_demo/` : les slides montrent la nouvelle version du programme (pour garder `web/`
+tel quel, ajoutez `-DSLIDE_DEMO_PUBLISH=OFF` à la première commande). Montrez la slide à travers un serveur
+web, depuis la racine du dépôt (ou du dossier décompressé) :
 
 ```
-python3 -m http.server
+python3 -m http.server 8080
 ```
 
-et ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`. Après un clic dans le cube, la flèche
+et ouvrez `http://localhost:8080/examples/a1-opengl-cube/slides.html`. Après un clic dans le cube, la flèche
 droite passe toujours à la slide suivante.
 
 **Ensuite :** [2. Uniforms pilotés en direct](../03_panel/index.html) : le même cube, changé pendant qu'il tourne.
