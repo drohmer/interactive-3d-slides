@@ -11,17 +11,21 @@ This first example is a minimal program: a cube that rotates by itself, written 
 (about 200 lines). The slide sets its speed and its tilt through the address of the frame, and there is no
 control on screen. The same source file is compiled for the desktop and for the web.
 
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge, the CMake module and glad.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> basic</span><span><strong>Interface:</strong> none; settings in the address</span></div>
+</div>
+
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Rotating cube, raw OpenGL compiled to WebAssembly"></iframe>
 <div class="live-note">Live: the web build of this example, set by <code>?speed=0.2&amp;tilt=25</code>.</div>
 </div>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide of this example (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
-</div>
-
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>, the example and what it needs (the bridge, the CMake module, glad)</span><span><strong>Graphics:</strong> basic</span><span><strong>Interface:</strong> none; settings in the address</span></div>
 
 ## The files
 
@@ -30,6 +34,7 @@ examples/a1-opengl-cube/
   main.cpp           the program
   CMakeLists.txt     its build, desktop and web
   slides.html        the slide that shows it (reveal.js)
+  lhtml-site/        the same slide, made with lhtml-site
   web/               the web build: index.html (slide-frame.html), project.js, project.wasm
 examples/cmake/raw_opengl_demo.cmake    the build of the raw OpenGL examples
 examples/third_party/glad/              the OpenGL loader, for the desktop
@@ -77,6 +82,24 @@ The page of the demo, `web/index.html`, is [slide-frame.html](../../code/bridge/
 bridge, copied by the build; its code and that of the two C++ files of the bridge are in the
 [reference](../../02_more/02_reference/index.html#the-code-of-the-bridge).
 
+### lhtml-site/
+
+The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
+([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_rotating-cube/index.html.j2   the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/a1-opengl-cube/lhtml-site/src/01_rotating-cube/index.html.j2.md" %}
+
+{% include "_code/examples/a1-opengl-cube/lhtml-site/configure.yaml.md" %}
+
 ## Build and run
 
 On the desktop, from `examples/a1-opengl-cube/`:
@@ -103,20 +126,5 @@ python3 -m http.server
 
 and open `http://localhost:8000/examples/a1-opengl-cube/slides.html`. After a click in the cube, the right
 arrow still goes to the next slide.
-
-## In lhtml-site
-
-The same frame, written by `demo::` in a slide whose layout puts the text on the left and the demo on the
-right ([the slide in the example talk](../../decks/lhtml-site/html/04_program/index.html)):
-
-```
-{% raw %}{% set layout = 'side' %}
-
-= Rotating cube
-
-media::
-demo::../_demo/a1/index.html?speed=0.2&tilt=25
-::{% endraw %}
-```
 
 **Next:** [2. Uniforms driven live](../03_panel/index.html): the same cube, changed while it runs.

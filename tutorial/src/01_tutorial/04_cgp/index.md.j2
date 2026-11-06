@@ -12,17 +12,21 @@ template project of [CGP](https://github.com/drohmer/cgp-2027), a C++ library ma
 graphics, compiled for the web without changing a line. The mouse turns the camera, its ImGui window stays
 on screen, and the arrow keys still go to the slides.
 
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c1-cgp-template.zip">c1-cgp-template.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
+</div>
+<div class="needs"><span><strong>Needs:</strong> the CGP project, for the build</span><span><strong>Interface:</strong> the mouse, the ImGui window</span></div>
+</div>
+
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html" title="The scene of the CGP template"></iframe>
 <div class="live-note">Live: drag to turn the camera.</div>
 </div>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide of this example (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
-</div>
-
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/c1-cgp-template.zip">c1-cgp-template.zip</a> (the build script, the bridge, the slide, the web build)</span><span><strong>Needs:</strong> the CGP project, for the build</span><span><strong>Interface:</strong> the mouse, the ImGui window</span></div>
 
 ## How the CGP examples are built
 
@@ -60,6 +64,24 @@ bridge to the web build of the `CMakeLists.txt`, and use `slide-frame.html` as t
 [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c1-cgp-template/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
+([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_cgp-template/index.html.j2    the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/c1-cgp-template/lhtml-site/src/01_cgp-template/index.html.j2.md" %}
+
+{% include "_code/examples/c1-cgp-template/lhtml-site/configure.yaml.md" %}
 
 ## What the page of the demo adds
 

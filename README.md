@@ -7,7 +7,7 @@ How to put interactive 3D models, typically made with OpenGL, in your presentati
 (raw OpenGL 3.3, or a library such as CGP) compiled to WebAssembly with [Emscripten](https://emscripten.org/),
 shown in a slide as an iframe, and driven from the slide while you speak, in reveal.js or lhtml-site. The tutorial
 goes through complete examples, from a turning cube in raw OpenGL to marching cubes with ImGui: each one with
-all its code, to download, a slide (`slides.html`) and a live demo.
+all its code, to download, a slide in reveal.js (`slides.html`) and in lhtml-site (`lhtml-site/`), and a live demo.
 
 This repository holds the tutorial and its code:
 

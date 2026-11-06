@@ -92,3 +92,10 @@ article.doc tbody tr:nth-child(even) td { background: var(--bg-soft); }
 /* a whole presentation, live in the page (16:9) */
 .live.talk iframe { aspect-ratio: 16 / 9; }
 .talk-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0.8em 0 1.2em; }
+
+/* the block at the top of an example page: download, open the slide in each tool */
+.get { border: 1px solid var(--border, #e5e7eb); border-left: 4px solid var(--accent, #2563eb); border-radius: 8px; padding: 12px 18px 6px; margin: 1em 0 1.4em; }
+.get-title { font-weight: 700; font-size: 1.05em; margin-bottom: 4px; }
+.get p { margin: 0.3em 0 0.6em; }
+.get-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 0.4em 0 0.8em; }
+.get .needs { border: 0; padding: 0; margin: 0 0 6px; background: none; }

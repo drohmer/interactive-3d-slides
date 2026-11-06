@@ -12,17 +12,21 @@ Ses paramètres sont modifiés pendant qu'il tourne : la torsion, la teinte, la 
 de remise à zéro. Le panneau est construit par la page à partir des paramètres déclarés par le programme, il
 n'y a donc pas de HTML à écrire.
 
+<div class="get">
+<div class="get-title">Récupérer cet exemple</div>
+<p><strong>Télécharger :</strong> <a href="../../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont, le module CMake et glad.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">Le voir dans une présentation complète</a>
+</div>
+<div class="needs"><span><strong>Rendu :</strong> simple, une déformation dans le vertex shader</span><span><strong>Interface :</strong> un panneau construit à partir du C++</span></div>
+</div>
+
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?twist=0.8&controls=twist,hue,speed,light,reset" title="Une boîte tordue, pilotée par un panneau"></iframe>
 <div class="live-note">En direct : déplacez les curseurs du panneau.</div>
 </div>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide de cet exemple (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">Le voir dans une présentation complète</a>
-</div>
-
-<div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a></span><span><strong>Rendu :</strong> simple, une déformation dans le vertex shader</span><span><strong>Interface :</strong> un panneau construit à partir du C++</span></div>
 
 ## Ce qui est nouveau
 
@@ -58,6 +62,24 @@ Les mêmes que dans l'[exemple 1](../02_cube/index.html#les-fichiers) : la compi
 [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
+
+### lhtml-site/
+
+La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
+le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
+`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_uniforms/index.html.j2        the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/a2-opengl-uniforms/lhtml-site/src/01_uniforms/index.html.j2.md" %}
+
+{% include "_code/examples/a2-opengl-uniforms/lhtml-site/configure.yaml.md" %}
 
 ## Compiler et lancer
 

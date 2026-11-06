@@ -1,0 +1,18 @@
+{% set layout = 'side' %}
+
+= Drag the points
+
+Drag a blue point: the program computes the length of the curve, and the slide shows it.
+
+<div class="controls">
+<p>
+<button data-demo-set="curve=bezier">B&eacute;zier</button>
+<button data-demo-set="curve=spline">Spline</button>
+</p>
+<p>Length of the curve: <span class="value" data-demo-value="length" data-digits="2"></span></p>
+</div>
+
+media::
+demo::../_demo/index.html?controls=points,polygon,reset&panel=br(.live)
+img::../_demo/poster.png(.still)
+::

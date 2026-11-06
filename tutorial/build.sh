@@ -37,6 +37,20 @@ for web in ../examples/*/web; do
 done
 cp ../bridge/slide-controls.js .site/demos/
 
+echo "==> the lhtml-site slide of each example, live (.site/code/examples/<id>/lhtml-site/html/)"
+for deck in ../examples/*/lhtml-site; do
+    example=$(dirname "$deck")
+    id=$(basename "$example")
+    rm -rf ".work/$id"; mkdir -p ".work/$id"
+    cp -R "$deck" ".work/$id/lhtml-site"
+    mkdir -p ".work/$id/lhtml-site/src/_demo"
+    cp -R "$example/web/." "$example/poster.png" ../bridge/slide-controls.js ".work/$id/lhtml-site/src/_demo/"
+    "$LHTML_SITE" -i ".work/$id/lhtml-site/configure.yaml" --target html >/dev/null
+    rm -rf ".site/code/examples/$id/lhtml-site/html"
+    cp -R ".work/$id/lhtml-site/.site/html" ".site/code/examples/$id/lhtml-site/html"
+    echo "    $id"
+done
+
 echo "==> example talks"
 mkdir -p .work .site/decks
 cp -R decks/lhtml-site .work/lhtml-site

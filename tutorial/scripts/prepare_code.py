@@ -80,6 +80,18 @@ def expand(paths, files):
     return result
 
 
+def lhtml_demo(example, files):
+    """The demo of the lhtml-site slide of an example (examples/<id>/lhtml-site/src/_demo/, not in the repository):
+    its web build, its poster and slide-controls.js, so that the slide builds as it is from the zip."""
+    if not os.path.isdir(os.path.join(REPO, 'examples', example, 'lhtml-site')):
+        return []
+    demo = 'examples/' + example + '/lhtml-site/src/_demo/'
+    web = 'examples/' + example + '/web/'
+    pairs = [(f, demo + f[len(web):]) for f in files if f.startswith(web)]
+    pairs += [('examples/' + example + '/poster.png', demo + 'poster.png'), ('bridge/slide-controls.js', demo + 'slide-controls.js')]
+    return pairs
+
+
 def publish(site):
     files = tracked()
     code = os.path.join(site, 'code')
@@ -88,14 +100,17 @@ def publish(site):
         os.makedirs(os.path.dirname(os.path.join(code, path)), exist_ok=True)
         shutil.copy2(os.path.join(REPO, path), os.path.join(code, path))
 
-    def write_zip(name, paths):
+    def write_zip(name, paths, extra=()):
         with zipfile.ZipFile(os.path.join(code, name), 'w', zipfile.ZIP_DEFLATED) as z:
             for path in sorted(set(paths)):
                 z.write(os.path.join(REPO, path), os.path.join('interactive-3d-slides', path))
+            for source, path in extra:
+                z.write(os.path.join(REPO, source), os.path.join('interactive-3d-slides', path))
         return os.path.getsize(os.path.join(code, name)) / 1e6
 
     for example, needs in EXAMPLES.items():
-        size = write_zip(example + '.zip', expand(['examples/' + example] + needs + ['README.md', 'LICENSE', 'Makefile'], files))
+        size = write_zip(example + '.zip', expand(['examples/' + example] + needs + ['README.md', 'LICENSE', 'Makefile'], files),
+                         lhtml_demo(example, files))
         print(f'zip: code/{example}.zip ({size:.1f} MB)')
     size = write_zip('interactive-3d-slides.zip', files)
     print(f'zip: code/interactive-3d-slides.zip ({size:.1f} MB), {len(files)} files in code/')

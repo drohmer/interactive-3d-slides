@@ -12,6 +12,17 @@ curve, which approaches its points, or a Catmull-Rom spline, which goes through 
 length of the curve, and the slide displays it while the points are moved: the value goes from the demo to the
 slide.
 
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> curves of any degree, picking in 3D</span><span><strong>Interface:</strong> direct manipulation; a value sent to the slide</span></div>
+</div>
+
 <div class="live">
 <iframe id="curve" class="demo" src="{{ code }}web/index.html?controls=points,polygon,reset&compact=1&panel=br" title="A curve whose control points are dragged with the mouse"></iframe>
 <div class="live-controls">
@@ -22,13 +33,6 @@ slide.
 <div class="live-note">Live: drag a blue point, and watch the length.</div>
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide of this example (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
-</div>
-
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a></span><span><strong>Graphics:</strong> curves of any degree, picking in 3D</span><span><strong>Interface:</strong> direct manipulation; a value sent to the slide</span></div>
 
 ## What is new
 
@@ -70,6 +74,24 @@ Most browsers draw WebGL lines one pixel wide, whatever `glLineWidth` asks: the 
 [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c7-cgp-drag-points/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
+([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_drag-points/index.html.j2     the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/c7-cgp-drag-points/lhtml-site/src/01_drag-points/index.html.j2.md" %}
+
+{% include "_code/examples/c7-cgp-drag-points/lhtml-site/configure.yaml.md" %}
 
 ## Build and run
 

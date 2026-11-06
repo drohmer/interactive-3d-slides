@@ -12,6 +12,17 @@ each change of its parameters. The interface is the ImGui window of the program,
 in a single window and there is no HTML to write. In a slide, this window has to be readable on the projector,
 and to stay consistent with the buttons of the slide.
 
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> a scalar field, marching cubes, recomputed live</span><span><strong>Interface:</strong> ImGui, and buttons in the slide</span></div>
+</div>
+
 <div class="live">
 <iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Marching cubes with the ImGui window"></iframe>
 <div class="live-controls">
@@ -22,13 +33,6 @@ and to stay consistent with the buttons of the slide.
 <div class="live-note">Live: the buttons change the same variables as the ImGui window, which shows the new values.</div>
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide of this example (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
-</div>
-
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a></span><span><strong>Graphics:</strong> a scalar field, marching cubes, recomputed live</span><span><strong>Interface:</strong> ImGui, and buttons in the slide</span></div>
 
 The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
 (`examples/02_marching_cubes/02_marching_cube_dynamic`).
@@ -88,6 +92,24 @@ The ImGui window; the two controls hidden on the web are marked `slide-demos`. [
 [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c6-cgp-marching-cubes/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
+([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_marching-cubes/index.html.j2  the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/src/01_marching-cubes/index.html.j2.md" %}
+
+{% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/configure.yaml.md" %}
 
 ## Build and run
 

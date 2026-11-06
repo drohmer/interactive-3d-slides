@@ -12,17 +12,21 @@ exemple est le projet modèle de [CGP](https://github.com/drohmer/cgp-2027), une
 enseigner l'informatique graphique, compilé pour le web sans changer une ligne. La souris tourne la caméra, sa
 fenêtre ImGui reste à l'écran, et les flèches passent toujours aux slides.
 
+<div class="get">
+<div class="get-title">Récupérer cet exemple</div>
+<p><strong>Télécharger :</strong> <a href="../../../code/c1-cgp-template.zip">c1-cgp-template.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le projet CGP n'est nécessaire que pour recompiler.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">Le voir dans une présentation complète</a>
+</div>
+<div class="needs"><span><strong>Il faut :</strong> le projet CGP, pour compiler</span><span><strong>Interface :</strong> la souris, la fenêtre ImGui</span></div>
+</div>
+
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html" title="La scène du modèle CGP"></iframe>
 <div class="live-note">En direct : faites glisser la souris pour tourner la caméra.</div>
 </div>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide de cet exemple (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">Le voir dans une présentation complète</a>
-</div>
-
-<div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c1-cgp-template.zip">c1-cgp-template.zip</a> (le script de compilation, le pont, la slide, la compilation web)</span><span><strong>Il faut :</strong> le projet CGP, pour compiler</span><span><strong>Interface :</strong> la souris, la fenêtre ImGui</span></div>
 
 ## Comment sont compilés les exemples CGP
 
@@ -62,6 +66,24 @@ la démo.
 [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c1-cgp-template/slides.html.md" %}
+
+### lhtml-site/
+
+La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
+le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
+`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_cgp-template/index.html.j2    the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/c1-cgp-template/lhtml-site/src/01_cgp-template/index.html.j2.md" %}
+
+{% include "_code/examples/c1-cgp-template/lhtml-site/configure.yaml.md" %}
 
 ## Ce qu'ajoute la page de la démo
 

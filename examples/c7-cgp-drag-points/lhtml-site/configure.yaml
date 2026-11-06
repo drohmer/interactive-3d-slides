@@ -1,0 +1,17 @@
+# The slide of the example c7-cgp-drag-points, made with lhtml-site (the same as ../slides.html, made with reveal.js).
+#
+# The demo goes in src/_demo/: the web build of the example, its poster, and slide-controls.js. The zip of
+# the example on the site of the tutorial already holds it. From a clone of the repository, in this folder:
+#   mkdir -p src/_demo && cp -R ../web/. ../poster.png ../../../bridge/slide-controls.js src/_demo/
+#
+#   lhtml-site                   build into .site/: html/ in the browser
+#   lhtml-site --serve --watch   preview on http://127.0.0.1:8000/
+#
+# A folder whose name starts with an underscore is not a slide: it is copied as it is.
+source_directory: 'src/'
+site_directory: '.site/'
+targets:
+  html: {theme: slides}
+keywords:
+  cssAbs: [_style/talk.css]              # the buttons of the slide, and the image of the demo in a PDF
+  jsAbs: [_demo/slide-controls.js]       # the buttons of the slide drive the demo

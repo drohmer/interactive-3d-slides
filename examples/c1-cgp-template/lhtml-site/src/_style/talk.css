@@ -1,0 +1,9 @@
+/* The buttons written in the slides (data-demo-set), and the current state of the demo (class on) */
+.controls button { font: inherit; font-size: 80%; padding: 4px 16px; margin: 0 8px 8px 0; cursor: pointer;
+                   border: 2px solid #999; border-radius: 8px; background: white; }
+.controls button.on { background: #333; color: white; border-color: #333; }
+.value { font-weight: bold; color: #c0392b; }
+
+/* On screen the demo, in the PDF its image (the PDF is printed by the browser) */
+@media screen { .still { display: none; } }
+@media print { .live, .controls { display: none; } }

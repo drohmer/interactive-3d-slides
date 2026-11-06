@@ -12,6 +12,17 @@ the center, or parallel waves. The surface is driven by buttons written in the t
 frame of the demo. The current state is therefore visible in the slide, and the slide can also display a value
 of the program.
 
+<div class="get">
+<div class="get-title">Get this example</div>
+<p><strong>Download:</strong> <a href="../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<div class="get-actions">
+<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
+<a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
+<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
+</div>
+<div class="needs"><span><strong>Graphics:</strong> a mesh updated at each frame</span><span><strong>Interface:</strong> buttons in the slide, a panel, ImGui</span></div>
+</div>
+
 <div class="live">
 <iframe id="surface" class="demo" src="{{ code }}web/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="A waving surface, driven by buttons outside its frame"></iframe>
 <div class="live-controls">
@@ -24,13 +35,6 @@ of the program.
 <div class="live-note">Live: these buttons are outside the frame, as in a slide.</div>
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
-
-<div class="talk-actions">
-<a class="btn btn-primary" href="{{ code }}slides.html">Open the slide of this example (reveal.js) →</a>
-<a class="btn" href="../08_presentations/index.html">See it in a complete presentation</a>
-</div>
-
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a></span><span><strong>Graphics:</strong> a mesh updated at each frame</span><span><strong>Interface:</strong> buttons in the slide, a panel, ImGui</span></div>
 
 ## What is new
 
@@ -57,7 +61,8 @@ examples/c3-cgp-waving-surface/
   src/main.cpp       the main() of the template, plus slide::parse
   src/scene.hpp      the parameters of the wave
   src/scene.cpp      the scene: the grid, the wave, the wireframe, the declared parameters
-  slides.html        the slide, with its buttons
+  slides.html        the slide, with its buttons (reveal.js)
+  lhtml-site/        the same slide, made with lhtml-site
   demo.json          the browser test of the example
 ```
 
@@ -87,6 +92,24 @@ The buttons below the frame, and `slide-controls.js`. [slides.html]({{ code }}sl
 
 In reveal.js all the slides are in one page: with several demos, give each frame an `id` and name it on its
 buttons, `data-demo="#surface"`.
+
+### lhtml-site/
+
+The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
+([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
+`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`.
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_waving-surface/index.html.j2  the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/c3-cgp-waving-surface/lhtml-site/src/01_waving-surface/index.html.j2.md" %}
+
+{% include "_code/examples/c3-cgp-waving-surface/lhtml-site/configure.yaml.md" %}
 
 ## Build and run
 
