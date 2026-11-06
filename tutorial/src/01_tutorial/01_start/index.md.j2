@@ -50,6 +50,24 @@ program, and the page `slide-frame.html`) is called the *bridge* in this tutoria
   teaching computer graphics, needed only to recompile them (`git clone https://github.com/drohmer/cgp-2027.git`).
   The two first examples need no library but GLFW.
 
+<div class="callout" id="on-windows"><div class="callout-title">On Windows</div>
+
+The commands of the tutorial are written for macOS and Linux. In PowerShell on Windows:
+
+- `python` (or `py`) instead of `python3`: `python -m http.server 8080`.
+- The Emscripten SDK: `.\emsdk install latest` and `.\emsdk activate latest`, then `.\emsdk_env.ps1` in each
+  new terminal (`emsdk_env.bat` in cmd). `emcmake` also needs Ninja: `winget install Ninja-build.Ninja`.
+- GLFW, for the desktop version of the examples 1 and 2: `vcpkg install glfw3` (see [vcpkg](https://vcpkg.io/)),
+  then add `-DCMAKE_TOOLCHAIN_FILE=<vcpkg>\scripts\buildsystems\vcpkg.cmake` to the first `cmake` command. After
+  `cmake --build build --config Release`, the program is `build\Release\project.exe`.
+- A variable given before a command (`CGP_DIR=../cgp-2027 python3 ...`) is set on its own line:
+  `$env:CGP_DIR = "..\cgp-2027"`, then `python scripts\build_examples.py ...`.
+
+The `README.md` at the top of the zip of each example gives these commands for that example. *(These commands
+have not been tested on Windows.)*
+
+</div>
+
 ## Get the code
 
 Each example page has a zip of the example and of what it needs. Or take everything at once:

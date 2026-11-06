@@ -1,9 +1,13 @@
-"""Build the examples for the web, test them in a browser, and capture their posters.
+r"""Build the examples for the web, test them in a browser, and capture their posters.
 
 Usage (the Emscripten SDK active: source <emsdk>/emsdk_env.sh), from the root of the repository:
   git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     the CGP project, once
   CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c3-cgp-waving-surface
   CGP_DIR=../cgp-2027 python3 scripts/build_examples.py               all the examples
+On Windows (PowerShell; the Emscripten SDK active with <emsdk>\emsdk_env.bat, and Ninja installed:
+winget install Ninja-build.Ninja):
+  $env:CGP_DIR = "..\cgp-2027"
+  python scripts\build_examples.py c3-cgp-waving-surface
 
 Options:
   --native    also build the desktop version, and run it for two seconds
@@ -82,10 +86,21 @@ def stage_cgp(ident, cgp_dir):
     return stage
 
 
+def native_program(build):
+    """The native program: build/project, or build/project.exe on Windows, where Visual Studio puts it in a
+    folder per configuration (build/Release/project.exe)."""
+    for folder in ['', 'Release', 'RelWithDebInfo', 'Debug']:
+        for name in ['project', 'project.exe']:
+            candidate = os.path.join(build, folder, name)
+            if os.path.isfile(candidate):
+                return candidate
+    return os.path.join(build, 'project')
+
+
 def check_native(build, project, stream):
     """Runs the native program for two seconds: it must start and not stop by itself.
     It runs from the root of its project: CGP looks for shaders/ from the current folder."""
-    program = os.path.join(build, 'project')
+    program = native_program(build)
     stream.write(f'$ (cd {project}; {program}) (2 s)\n')
     stream.flush()
     process = subprocess.Popen([program], cwd=project, stdout=stream, stderr=subprocess.STDOUT)
@@ -101,8 +116,11 @@ def main():
     native = '--native' in args
     test = '--no-test' not in args
     args = [a for a in args if a not in ('--native', '--no-test')]
-    if shutil.which('emcmake') is None:
-        sys.exit('emcmake not found: activate the Emscripten SDK first (source <emsdk>/emsdk_env.sh)')
+    # the full path: on Windows emcmake is emcmake.bat, which a subprocess finds only by its full name
+    emcmake = shutil.which('emcmake')
+    if emcmake is None:
+        sys.exit('emcmake not found: activate the Emscripten SDK first '
+                 '(source <emsdk>/emsdk_env.sh, or <emsdk>\\emsdk_env.bat on Windows)')
     python = os.environ.get('LHTML_PYTHON', sys.executable)
     if test and subprocess.run([python, '-c', 'import playwright'], capture_output=True).returncode != 0:
         print(f'Playwright is not installed for {python}: the browser test and the poster are skipped '
@@ -130,7 +148,7 @@ def main():
             build = os.path.join(BUILD, ident + '-web')
             log(f'{tag}: web build ({kind})', stream)
             started = time.time()
-            ok = run(['emcmake', 'cmake', '-S', project, '-B', build, '-DCMAKE_BUILD_TYPE=Release'], stream) \
+            ok = run([emcmake, 'cmake', '-S', project, '-B', build, '-DCMAKE_BUILD_TYPE=Release'], stream) \
                 and run(['cmake', '--build', build, '-j', '8'], stream)
             if not ok:
                 log(f'{tag}: BUILD FAILED (see the log)', stream)
@@ -142,7 +160,7 @@ def main():
                 build_native = os.path.join(BUILD, ident + '-native')
                 log(f'{tag}: native build', stream)
                 ok = run(['cmake', '-S', project, '-B', build_native, '-DCMAKE_BUILD_TYPE=Release'], stream) \
-                    and run(['cmake', '--build', build_native, '-j', '8'], stream) \
+                    and run(['cmake', '--build', build_native, '--config', 'Release', '-j', '8'], stream) \
                     and check_native(build_native, project, stream)
                 log(f'{tag}: native ' + ('starts' if ok else 'FAILED (see the log)'), stream)
                 if not ok:

@@ -53,6 +53,24 @@ programme, et la page `slide-frame.html`) est appelé le *pont* dans ce tutoriel
   faite pour enseigner l'informatique graphique, nécessaire seulement pour les recompiler
   (`git clone https://github.com/drohmer/cgp-2027.git`). Les deux premiers exemples n'ont besoin que de GLFW.
 
+<div class="callout" id="sous-windows"><div class="callout-title">Sous Windows</div>
+
+Les commandes du tutoriel sont écrites pour macOS et Linux. Dans PowerShell sous Windows :
+
+- `python` (ou `py`) au lieu de `python3` : `python -m http.server 8080`.
+- Le SDK Emscripten : `.\emsdk install latest` et `.\emsdk activate latest`, puis `.\emsdk_env.ps1` dans chaque
+  nouveau terminal (`emsdk_env.bat` dans cmd). `emcmake` a aussi besoin de Ninja : `winget install Ninja-build.Ninja`.
+- GLFW, pour la version bureau des exemples 1 et 2 : `vcpkg install glfw3` (voir [vcpkg](https://vcpkg.io/)),
+  puis ajoutez `-DCMAKE_TOOLCHAIN_FILE=<vcpkg>\scripts\buildsystems\vcpkg.cmake` à la première commande `cmake`.
+  Après `cmake --build build --config Release`, le programme est `build\Release\project.exe`.
+- Une variable donnée devant une commande (`CGP_DIR=../cgp-2027 python3 ...`) se définit sur sa propre ligne :
+  `$env:CGP_DIR = "..\cgp-2027"`, puis `python scripts\build_examples.py ...`.
+
+Le `README.md` en haut du zip de chaque exemple donne ces commandes pour cet exemple. *(Ces commandes n'ont pas
+été testées sous Windows.)*
+
+</div>
+
 ## Récupérer le code
 
 Chaque page d'exemple a un zip de l'exemple et de ce dont il a besoin. Ou prenez tout d'un coup :

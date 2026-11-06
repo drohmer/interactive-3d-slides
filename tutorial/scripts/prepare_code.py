@@ -126,6 +126,37 @@ emcmake cmake -S . -B build_web && cmake --build build_web        # web
 
 The web build is copied into `web/` and `lhtml-site/src/_demo/`: reload the slide to see your change.
 Details: `examples/{example}/README.md`.""")
+    emsdk = (r"<emsdk>\emsdk_env.ps1                                         # the Emscripten SDK (emsdk_env.bat in cmd)" "\n"
+             r"winget install Ninja-build.Ninja                                # once: emcmake needs Ninja on Windows")
+    windows = (f"""```powershell
+python -m http.server 8080                                        # step 1 (or: py -m http.server 8080)
+```
+
+```powershell
+{emsdk}
+git clone https://github.com/drohmer/cgp-2027.git ..\\cgp-2027     # the CGP project, once
+$env:CGP_DIR = "..\\cgp-2027"
+python scripts\\build_examples.py {example}
+```""" if cgp else f"""```powershell
+python -m http.server 8080                                        # step 1 (or: py -m http.server 8080)
+```
+
+The desktop version needs GLFW, for instance from [vcpkg](https://vcpkg.io/) (`vcpkg install glfw3`):
+
+```powershell
+cd examples\\{example}
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=<vcpkg>\\scripts\\buildsystems\\vcpkg.cmake
+cmake --build build --config Release
+build\\Release\\project.exe
+```
+
+The web version:
+
+```powershell
+{emsdk}
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```""")
     return f"""# Example {number}: {title}
 
 From the tutorial *Create slides with interactive 3D*: {SITE}01_tutorial/{page}/index.html
@@ -165,6 +196,12 @@ then open http://127.0.0.1:8000/ . `lhtml-site` alone builds it into `.site/html
 ## 3. Change the program and rebuild it
 
 {build}
+
+## On Windows
+
+The same steps, with the commands of PowerShell (not tested on Windows by the author):
+
+{windows}
 """
 
 
