@@ -16,6 +16,7 @@ fenêtre ImGui reste à l'écran, et les flèches passent toujours aux slides.
 <div class="get-title">Récupérer cet exemple</div>
 <p><strong>Télécharger :</strong> <a href="../../../code/c1-cgp-template.zip">c1-cgp-template.zip</a>. Le zip contient la slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le programme C++ est le projet modèle de CGP lui-même, nécessaire
 seulement pour recompiler.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/c1-cgp-template/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#comment-sont-compiles-les-exemples-cgp">compiler et lancer</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
@@ -25,15 +26,15 @@ seulement pour recompiler.</p>
 </div>
 
 <div class="live">
-<iframe class="demo" src="{{ code }}web/index.html" title="La scène du modèle CGP"></iframe>
+<iframe class="demo" src="{{ code }}web/index.html" title="La scène du projet modèle de CGP"></iframe>
 <div class="live-note">En direct : faites glisser la souris pour tourner la caméra.</div>
 </div>
 
 ## Comment sont compilés les exemples CGP
 
-Un projet CGP est un modèle : `CMakeLists.txt`, la bibliothèque dans `cgp/`, votre scène dans `src/`, les
-shaders dans `shaders/`. Les exemples de ce tutoriel ne contiennent que les fichiers qui diffèrent du modèle. Le
-script de compilation les pose sur une copie du modèle, ajoute le pont, et compile avec le `CMakeLists.txt` de CGP
+Un projet CGP est un projet modèle : `CMakeLists.txt`, la bibliothèque dans `cgp/`, votre scène dans `src/`, les
+shaders dans `shaders/`. Les exemples de ce tutoriel ne contiennent que les fichiers qui diffèrent du projet modèle. Le
+script de compilation les pose sur une copie du projet modèle, ajoute le pont, et compile avec le `CMakeLists.txt` de CGP
 lui-même :
 
 ```
@@ -42,7 +43,7 @@ build/<example>-stage/      a copy of the CGP project (CGP_DIR)
   CMakeLists.txt            the one of CGP, plus the link options of the bridge
 ```
 
-Cet exemple n'a aucun fichier à lui : c'est le modèle tel quel. Avec le SDK Emscripten activé, depuis la racine
+Cet exemple n'a aucun fichier à lui : c'est le projet modèle tel quel. Avec le SDK Emscripten activé, depuis la racine
 du dépôt (ou du dossier décompressé) :
 
 ```
@@ -55,7 +56,7 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py --native c1-cgp-template
 
 La première commande compile pour le web, copie le résultat dans `examples/c1-cgp-template/web/` et
 `examples/c1-cgp-template/lhtml-site/src/_demo/`, puis teste la démo dans un navigateur et capture son poster
-(si Playwright est installé ; sinon, ou avec `--no-test`, cette étape est sautée) ; `--native` compile aussi la version bureau et la lance deux secondes. Dans votre propre
+(si Playwright est installé, voir [Tester une démo](../../02_more/03_tests/index.html)) ; `--native` compile aussi la version bureau et la lance deux secondes. Dans votre propre
 projet CGP, c'est trois étapes : copiez `slide_bridge.hpp` et `slide_bridge.cpp` dans `src/`, ajoutez les options
 d'édition de liens du pont à la compilation web du `CMakeLists.txt`, et prenez `slide-frame.html` comme page de
 la démo.
@@ -74,22 +75,10 @@ la démo.
 
 ### lhtml-site/
 
-La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
-le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
-classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_cgp-template/index.html.j2    the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_cgp-template/index.html.j2` :
 
 {% include "_code/examples/c1-cgp-template/lhtml-site/src/01_cgp-template/index.html.j2.md" %}
-
-{% include "_code/examples/c1-cgp-template/lhtml-site/configure.yaml.md" %}
 
 ## Ce qu'ajoute la page de la démo
 

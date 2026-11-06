@@ -1,0 +1,124 @@
+---
+title: Your own program in a slide
+section: Tutorial
+description: 'The checklist to put your own C++ OpenGL program in a slide: the files to copy, the lines to add, the build for the web, the page of the demo and the frame of the slide.'
+---
+
+# Your own program in a slide
+
+This page gathers, in one checklist, what the examples show one piece at a time: how to take your own C++
+OpenGL program (with GLFW) and show it in a slide. Each step links to the example where it is explained in
+detail. If your program uses the CGP library, see [the CGP case](#with-cgp) at the end of the page.
+
+## 1. Copy the bridge into your project
+
+From [the zip of the repository](../../code/interactive-3d-slides.zip) (or of
+[example 1](../../code/a1-opengl-cube.zip)), copy the three files of `bridge/`:
+
+- `slide_bridge.hpp` and `slide_bridge.cpp`: add them to the sources of your program. They read the settings
+  given by the slide, and depend only on the standard library.
+- `slide-frame.html`: the page that shows your program in the frame of the slide (step 4).
+
+## 2. Adapt the program for the web
+
+The program compiles for the web with Emscripten (WebGL 2, which corresponds to OpenGL ES 3.0). Four places
+differ from the desktop version; in [example 1](../02_cube/index.html#main-cpp) they are marked
+with `#ifdef __EMSCRIPTEN__`:
+
+- **The headers:** `<GLES3/gl3.h>` (and `<emscripten/emscripten.h>`, `<emscripten/html5.h>`) instead of your
+  OpenGL loader (glad, glew).
+- **The first line of the shaders:** `#version 300 es` and `precision highp float;` instead of
+  `#version 330 core`.
+- **The size of the window:** the size of the canvas of the page,
+  `emscripten_get_canvas_element_size("#canvas", &width, &height)`, used for `glfwCreateWindow` and read again at
+  each frame for the viewport. Ask GLFW for an OpenGL ES 3.0 context (`GLFW_CLIENT_API`, `GLFW_OPENGL_ES_API`).
+- **The main loop:** move the body of your `while` loop into a function `frame()`, and give it to the browser:
+
+  ```cpp
+  #ifdef __EMSCRIPTEN__
+      emscripten_set_main_loop(frame, 0, 1);
+  #else
+      while (!glfwWindowShouldClose(window))
+          frame();
+  #endif
+  ```
+
+*Rem. Some OpenGL functions do not exist in WebGL, such as `glPolygonMode` (wireframe) or wide lines: see the
+notes of [example 4](../05_buttons/index.html) and [example 6](../07_readout/index.html).*
+
+## 3. Declare the settings
+
+At the start of `main()`, read the arguments, then declare the variables that the slide may set:
+
+```cpp
+#include "slide_bridge.hpp"
+
+int main(int argc, char* argv[])
+{
+    slide::parse(argc, argv);                          // the settings of the address: ?speed=0.2 gives --speed 0.2
+    slide::param("speed", speed, 0.0f, 1.0f, 0.01f);   // a float, with its range and its step
+    slide::param("wireframe", wireframe);              // a bool
+    slide::action("reset", [] { reset_scene(); });     // a button
+    // ... the rest of your program
+}
+```
+
+The page builds its panel from these declarations ([example 2](../03_panel/index.html)); the buttons of the slide
+use the same names ([example 4](../05_buttons/index.html)). The full list is in the [reference](../../02_more/02_reference/index.html).
+
+## 4. Build for the web
+
+Add the link options of Emscripten to the web build. With CMake:
+
+```cmake
+if(EMSCRIPTEN)
+    target_link_options(project PRIVATE
+        -sUSE_GLFW=3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2
+        -sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall)
+endif()
+```
+
+- `-sEXPORTED_FUNCTIONS` and `-sEXPORTED_RUNTIME_METHODS` let the page talk to the bridge.
+- If the program reads files (shaders, meshes, textures), add `--preload-file <folder>`: they are packed into
+  `project.data`, next to `project.js`.
+- *Rem. The module [raw_opengl_demo.cmake](../../code/examples/cmake/raw_opengl_demo.cmake) of the examples does
+  all this, and can be included as in [example 1](../02_cube/index.html#cmakelists-txt).*
+
+Then build, with the Emscripten SDK activated:
+
+```
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```
+
+`build_web/` then contains `project.js` and `project.wasm` (and `project.data` with `--preload-file`). Copy
+`slide-frame.html` next to them, as `index.html`: this is the page of the demo. If your executable is not named
+`project`, change `script: 'project.js'` in the block `CONFIG` at the top of `slide-frame.html`.
+
+## 5. Put the demo in a slide
+
+Copy the folder of the demo (`index.html`, `project.js`, `project.wasm`...) next to your slides, for instance in
+`demo/`, then:
+
+- **reveal.js:** a frame in a `<section>`, `<iframe class="demo" data-src="demo/index.html?speed=0.2"></iframe>`
+  (see [slides.html of example 1](../02_cube/index.html#slides-html)).
+- **lhtml-site:** the folder in `src/_demo/`, and in the slide `demo::../_demo/index.html?speed=0.2`
+  (see [the lhtml-site slide of example 1](../02_cube/index.html#lhtml-site)).
+
+Show the slides through a web server (`python3 -m http.server 8080` in their folder), not as files.
+
+- **&gt;** Check that the demo fills its frame, that the settings of the address are applied, and that the arrow
+  keys still change the slide after a click in the demo.
+
+## With CGP
+
+A CGP project already builds for the web. Three steps are enough ([example 3](../04_cgp/index.html)):
+
+- copy `slide_bridge.hpp` and `slide_bridge.cpp` into `src/`;
+- add the link options of the bridge to the web build of `CMakeLists.txt`:
+  `-sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall`;
+- use `slide-frame.html` as the page of the demo (copied as `index.html` next to `project.js`).
+
+Then declare the settings as in step 3, for instance in `scene.cpp` ([example 4](../05_buttons/index.html)).
+
+**Next:** [On the day of the talk](../10_talk-day/index.html).

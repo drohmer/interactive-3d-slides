@@ -1,8 +1,10 @@
-# A1 - Raw OpenGL 3.3: a turning cube
+# Example 1 (A1): Rotating cube
+
+*raw OpenGL 3.3, a cube that rotates by itself. The page of the tutorial: [1. Rotating cube](https://scholartools.fr/interactive-3d-slides/01_tutorial/02_cube/index.html).*
 
 ![A colored cube](poster.png)
 
-The smallest demo for a slide: a cube that turns by itself, in raw OpenGL 3.3, with no library
+The smallest demo for a slide: a cube that rotates by itself, in raw OpenGL 3.3, with no library
 but GLFW. The slide sets it through the address of the iframe; there is no control on screen.
 
 - **Graphics:** basic (one draw call, one color per face).
@@ -33,7 +35,7 @@ One source for the desktop and the web. The differences, marked with `#ifdef __E
    that size, otherwise `glfwCreateWindow` resizes the canvas.
 4. **Main loop:** the browser calls `frame()` at each refresh (`emscripten_set_main_loop`).
 
-The settings are three lines, with the bridge:
+The settings are four lines, with the bridge (labels left out here):
 
 ```cpp
 slide::parse(argc, argv);
@@ -54,4 +56,5 @@ emcmake cmake -S . -B build_web && cmake --build build_web
 
 The web build gives `index.html`, `project.js` and `project.wasm` in `build_web/`, and copies them into
 [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version (to keep `web/` as it is:
-`-DSLIDE_DEMO_PUBLISH=OFF`). Serve the folder with a web server (`python3 -m http.server`), not as a file.
+`-DSLIDE_DEMO_PUBLISH=OFF`). Serve the root of the repository (or of the unzipped folder) with a web server, not as a file:
+`python3 -m http.server 8080`, then open `http://localhost:8080/examples/a1-opengl-cube/slides.html`.

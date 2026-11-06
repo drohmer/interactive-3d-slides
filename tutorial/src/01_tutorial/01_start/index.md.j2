@@ -24,10 +24,23 @@ The slides of the tutorial are made with [reveal.js](https://revealjs.com/) (eac
 slide, `slides.html`), and the same demos are in a talk made with [lhtml-site](https://scholartools.fr/lhtml/).
 Both are HTML, where the frame is native.
 
-The small amount of code that connects the program and the slide (two C++ files that read the settings in the
-program, and the page `slide-frame.html`) is called the *bridge* in this tutorial.
+A few words used in the tutorial:
+
+- **The demo:** your program, compiled for the web, running in the frame of a slide.
+- **The page of the demo:** `slide-frame.html`, copied next to the build of the program as `index.html`
+  (this is the `web/index.html` of each example).
+- **The bridge:** the small amount of code that connects the program and the slide: the page of the demo, and
+  two C++ files (`slide_bridge.hpp/.cpp`) that read the settings in the program.
+- **The panel:** the sliders and buttons that the page of the demo draws over it, from the settings that the
+  program declares ([example 2](../03_panel/index.html)).
+- **The poster:** an image of the demo, used in the PDF of the slides, where a program cannot run.
+- **`data-src`** (reveal.js) and **`demo::`** (lhtml-site): how each tool writes the frame of a demo (below).
 
 ## What you need
+
+To see the demos in their slides, only **Python 3** is needed (step [Get the code](#get-the-code)). To
+recompile the examples 1 and 2, add a C++ compiler, CMake, GLFW and Emscripten; for the examples 3 to 6,
+add the CGP library.
 
 - **A C++ compiler and CMake**, and GLFW for the desktop version of the examples
   (`brew install glfw` on macOS, `sudo apt install libglfw3-dev` on Ubuntu).
@@ -50,7 +63,7 @@ program, and the page `slide-frame.html`) is called the *bridge* in this tutoria
   teaching computer graphics, needed only to recompile them (`git clone https://github.com/drohmer/cgp-2027.git`).
   The two first examples need no library but GLFW.
 
-<div class="callout" id="on-windows"><div class="callout-title">On Windows</div>
+<details class="callout" id="on-windows"><summary class="callout-title">On Windows (click to show the commands)</summary>
 
 The commands of the tutorial are written for macOS and Linux. In PowerShell on Windows:
 
@@ -66,7 +79,7 @@ The commands of the tutorial are written for macOS and Linux. In PowerShell on W
 The `README.md` at the top of the zip of each example gives these commands for that example. *(These commands
 have not been tested on Windows.)*
 
-</div>
+</details>
 
 ## Get the code
 

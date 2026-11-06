@@ -15,6 +15,7 @@ and to stay consistent with the buttons of the slide.
 <div class="get">
 <div class="get-title">Get this example</div>
 <p><strong>Download:</strong> <a href="../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge and the build script. The CGP project is needed only to recompile.</p>
+<p class="try"><strong>Try it:</strong> unzip it, and in the unzipped folder run <code>python3 -m http.server 8080</code>; then open <code>http://localhost:8080/examples/c6-cgp-marching-cubes/slides.html</code>, the slide with its demo. To change the program: <a href="#build-and-run">build and run</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
@@ -34,9 +35,6 @@ and to stay consistent with the buttons of the slide.
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
 
-The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
-(`examples/02_marching_cubes/02_marching_cube_dynamic`).
-
 ## What is new
 
 - **ImGui readable on the projector:** `?gui_scale=1.4` enlarges its text, through `project::gui_scale`, which the
@@ -47,6 +45,12 @@ The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://githu
 - **Two controls hidden on the web:** the wireframe (`glPolygonMode`, see [example 4](../05_buttons/index.html))
   and the export of the mesh to a file, which would land in the memory of the page.
 - **Mouse:** in CGP, ImGui takes the clicks over its window; elsewhere the mouse turns the camera.
+
+## Build and run
+
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c6-cgp-marching-cubes`.
+
+*Rem. The marching cubes of this example come from an example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027).*
 
 ## The files
 
@@ -61,13 +65,21 @@ examples/c6-cgp-marching-cubes/src/
 
 [scene.cpp]({{ code }}src/scene.cpp): the declarations are at the end of `initialize()`.
 
+<details><summary>Show the full file: <strong>scene.cpp</strong> (94 lines)</summary>
+
 {% include "_code/examples/c6-cgp-marching-cubes/src/scene.cpp.md" %}
+
+</details>
 
 ### src/implicit_surface/gui_helper.cpp
 
-The ImGui window; the two controls hidden on the web are marked `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+The ImGui window; the two controls hidden on the web are marked with the comment `interactive-3d-slides:`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+
+<details><summary>Show the full file: <strong>gui_helper.cpp</strong> (63 lines)</summary>
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp.md" %}
+
+</details>
 
 <details><summary><strong>The other files</strong>: main.cpp, scene.hpp, implicit_surface.cpp/.hpp, field_function.cpp/.hpp</summary>
 
@@ -95,25 +107,9 @@ The ImGui window; the two controls hidden on the web are marked `slide-demos`. [
 
 ### lhtml-site/
 
-The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
-([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
-`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`. In the slide, `(.live)` and `(.still)` give a
-class to the frame and to the image: the frame is shown on screen, the image in a PDF (see `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_marching-cubes/index.html.j2  the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
+The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), organized as in
+[example 1](../02_cube/index.html#lhtml-site); only the slide changes, `src/01_marching-cubes/index.html.j2`:
 
 {% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/src/01_marching-cubes/index.html.j2.md" %}
-
-{% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/configure.yaml.md" %}
-
-## Build and run
-
-As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c6-cgp-marching-cubes`.
 
 **Next:** [6. Values sent back to the slide](../07_readout/index.html).

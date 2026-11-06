@@ -1,0 +1,128 @@
+---
+title: Votre propre programme dans une slide
+section: Tutoriel
+description: "La liste des étapes pour mettre votre propre programme C++ OpenGL dans une slide : les fichiers à copier, les lignes à ajouter, la compilation pour le web, la page de la démo et le cadre de la slide."
+---
+
+# Votre propre programme dans une slide
+
+Cette page rassemble, en une seule liste d'étapes, ce que les exemples montrent morceau par morceau : comment
+prendre votre propre programme C++ OpenGL (avec GLFW) et le montrer dans une slide. Chaque étape renvoie à
+l'exemple où elle est expliquée en détail. Si votre programme utilise la bibliothèque CGP, voyez
+[le cas de CGP](#avec-cgp) à la fin de la page.
+
+## 1. Copier le pont dans votre projet
+
+Depuis [le zip du dépôt](../../../code/interactive-3d-slides.zip) (ou celui de
+[l'exemple 1](../../../code/a1-opengl-cube.zip)), copiez les trois fichiers de `bridge/` :
+
+- `slide_bridge.hpp` et `slide_bridge.cpp` : ajoutez-les aux sources de votre programme. Ils lisent les
+  réglages donnés par la slide, et ne dépendent que de la bibliothèque standard.
+- `slide-frame.html` : la page qui montre votre programme dans le cadre de la slide (étape 4).
+
+## 2. Adapter le programme pour le web
+
+Le programme se compile pour le web avec Emscripten (WebGL 2, qui correspond à OpenGL ES 3.0). Quatre endroits
+diffèrent de la version bureau ; dans [l'exemple 1](../02_cube/index.html#main-cpp), ils sont marqués par
+`#ifdef __EMSCRIPTEN__` :
+
+- **Les en-têtes :** `<GLES3/gl3.h>` (et `<emscripten/emscripten.h>`, `<emscripten/html5.h>`) au lieu de votre
+  chargeur OpenGL (glad, glew).
+- **La première ligne des shaders :** `#version 300 es` et `precision highp float;` au lieu de
+  `#version 330 core`.
+- **La taille de la fenêtre :** la taille du canvas de la page,
+  `emscripten_get_canvas_element_size("#canvas", &width, &height)`, utilisée pour `glfwCreateWindow` et relue à
+  chaque image pour le viewport. Demandez à GLFW un contexte OpenGL ES 3.0 (`GLFW_CLIENT_API`, `GLFW_OPENGL_ES_API`).
+- **La boucle principale :** déplacez le corps de votre boucle `while` dans une fonction `frame()`, et
+  donnez-la au navigateur :
+
+  ```cpp
+  #ifdef __EMSCRIPTEN__
+      emscripten_set_main_loop(frame, 0, 1);
+  #else
+      while (!glfwWindowShouldClose(window))
+          frame();
+  #endif
+  ```
+
+*Rem. Certaines fonctions OpenGL n'existent pas en WebGL, comme `glPolygonMode` (fil de fer) ou les lignes
+épaisses : voir les notes de [l'exemple 4](../05_buttons/index.html) et de [l'exemple 6](../07_readout/index.html).*
+
+## 3. Déclarer les réglages
+
+Au début de `main()`, lisez les arguments, puis déclarez les variables que la slide peut régler :
+
+```cpp
+#include "slide_bridge.hpp"
+
+int main(int argc, char* argv[])
+{
+    slide::parse(argc, argv);                          // the settings of the address: ?speed=0.2 gives --speed 0.2
+    slide::param("speed", speed, 0.0f, 1.0f, 0.01f);   // a float, with its range and its step
+    slide::param("wireframe", wireframe);              // a bool
+    slide::action("reset", [] { reset_scene(); });     // a button
+    // ... the rest of your program
+}
+```
+
+La page construit son panneau à partir de ces déclarations ([exemple 2](../03_panel/index.html)) ; les boutons
+de la slide utilisent les mêmes noms ([exemple 4](../05_buttons/index.html)). La liste complète est dans la
+[référence](../../02_more/02_reference/index.html).
+
+## 4. Compiler pour le web
+
+Ajoutez les options d'édition de liens d'Emscripten à la compilation web. Avec CMake :
+
+```cmake
+if(EMSCRIPTEN)
+    target_link_options(project PRIVATE
+        -sUSE_GLFW=3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2
+        -sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall)
+endif()
+```
+
+- `-sEXPORTED_FUNCTIONS` et `-sEXPORTED_RUNTIME_METHODS` permettent à la page de communiquer avec le pont.
+- Si le programme lit des fichiers (shaders, maillages, textures), ajoutez `--preload-file <folder>` : ils sont
+  regroupés dans `project.data`, à côté de `project.js`.
+- *Rem. Le module [raw_opengl_demo.cmake](../../../code/examples/cmake/raw_opengl_demo.cmake) des exemples fait
+  tout cela, et peut être inclus comme dans [l'exemple 1](../02_cube/index.html#cmakelists-txt).*
+
+Compilez ensuite, avec le SDK Emscripten activé :
+
+```
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```
+
+`build_web/` contient alors `project.js` et `project.wasm` (et `project.data` avec `--preload-file`). Copiez
+`slide-frame.html` à côté d'eux, sous le nom `index.html` : c'est la page de la démo. Si votre exécutable ne
+s'appelle pas `project`, changez `script: 'project.js'` dans le bloc `CONFIG` en haut de `slide-frame.html`.
+
+## 5. Mettre la démo dans une slide
+
+Copiez le dossier de la démo (`index.html`, `project.js`, `project.wasm`...) à côté de vos slides, par exemple
+dans `demo/`, puis :
+
+- **reveal.js :** un cadre dans une `<section>`, `<iframe class="demo" data-src="demo/index.html?speed=0.2"></iframe>`
+  (voir [slides.html de l'exemple 1](../02_cube/index.html#slides-html)).
+- **lhtml-site :** le dossier dans `src/_demo/`, et dans la slide `demo::../_demo/index.html?speed=0.2`
+  (voir [la slide lhtml-site de l'exemple 1](../02_cube/index.html#lhtml-site)).
+
+Montrez les slides à travers un serveur web (`python3 -m http.server 8080` dans leur dossier), et non comme
+des fichiers.
+
+- **&gt;** Vérifiez que la démo remplit son cadre, que les réglages de l'adresse sont appliqués, et que les
+  flèches changent toujours de slide après un clic dans la démo.
+
+## Avec CGP
+
+Un projet CGP se compile déjà pour le web. Trois étapes suffisent ([exemple 3](../04_cgp/index.html)) :
+
+- copiez `slide_bridge.hpp` et `slide_bridge.cpp` dans `src/` ;
+- ajoutez les options d'édition de liens du pont à la compilation web de `CMakeLists.txt` :
+  `-sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall` ;
+- utilisez `slide-frame.html` comme page de la démo (copiée sous le nom `index.html` à côté de `project.js`).
+
+Déclarez ensuite les réglages comme à l'étape 3, par exemple dans `scene.cpp` ([exemple 4](../05_buttons/index.html)).
+
+**Ensuite :** [Le jour de l'exposé](../10_talk-day/index.html).

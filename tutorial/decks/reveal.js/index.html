@@ -8,10 +8,10 @@
   An example talk of the tutorial "Create slides with interactive 3D", made with reveal.js: twelve
   slides, with titles, text, and interactive 3D models in some of them.
 
-  The models are in demos/<name>/ next to this file (the web builds of the examples: index.html,
+  The demos are in demos/<name>/ next to this file (the web builds of the examples: index.html,
   project.js, project.wasm, project.data), with slide-controls.js. Each one is a plain <iframe>;
   data-src loads it when its slide comes near and unloads it after. All the slides are in this page:
-  the buttons of a slide name their model (data-demo="#surface").
+  the buttons of a slide name their demo (data-demo="#surface").
 
   Open it through a web server: python3 -m http.server 8080 in this folder, then http://localhost:8080/
   reveal.js comes from a CDN: for a talk without network, download it next to this file.
@@ -19,14 +19,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
 <style>
-  /* the text on the left, the model on the right */
+  /* the text on the left, the demo on the right */
   .reveal .side { display: grid; grid-template-columns: 40% 60%; gap: 30px; align-items: center; text-align: left; }
   .reveal .side ul { font-size: 0.75em; margin: 0; }
   .reveal .side p { font-size: 0.75em; }
   .reveal iframe.demo { width: 100%; height: 520px; border: 0; }
   .reveal code { font-size: 0.85em; }
   .reveal .muted { color: #888; font-size: 0.6em; }
-  /* the buttons of the slides, and the current state of the model (class on) */
+  /* the buttons of the slides, and the current state of the demo (class on) */
   .reveal .controls-row button { font: inherit; font-size: 0.7em; padding: 4px 14px; margin: 0 6px 8px 0;
                                  border-radius: 8px; border: 2px solid #999; background: white; cursor: pointer; }
   .reveal .controls-row button.on { background: #333; color: white; border-color: #333; }
@@ -44,17 +44,17 @@
 
 <section>
   <h3>Outline</h3>
-  <p style="font-size: 0.7em">The models of this talk are C++ programs (OpenGL 3.3), compiled to WebAssembly:
+  <p style="font-size: 0.7em">The demos of this talk are C++ programs (OpenGL 3.3), compiled to WebAssembly:
   each one runs in a frame of the slide, next to the text.</p>
   <ol>
-    <li>A model in the slide</li>
+    <li>A demo in the slide</li>
     <li>Settings and controls</li>
     <li>Values from the program</li>
   </ol>
-  <p class="muted">Click in a model to turn it with the mouse; the arrow keys still go to the next slide.</p>
+  <p class="muted">Click in a demo to turn it with the mouse; the arrow keys still go to the next slide.</p>
 </section>
 
-<section><h2>1. A model in the slide</h2></section>
+<section><h2>1. A demo in the slide</h2></section>
 
 <section>
   <h3>A C++ program in the slide</h3>
@@ -75,7 +75,7 @@
     <ul>
       <li>The same build as the previous slide</li>
       <li>Another address: <code>?speed=0.5&amp;tilt=-30&amp;background=dark</code></li>
-      <li>One build serves all the slides that show this model</li>
+      <li>One build serves all the slides that show this demo</li>
     </ul>
     <iframe class="demo" data-src="demos/a1/index.html?speed=0.5&tilt=-30&background=dark"></iframe>
   </div>
@@ -89,7 +89,7 @@
     <ul>
       <li>The program declares its parameters, with their ranges</li>
       <li>The page of the demo builds the panel from them</li>
-      <li>Each slider changes a uniform while the model turns</li>
+      <li>Each slider changes a uniform while the demo turns</li>
     </ul>
     <iframe class="demo" data-src="demos/a2/index.html?twist=0.8&controls=twist,hue,speed,light,reset"></iframe>
   </div>
@@ -151,12 +151,12 @@
 <section>
   <h3>Conclusion</h3>
   <ul style="font-size: 0.75em">
-    <li>A 3D model in a slide is a web page in a frame</li>
+    <li>A 3D demo in a slide is a web page in a frame</li>
     <li>The address of the frame sets it, slide by slide</li>
     <li>A panel, buttons in the slide or ImGui drive it during the talk</li>
     <li>The program can send values back to the slide</li>
   </ul>
-  <p style="font-size: 0.7em">The method, the code of these models and of this talk: the tutorial
+  <p style="font-size: 0.7em">The method, the code of these demos and of this talk: the tutorial
   <a href="https://scholartools.fr/interactive-3d-slides/">Create slides with interactive 3D</a>.</p>
 </section>
 
@@ -165,8 +165,8 @@
 <script src="demos/slide-controls.js"></script>
 <script>
   Reveal.initialize({hash: true});
-  // After a click in a model, the keyboard stays in its frame. When the slide changes, reveal.js
-  // unloads that model (data-src): the frame keeps the keyboard but becomes an empty page, which
+  // After a click in a demo, the keyboard stays in its frame. When the slide changes, reveal.js
+  // unloads that demo (data-src): the frame keeps the keyboard but becomes an empty page, which
   // sends no key back, and the next arrow would be lost. The presentation takes the keyboard back.
   Reveal.on('slidechanged', () => {
     if (document.activeElement && document.activeElement.tagName === 'IFRAME') document.activeElement.blur();

@@ -15,6 +15,7 @@ to write.
 <div class="get">
 <div class="get-title">Get this example</div>
 <p><strong>Download:</strong> <a href="../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a>. The zip contains the C++ program, its slide in reveal.js (<code>slides.html</code>) and in lhtml-site (<code>lhtml-site/</code>), the web build of the demo (ready to show), the bridge, the CMake module and glad.</p>
+<p class="try"><strong>Try it:</strong> unzip it, and in the unzipped folder run <code>python3 -m http.server 8080</code>; then open <code>http://localhost:8080/examples/a2-opengl-uniforms/slides.html</code>, the slide with its demo. To change the program: <a href="#build-and-run">build and run</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Open the slide in reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Open the slide in lhtml-site →</a>
@@ -43,44 +44,9 @@ to write.
   their order. A number gives a slider, a bool a toggle, an action a button.
 - **Uniforms sent at each frame:** the program only reads its variables; it does not need to know that the
   slide changed them.
-- **An accumulated angle,** `angle += 2 pi speed dt`, so that a change of speed does not make the box jump.
+- **An accumulated angle,** `angle += 2 pi speed dt`, so that a change of speed does not make the cube jump.
 - **Lighting without normals:** the fragment shader takes the normal from the derivatives of the position
   (`cross(dFdx(p), dFdy(p))`); each triangle is flat, which shows as thin bands on the twisted faces.
-
-## The files
-
-The same as [example 1](../02_cube/index.html#the-files): the build is the same `CMakeLists.txt`.
-
-### main.cpp
-
-[main.cpp]({{ code }}main.cpp)
-
-{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
-
-### slides.html
-
-[slides.html]({{ code }}slides.html)
-
-{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
-
-### lhtml-site/
-
-The same slide, made with lhtml-site: a presentation of a single slide, which builds as it is from the zip
-([open it]({{ code }}lhtml-site/html/index.html)). In this folder, `lhtml-site` builds it into `.site/html/`, and
-`lhtml-site --serve` shows it on `http://127.0.0.1:8000/`. In the slide, `(.live)` and `(.still)` give a
-class to the frame and to the image: the frame is shown on screen, the image in a PDF (see `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_uniforms/index.html.j2        the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
-
-{% include "_code/examples/a2-opengl-uniforms/lhtml-site/src/01_uniforms/index.html.j2.md" %}
-
-{% include "_code/examples/a2-opengl-uniforms/lhtml-site/configure.yaml.md" %}
 
 ## Build and run
 
@@ -93,5 +59,32 @@ the command line.
 | `controls=twist,hue` | the controls of the panel, in this order |
 | `compact=1` | short labels, small panel (for a small frame) |
 | `panel=tl`, `tr`, `bl`, `br` | the corner of the panel (default `tr`) |
+
+## The files
+
+The same as [example 1](../02_cube/index.html#the-files): the build is the same `CMakeLists.txt`.
+
+### main.cpp
+
+[main.cpp]({{ code }}main.cpp)
+
+<details><summary>Show the full file: <strong>main.cpp</strong> (256 lines)</summary>
+
+{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
+
+### lhtml-site/
+
+The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), organized as in
+[example 1](../02_cube/index.html#lhtml-site); only the slide changes, `src/01_uniforms/index.html.j2`:
+
+{% include "_code/examples/a2-opengl-uniforms/lhtml-site/src/01_uniforms/index.html.j2.md" %}
 
 **Next:** [3. CGP program](../04_cgp/index.html): the same with a library.

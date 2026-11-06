@@ -9,8 +9,8 @@ in some of them.
 | Path | What |
 |---|---|
 | `index.html` | the whole presentation, a `<section>` per slide |
-| `demos/a1/` ... `demos/c7/` | the models, already built for the web (`index.html`, `project.js`, `project.wasm`, ...) |
-| `demos/slide-controls.js` | the buttons written in the slides, which drive the models |
+| `demos/a1/` ... `demos/c7/` | the demos, already built for the web (`index.html`, `project.js`, `project.wasm`, ...) |
+| `demos/slide-controls.js` | the buttons written in the slides, which drive the demos |
 
 ## Show it
 
@@ -20,8 +20,8 @@ In this folder:
 python3 -m http.server 8080
 ```
 
-then open http://localhost:8080/ (a page opened as a file cannot load the models: a web server is needed).
-Go from slide to slide with the arrow keys; click in a model to turn it, the arrow keys still go to the next
+then open http://localhost:8080/ (a page opened as a file cannot load the demos: a web server is needed).
+Go from slide to slide with the arrow keys; click in a demo to turn it, the arrow keys still go to the next
 slide.
 
 reveal.js is loaded from the internet (cdn.jsdelivr.net). For a talk without network, download its `dist/`
@@ -29,5 +29,5 @@ folder (https://github.com/hakimel/reveal.js) next to `index.html`, and change t
 
 ## Your own talk
 
-Edit `index.html`: a slide is a `<section>`; a model is an `<iframe class="demo" data-src="demos/...">`. To put
+Edit `index.html`: a slide is a `<section>`; a demo is an `<iframe class="demo" data-src="demos/...">`. To put
 your own program, build it for the web as in the tutorial, and copy its build into `demos/`.

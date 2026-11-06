@@ -14,6 +14,7 @@ contrôle à l'écran. Le même fichier source est compilé pour le bureau et po
 <div class="get">
 <div class="get-title">Récupérer cet exemple</div>
 <p><strong>Télécharger :</strong> <a href="../../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont, le module CMake et glad.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/a1-opengl-cube/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
@@ -26,81 +27,6 @@ contrôle à l'écran. Le même fichier source est compilé pour le bureau et po
 <iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Cube en rotation, OpenGL brut compilé en WebAssembly"></iframe>
 <div class="live-note">En direct : la compilation web de cet exemple, réglée par <code>?speed=0.2&amp;tilt=25</code>.</div>
 </div>
-
-## Les fichiers
-
-```
-examples/a1-opengl-cube/
-  main.cpp           the program
-  CMakeLists.txt     its build, desktop and web
-  slides.html        the slide that shows it (reveal.js)
-  lhtml-site/        the same slide, made with lhtml-site
-  web/               the web build: index.html (slide-frame.html), project.js, project.wasm
-examples/cmake/raw_opengl_demo.cmake    the build of the raw OpenGL examples
-examples/third_party/glad/              the OpenGL loader, for the desktop
-bridge/                                 the bridge between the program and the slide
-```
-
-### main.cpp
-
-Une seule source pour le bureau (OpenGL 3.3 core, GLFW, glad) et pour le web (WebGL 2, c'est-à-dire OpenGL
-ES 3.0). Les quatre différences sont marquées par `#ifdef __EMSCRIPTEN__` :
-
-1. **Les en-têtes :** `<GLES3/gl3.h>` sur le web, glad sur le bureau.
-2. **La première ligne des shaders :** `#version 300 es` et une `precision` sur le web, `#version 330 core`
-   sur le bureau. Le corps des shaders est le même ; le programme ajoute devant la bonne ligne
-   (`shader_header`).
-3. **La taille du dessin :** celle du canvas de la page. La fenêtre est créée à sa taille, sinon
-   `glfwCreateWindow` redimensionne le canvas, et la taille est lue à chaque image (`surface_size`).
-4. **La boucle principale :** sur le web, le navigateur appelle `frame()` à chaque rafraîchissement
-   (`emscripten_set_main_loop`).
-
-Les réglages viennent de la ligne de commande, que la page de la démo construit à partir de son adresse
-(`?speed=0.2` donne `--speed 0.2`) : trois lignes avec le pont, au début de `main()`.
-
-[main.cpp]({{ code }}main.cpp)
-
-{% include "_code/examples/a1-opengl-cube/main.cpp.md" %}
-
-### CMakeLists.txt
-
-[CMakeLists.txt]({{ code }}CMakeLists.txt), et le module qu'il inclut,
-[raw_opengl_demo.cmake](../../../code/examples/cmake/raw_opengl_demo.cmake) : sur le bureau il lie GLFW et
-glad ; sur le web il ajoute les options d'Emscripten et copie la page de la démo à côté de la compilation.
-
-{% include "_code/examples/a1-opengl-cube/CMakeLists.txt.md" %}
-
-{% include "_code/examples/cmake/raw_opengl_demo.cmake.md" %}
-
-### slides.html
-
-La slide utilise reveal.js, et contient un cadre dont l'adresse donne les réglages. L'attribut `data-src`
-charge la démo quand sa slide approche. [slides.html]({{ code }}slides.html)
-
-{% include "_code/examples/a1-opengl-cube/slides.html.md" %}
-
-La page de la démo, `web/index.html`, est [slide-frame.html](../../../code/bridge/slide-frame.html) du pont,
-copiée par la compilation ; son code et celui des deux fichiers C++ du pont sont dans la
-[référence](../../02_more/02_reference/index.html#le-code-du-pont).
-
-### lhtml-site/
-
-La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
-le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
-classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_rotating-cube/index.html.j2   the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
-
-{% include "_code/examples/a1-opengl-cube/lhtml-site/src/01_rotating-cube/index.html.j2.md" %}
-
-{% include "_code/examples/a1-opengl-cube/lhtml-site/configure.yaml.md" %}
 
 ## Compiler et lancer
 
@@ -132,5 +58,88 @@ python3 -m http.server 8080
 
 et ouvrez `http://localhost:8080/examples/a1-opengl-cube/slides.html`. Après un clic dans le cube, la flèche
 droite passe toujours à la slide suivante.
+
+## Les fichiers
+
+```
+examples/a1-opengl-cube/
+  main.cpp           the program
+  CMakeLists.txt     its build, desktop and web
+  slides.html        the slide that shows it (reveal.js)
+  lhtml-site/        the same slide, made with lhtml-site
+  web/               the web build: index.html (slide-frame.html), project.js, project.wasm
+examples/cmake/raw_opengl_demo.cmake    the build of the raw OpenGL examples
+examples/third_party/glad/              the OpenGL loader, for the desktop
+bridge/                                 the bridge between the program and the slide
+```
+
+### main.cpp
+
+Une seule source pour le bureau (OpenGL 3.3 core, GLFW, glad) et pour le web (WebGL 2, c'est-à-dire OpenGL
+ES 3.0). Les quatre différences sont marquées par `#ifdef __EMSCRIPTEN__` :
+
+1. **Les en-têtes :** `<GLES3/gl3.h>` sur le web, glad sur le bureau.
+2. **La première ligne des shaders :** `#version 300 es` et une `precision` sur le web, `#version 330 core`
+   sur le bureau. Le corps des shaders est le même ; le programme ajoute devant la bonne ligne
+   (`shader_header`).
+3. **La taille du dessin :** celle du canvas de la page. La fenêtre est créée à sa taille, sinon
+   `glfwCreateWindow` redimensionne le canvas, et la taille est lue à chaque image (`surface_size`).
+4. **La boucle principale :** sur le web, le navigateur appelle `frame()` à chaque rafraîchissement
+   (`emscripten_set_main_loop`).
+
+Les réglages viennent de la ligne de commande, que la page de la démo construit à partir de son adresse
+(`?speed=0.2` donne `--speed 0.2`) : quatre lignes avec le pont, au début de `main()`.
+
+[main.cpp]({{ code }}main.cpp)
+
+<details><summary>Afficher le fichier complet: <strong>main.cpp</strong> (212 lignes)</summary>
+
+{% include "_code/examples/a1-opengl-cube/main.cpp.md" %}
+
+</details>
+
+### CMakeLists.txt
+
+[CMakeLists.txt]({{ code }}CMakeLists.txt), et le module qu'il inclut,
+[raw_opengl_demo.cmake](../../../code/examples/cmake/raw_opengl_demo.cmake) : sur le bureau il lie GLFW et
+glad ; sur le web il ajoute les options d'Emscripten et copie la page de la démo à côté de la compilation.
+
+{% include "_code/examples/a1-opengl-cube/CMakeLists.txt.md" %}
+
+<details><summary>Afficher le fichier complet: <strong>raw_opengl_demo.cmake</strong> (53 lignes)</summary>
+
+{% include "_code/examples/cmake/raw_opengl_demo.cmake.md" %}
+
+</details>
+
+### slides.html
+
+La slide utilise reveal.js, et contient un cadre dont l'adresse donne les réglages. L'attribut `data-src`
+charge la démo quand sa slide approche. [slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a1-opengl-cube/slides.html.md" %}
+
+La page de la démo, `web/index.html`, est [slide-frame.html](../../../code/bridge/slide-frame.html) du pont,
+copiée par la compilation ; son code et celui des deux fichiers C++ du pont sont dans la
+[référence](../../02_more/02_reference/index.html#le-code-du-pont).
+
+### lhtml-site/
+
+La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
+le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
+`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
+classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
+
+```
+lhtml-site/
+  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
+  src/01_rotating-cube/index.html.j2   the slide
+  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
+  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
+```
+
+{% include "_code/examples/a1-opengl-cube/lhtml-site/src/01_rotating-cube/index.html.j2.md" %}
+
+{% include "_code/examples/a1-opengl-cube/lhtml-site/configure.yaml.md" %}
 
 **Ensuite :** [2. Uniforms pilotés en direct](../03_panel/index.html) : le même cube, changé pendant qu'il tourne.

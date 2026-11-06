@@ -25,7 +25,8 @@ Le pont tient en quatre fichiers [du dépôt](#le-code-du-pont), à copier dans 
 | `slide::param(key, int& v, min, max)` | Un entier |
 | `slide::param(key, bool& v)` | Un interrupteur |
 {% raw %}| `slide::param(key, std::string& v, {"a", "b"})` | Un choix ; `{{"a", "Label A"}, ...}` donne les libellés des boutons |{% endraw %}
-| `slide::param(key, getter, setter, min, max, step)` | Un nombre dans d'autres unités que la variable (`float` ou `bool`) |
+| `slide::param(key, getter, setter, min, max, step)` | Un nombre dans d'autres unités que la variable (un `float`) |
+| `slide::param(key, getter, setter)` | La même chose pour une bascule (un `bool`) |
 | `slide::action(key, callback)` | Un bouton sans valeur |
 | `slide::readout(key, getter)` | Une valeur calculée par le programme, affichée par la page et la slide, en lecture seule |
 | `.with_label(label, short_label)` | Le libellé du contrôle (HTML permis), et celui du panneau compact |
@@ -54,8 +55,8 @@ Dans `CONFIG`, en tête du fichier : `script` (`project.js` par défaut), `defau
 n'en donne pas, `{gui: '0'}`), `readyFrames` (images dessinées avant que la démo soit montrée), `capture`
 (garder l'image du canvas, `true` par défaut), `navigationKeys`.
 
-La page définit aussi `window.__lhtmlReady` (une promesse résolue une fois la démo dessinée, pour un export
-PDF), et affiche une erreur dans le cadre si le programme ne se charge pas ou s'arrête.
+La page définit aussi `window.__lhtmlReady` (un objet dont `ready()` donne une promesse résolue une fois la démo dessinée,
+pour un export PDF), et affiche une erreur dans le cadre si le programme ne se charge pas ou s'arrête.
 
 ## Messages
 

@@ -1,4 +1,6 @@
-# C6 - CGP: interactive marching cubes, with ImGui
+# Example 5 (C6): GUI with ImGui
+
+*CGP, interactive marching cubes with ImGui. The page of the tutorial: [5. GUI with ImGui](https://scholartools.fr/interactive-3d-slides/01_tutorial/06_imgui/index.html).*
 
 ![An implicit surface in its domain, with the ImGui window](poster.png)
 
@@ -55,7 +57,7 @@ The ImGui window shows the new values at the next frame: it reads the variables 
 
   and a camera farther away, so that the whole domain fits a wide slide.
 - **`implicit_surface/gui_helper.cpp`:** two controls hidden on the web. The wireframe uses
-  `glPolygonMode`, which WebGL does not have (see [C3](../c3-cgp-waving-surface/README.md)); the export of
+  `glPolygonMode`, which WebGL does not have (see [example 4 (C3)](../c3-cgp-waving-surface/README.md)); the export of
   the mesh would write a file in the memory of the page.
 
 ## ImGui in a slide
@@ -77,4 +79,5 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c6-cgp-marching-cubes
 ```
 
 The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
-Serve the folder with a web server (`python3 -m http.server`), not as a file.
+Serve the root of the repository (or of the unzipped folder) with a web server, not as a file:
+`python3 -m http.server 8080`, then open `http://localhost:8080/examples/c6-cgp-marching-cubes/slides.html`.

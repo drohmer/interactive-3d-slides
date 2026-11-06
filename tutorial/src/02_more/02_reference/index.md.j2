@@ -25,7 +25,8 @@ The bridge is four files of [the repository](#the-code-of-the-bridge), to copy i
 | `slide::param(key, int& v, min, max)` | An integer |
 | `slide::param(key, bool& v)` | A toggle |
 {% raw %}| `slide::param(key, std::string& v, {"a", "b"})` | A choice; `{{"a", "Label A"}, ...}` gives the labels of the buttons |{% endraw %}
-| `slide::param(key, getter, setter, min, max, step)` | A number with other units than the variable (`float` or `bool`) |
+| `slide::param(key, getter, setter, min, max, step)` | A number with other units than the variable (a `float`) |
+| `slide::param(key, getter, setter)` | The same for a toggle (a `bool`) |
 | `slide::action(key, callback)` | A button without a value |
 | `slide::readout(key, getter)` | A value computed by the program, shown by the page and the slide, read only |
 | `.with_label(label, short_label)` | The label of the control (HTML allowed), and the one of the compact panel |
@@ -54,7 +55,7 @@ In `CONFIG`, at the top of the file: `script` (default `project.js`), `defaults`
 gives none, `{gui: '0'}`), `readyFrames` (frames drawn before the demo is shown), `capture` (keep the image
 of the canvas, default `true`), `navigationKeys`.
 
-The page also sets `window.__lhtmlReady` (a promise resolved once the demo is drawn, for a PDF export), and
+The page also sets `window.__lhtmlReady` (an object whose `ready()` gives a promise resolved once the demo is drawn, for a PDF export), and
 shows an error in the frame if the program cannot load or stops.
 
 ## Messages

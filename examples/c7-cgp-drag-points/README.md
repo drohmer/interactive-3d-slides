@@ -1,4 +1,6 @@
-# C7 - CGP: select and drag the control points of a curve
+# Example 6 (C7): Values sent back to the slide
+
+*CGP, drag the control points of a curve. The page of the tutorial: [6. Values sent back to the slide](https://scholartools.fr/interactive-3d-slides/01_tutorial/07_readout/index.html).*
 
 ![A Bezier curve and its control polygon](poster.png)
 
@@ -70,4 +72,5 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c7-cgp-drag-points
 ```
 
 The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
-Serve the folder with a web server (`python3 -m http.server`), not as a file.
+Serve the root of the repository (or of the unzipped folder) with a web server, not as a file:
+`python3 -m http.server 8080`, then open `http://localhost:8080/examples/c7-cgp-drag-points/slides.html`.

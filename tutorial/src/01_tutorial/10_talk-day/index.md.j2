@@ -12,7 +12,7 @@ A live demo has some risks, but most of them can be anticipated. This page lists
 ## Before you leave
 
 - **A local web server.** The demo is a web page that loads `project.wasm`: open the slides through a server,
-  not as files. `python3 -m http.server` in the folder of the slides is enough, and works without network.
+  not as files. `python3 -m http.server 8080` in the folder of the slides is enough, and works without network.
 - **Offline.** Everything the demo needs is in its folder: no CDN. Check what the slides load from the
   network (a slide framework from a CDN, fonts) and copy it locally. The `.data` files are downloaded at the
   first visit of the slide: keep them small.
@@ -63,31 +63,8 @@ smooth whatever the speed of the machine, and several videos are synchronized fr
 
 ## Test it automatically
 
-A test in a browser catches what you would see too late: the demo that does not start, the frame filled in
-one corner, the button that does nothing, the arrow key that stays in the demo. The repository has one for
-each example, described in a few lines (`demo.json`), run by Playwright in Chromium (WebGL by SwiftShader,
-no GPU needed):
-
-```json
-{
-  "query": "controls=ampl,k&panel=bl",
-  "steps": [
-    {"set": {"play": 0}}, {"snapshot": "a"},
-    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
-    {"differ": ["a", "b"]}
-  ]
-}
-```
-
-Each demo is also checked for: it starts, it fills its frame, it draws something, the arrow key reaches the
-slide, no error in the console. Copy an example and its `demo.json` to test your own program:
-[tests/test_demo.py](../../code/tests/test_demo.py).
-
-<details><summary><strong>tests/test_demo.py</strong>, the browser test of a demo</summary>
-
-{% include "_code/tests/test_demo.py.md" %}
-
-</details>
+A test in a browser catches, before the talk, the demo that does not start, the button that does nothing
+or the arrow key that stays in the demo. Each example has one: see [Testing a demo](../../02_more/03_tests/index.html).
 
 ## In case of trouble
 

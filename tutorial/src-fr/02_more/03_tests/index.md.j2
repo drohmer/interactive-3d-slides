@@ -1,0 +1,79 @@
+---
+title: Tester une démo
+section: Ressources
+description: "Tester une démo automatiquement dans un navigateur avant l'exposé : le test de chaque exemple (demo.json, tests/test_demo.py, Playwright), et les tests unitaires du pont."
+---
+
+# Tester une démo
+
+Un test dans un navigateur repère, avant l'exposé, ce que vous verriez sinon trop tard : la démo qui ne démarre
+pas, le dessin qui ne remplit qu'un coin du cadre, le bouton qui ne fait rien, la flèche qui reste dans la démo.
+Cette page est facultative : le tutoriel n'en a pas besoin.
+
+## Ce qu'il faut
+
+Playwright et son Chromium, dans un Python :
+
+```
+pip install playwright
+python3 -m playwright install chromium
+```
+
+WebGL tourne alors sur le processeur (SwiftShader) : pas besoin de carte graphique.
+
+## Le test d'une démo
+
+Chaque exemple a son test, décrit en quelques lignes dans `demo.json`. Par ex., le test d'une surface ondulée
+règle l'amplitude, et vérifie que l'image change :
+
+```json
+{
+  "query": "controls=ampl,k&panel=bl",
+  "steps": [
+    {"set": {"play": 0}}, {"snapshot": "a"},
+    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
+    {"differ": ["a", "b"]}
+  ]
+}
+```
+
+Chaque démo est aussi vérifiée sur les points suivants : elle démarre, remplit son cadre, dessine quelque chose,
+la flèche atteint la slide, et il n'y a aucune erreur dans la console.
+
+- **&gt;** Lancez le test d'un exemple, depuis la racine du dépôt (ou du dossier décompressé) :
+
+  ```
+  python3 tests/test_demo.py examples/c3-cgp-waving-surface/web examples/c3-cgp-waving-surface/demo.json
+  ```
+
+- **&gt;** Pour tester votre propre programme, copiez le `demo.json` d'un exemple à côté de votre compilation web,
+  et adaptez-le. Avec `--poster poster.png`, le test capture aussi l'image de la démo utilisée dans le PDF.
+
+Les étapes qu'un test peut utiliser sont listées en haut de [tests/test_demo.py](../../../code/tests/test_demo.py).
+
+<details><summary>Afficher le fichier complet : <strong>demo.json</strong> de l'exemple 4 (les boutons de la slide)</summary>
+
+{% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
+
+</details>
+
+<details><summary>Afficher le fichier complet : <strong>tests/test_demo.py</strong>, le test d'une démo dans un navigateur</summary>
+
+{% include "_code/tests/test_demo.py.md" %}
+
+</details>
+
+## Tous les exemples d'un coup
+
+`scripts/build_examples.py` compile chaque exemple pour le web, puis lance son test et capture son poster
+(voir l'[exemple 3](../../01_tutorial/04_cgp/index.html#comment-sont-compiles-les-exemples-cgp)) ; `--no-test` saute le test.
+
+## Le pont
+
+Le pont C++ a ses tests unitaires, avec les sanitizers d'adresses et de comportements indéfinis :
+
+```
+make test
+```
+
+depuis la racine du dépôt ([tests/test_slide_bridge.cpp](../../../code/tests/test_slide_bridge.cpp)).

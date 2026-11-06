@@ -243,7 +243,8 @@ def publish(site):
         size = write_zip(example + '.zip', example, expand(['examples/' + example] + needs + ['LICENSE'], files),
                          lhtml_demo(example, files), example_readme(example))
         print(f'zip: code/{example}.zip ({size:.1f} MB)')
-    size = write_zip('interactive-3d-slides.zip', 'interactive-3d-slides', files, readme=full_readme())
+    demos = [pair for example in EXAMPLES for pair in lhtml_demo(example, files)]
+    size = write_zip('interactive-3d-slides.zip', 'interactive-3d-slides', files, demos, readme=full_readme())
     print(f'zip: code/interactive-3d-slides.zip ({size:.1f} MB), {len(files)} files in code/')
     # the fragments are for the pages only
     shutil.rmtree(os.path.join(site, '_code'), ignore_errors=True)

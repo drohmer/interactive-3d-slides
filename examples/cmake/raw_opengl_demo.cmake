@@ -7,9 +7,9 @@
 #           lhtml-site/src/_demo/: after a build, the slides show the new version of the program.
 #           To keep web/ as it is: emcmake cmake -S . -B build_web -DSLIDE_DEMO_PUBLISH=OFF
 
-set(SLIDE_DEMOS_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
-set(SLIDE_BRIDGE_DIR "${SLIDE_DEMOS_ROOT}/bridge")
-set(SLIDE_GLAD_DIR "${SLIDE_DEMOS_ROOT}/examples/third_party/glad")
+set(INTERACTIVE_3D_SLIDES_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(SLIDE_BRIDGE_DIR "${INTERACTIVE_3D_SLIDES_ROOT}/bridge")
+set(SLIDE_GLAD_DIR "${INTERACTIVE_3D_SLIDES_ROOT}/examples/third_party/glad")
 option(SLIDE_DEMO_PUBLISH "Copy the web build into web/ and lhtml-site/src/_demo/" ON)
 
 function(raw_opengl_demo target)

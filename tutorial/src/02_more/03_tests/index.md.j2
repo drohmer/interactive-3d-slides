@@ -1,0 +1,79 @@
+---
+title: Testing a demo
+section: Resources
+description: 'Test a demo automatically in a browser before the talk: the test of each example (demo.json, tests/test_demo.py, Playwright), and the unit tests of the bridge.'
+---
+
+# Testing a demo
+
+A test in a browser catches, before the talk, what you would otherwise see too late: the demo that does not
+start, the drawing that fills only one corner of the frame, the button that does nothing, the arrow key that
+stays in the demo. This page is optional: the tutorial does not need it.
+
+## What you need
+
+Playwright and its Chromium, in a Python:
+
+```
+pip install playwright
+python3 -m playwright install chromium
+```
+
+WebGL then runs on the processor (SwiftShader): no graphics card is needed.
+
+## The test of a demo
+
+Each example has its test, described in a few lines in `demo.json`. For instance, the test of a waving surface
+sets the amplitude, and checks that the image changes:
+
+```json
+{
+  "query": "controls=ampl,k&panel=bl",
+  "steps": [
+    {"set": {"play": 0}}, {"snapshot": "a"},
+    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
+    {"differ": ["a", "b"]}
+  ]
+}
+```
+
+Each demo is also checked for the following points: it starts, it fills its frame, it draws something, the
+arrow key reaches the slide, and there is no error in the console.
+
+- **&gt;** Run the test of an example, from the root of the repository (or of the unzipped folder):
+
+  ```
+  python3 tests/test_demo.py examples/c3-cgp-waving-surface/web examples/c3-cgp-waving-surface/demo.json
+  ```
+
+- **&gt;** To test your own program, copy the `demo.json` of an example next to your web build, and adapt it.
+  With `--poster poster.png`, the test also captures the image of the demo used in the PDF.
+
+The steps a test can use are listed at the top of [tests/test_demo.py](../../code/tests/test_demo.py).
+
+<details><summary>Show the full file: <strong>demo.json</strong> of example 4 (the buttons of the slide)</summary>
+
+{% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
+
+</details>
+
+<details><summary>Show the full file: <strong>tests/test_demo.py</strong>, the test of a demo in a browser</summary>
+
+{% include "_code/tests/test_demo.py.md" %}
+
+</details>
+
+## The examples, all at once
+
+`scripts/build_examples.py` builds each example for the web, then runs its test and captures its poster
+(see [example 3](../../01_tutorial/04_cgp/index.html#how-the-cgp-examples-are-built)); `--no-test` skips the test.
+
+## The bridge
+
+The C++ bridge has its unit tests, with the address and undefined-behavior sanitizers:
+
+```
+make test
+```
+
+from the root of the repository ([tests/test_slide_bridge.cpp](../../code/tests/test_slide_bridge.cpp)).

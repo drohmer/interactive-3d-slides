@@ -1,4 +1,6 @@
-# A2 - Raw OpenGL 3.3: uniforms driven live
+# Example 2 (A2): Uniforms driven live
+
+*raw OpenGL 3.3, uniforms driven live. The page of the tutorial: [2. Uniforms driven live](https://scholartools.fr/interactive-3d-slides/01_tutorial/03_panel/index.html).*
 
 ![A twisted box](poster.png)
 
@@ -55,4 +57,4 @@ document.querySelector('iframe').contentWindow.postMessage({slide: {set: {twist:
 
 ## Build
 
-As [A1](../a1-opengl-cube/README.md#build).
+As [example 1 (A1)](../a1-opengl-cube/README.md#build).

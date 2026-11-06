@@ -1,4 +1,6 @@
-# C1 - The CGP template, as is
+# Example 3 (C1): CGP program
+
+*the template project of CGP, as it is. The page of the tutorial: [3. CGP program](https://scholartools.fr/interactive-3d-slides/01_tutorial/04_cgp/index.html).*
 
 ![The scene of the CGP template](poster.png)
 
@@ -43,4 +45,5 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c1-cgp-template
 ```
 
 The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
-Serve the folder with a web server (`python3 -m http.server`), not as a file.
+Serve the root of the repository (or of the unzipped folder) with a web server, not as a file:
+`python3 -m http.server 8080`, then open `http://localhost:8080/examples/c1-cgp-template/slides.html`.

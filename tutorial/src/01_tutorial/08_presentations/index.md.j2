@@ -8,10 +8,10 @@ description: 'Two complete example presentations, one in reveal.js and one in lh
 
 # 7. Complete presentations
 
-The previous examples place one model in one slide. In a talk, the models are mixed with the rest of the
-presentation: a title, an outline, sections, slides of text, and from time to time a slide with a model next to
+The previous examples place one demo in one slide. In a talk, the demos are mixed with the rest of the
+presentation: a title, an outline, sections, slides of text, and from time to time a slide with a demo next to
 its text. The two presentations below are the same talk of twelve slides, made once with reveal.js and once
-with lhtml-site, using the models of the examples.
+with lhtml-site, using the demos of the examples.
 
 <div class="talk-actions">
 <a class="btn btn-primary" href="../../decks/reveal.js/index.html">Open the reveal.js presentation →</a>
@@ -19,7 +19,7 @@ with lhtml-site, using the models of the examples.
 <a class="btn" href="../../decks/lhtml-site/slides.pdf">PDF of the lhtml-site presentation</a>
 </div>
 
-In both, go from slide to slide with the arrow keys; click in a model to turn it, then the arrows still go to
+In both, go from slide to slide with the arrow keys; click in a demo to turn it, then the arrows still go to
 the next slide.
 
 ## In reveal.js
@@ -30,9 +30,9 @@ the next slide.
 <a href="../../decks/reveal.js/index.html">Open it in its own page</a>.</div>
 </div>
 
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-reveal.js.zip">talk-reveal.js.zip</a>, the presentation and its models (<code>demos/</code>), ready to show (see its <code>README.md</code>).</span><span><strong>Show it:</strong> <code>python3 -m http.server 8080</code> in its folder, then <code>http://localhost:8080/</code></span></div>
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-reveal.zip">talk-reveal.zip</a>, the presentation and its demos (<code>demos/</code>), ready to show (see its <code>README.md</code>).</span><span><strong>Show it:</strong> <code>python3 -m http.server 8080</code> in its folder, then <code>http://localhost:8080/</code></span></div>
 
-One HTML file holds the whole presentation, a `<section>` per slide. The models are in `demos/` next to it:
+One HTML file holds the whole presentation, a `<section>` per slide. The demos are in `demos/` next to it:
 
 ```
 talk-reveal/
@@ -43,10 +43,10 @@ talk-reveal/
     slide-controls.js    the buttons of the slides
 ```
 
-- A slide with a model: a `<div class="side">` with the text on the left and the frame on the right.
-- `data-src` loads a model when its slide comes near, and unloads it after: the models of the other slides
+- A slide with a demo: a `<div class="side">` with the text on the left and the frame on the right.
+- `data-src` loads a demo when its slide comes near, and unloads it after: the demos of the other slides
   do not run.
-- All the slides are in one page: the buttons of a slide name their model (`data-demo="#surface"`).
+- All the slides are in one page: the buttons of a slide name their demo (`data-demo="#surface"`).
 
 ### index.html
 
@@ -62,9 +62,9 @@ talk-reveal/
 <a href="../../decks/lhtml-site/html/index.html">Open it in its own page</a>, or its <a href="../../decks/lhtml-site/slides.pdf">PDF</a>.</div>
 </div>
 
-<div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-lhtml-site.zip">talk-lhtml-site.zip</a>, the sources of the presentation and its models (<code>src/_demo/</code>)</span><span><strong>Build it:</strong> <code>lhtml-site</code> in its folder, then <code>lhtml-site --serve</code></span></div>
+<div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-lhtml-site.zip">talk-lhtml-site.zip</a>, the sources of the presentation and its demos (<code>src/_demo/</code>)</span><span><strong>Build it:</strong> <code>lhtml-site</code> in its folder, then <code>lhtml-site --serve</code></span></div>
 
-A folder per slide, in the order of their names. The models are in `src/_demo/`; a folder whose name starts
+A folder per slide, in the order of their names. The demos are in `src/_demo/`; a folder whose name starts
 with an underscore is not a slide, it is copied as it is.
 
 ```
@@ -72,19 +72,19 @@ talk-lhtml-site/
   README.md                    how to build and show it
   configure.yaml               the build: the slides in the browser, and a PDF
   src/
-    01_title/index.html.j2     a slide: its title (=), its text, its model (demo::)
+    01_title/index.html.j2     a slide: its title (=), its text, its demo (demo::)
     02_outline/index.html.j2
     ...
     12_conclusion/index.html.j2
-    _style/talk.css            the buttons of the slides, and the image of a model in the PDF
+    _style/talk.css            the buttons of the slides, and the image of a demo in the PDF
     _demo/a1/ ... _demo/c7/    the web builds of the examples, with their poster
     _demo/slide-controls.js
 ```
 
-- A slide with a model: the layout `side` puts the text on the left and the `media::` block on the right.
-- `demo::` writes the frame; `img::` gives the image of the model in the PDF (the classes `.live` and `.still`,
+- A slide with a demo: the layout `side` puts the text on the left and the `media::` block on the right.
+- `demo::` writes the frame; `img::` gives the image of the demo in the PDF (the classes `.live` and `.still`,
   and `_style/talk.css`).
-- A slide shows one page: the buttons of a slide drive its model without naming it.
+- A slide shows one page: the buttons of a slide drive its demo without naming it.
 - `configure.yaml` loads the stylesheet and `slide-controls.js` in every slide (`cssAbs`, `jsAbs`).
 
 ### configure.yaml
@@ -108,9 +108,9 @@ talk-lhtml-site/
 | | reveal.js | lhtml-site |
 |---|---|---|
 | The slides | one HTML file, a `<section>` per slide | a folder per slide, `index.html.j2` |
-| A model | `<iframe class="demo" data-src="demos/c3/index.html?...">` | `demo::../_demo/c3/index.html?...` |
-| Text and model side by side | a grid in the style of the page | the layout `side` |
-| Buttons in a slide | name their model: `data-demo="#surface"` | drive the model of the slide |
-| The PDF | the printing of reveal.js | `slides-pdf`, with an image of each model |
+| A demo | `<iframe class="demo" data-src="demos/c3/index.html?...">` | `demo::../_demo/c3/index.html?...` |
+| Text and demo side by side | a grid in the style of the page | the layout `side` |
+| Buttons in a slide | name their demo: `data-demo="#surface"` | drive the demo of the slide |
+| The PDF | the printing of reveal.js | `slides-pdf`, with an image of each demo |
 
-**Next:** [On the day of the talk](../09_talk-day/index.html).
+**Next:** [Your own program in a slide](../09_your-program/index.html), then [On the day of the talk](../10_talk-day/index.html).

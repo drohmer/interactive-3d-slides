@@ -1,4 +1,6 @@
-# C3 - CGP: a waving surface, driven from the panel and from the slide
+# Example 4 (C3): Buttons in the slide
+
+*CGP, a waving surface driven from the panel and from the slide. The page of the tutorial: [4. Buttons in the slide](https://scholartools.fr/interactive-3d-slides/01_tutorial/05_buttons/index.html).*
 
 ![A ripple on a surface](poster.png)
 
@@ -81,4 +83,5 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c3-cgp-waving-surface
 ```
 
 The build replaces [web/](web/) and `lhtml-site/src/_demo/`: both slides then show the new version.
-Serve the folder with a web server (`python3 -m http.server`), not as a file.
+Serve the root of the repository (or of the unzipped folder) with a web server, not as a file:
+`python3 -m http.server 8080`, then open `http://localhost:8080/examples/c3-cgp-waving-surface/slides.html`.

@@ -12,7 +12,7 @@ Une démo en direct comporte des risques, mais la plupart peuvent être anticip�
 ## Avant de partir
 
 - **Un serveur web local.** La démo est une page web qui charge `project.wasm` : ouvrez les slides à travers
-  un serveur, pas comme des fichiers. `python3 -m http.server` dans le dossier des slides suffit, et marche
+  un serveur, pas comme des fichiers. `python3 -m http.server 8080` dans le dossier des slides suffit, et marche
   sans réseau.
 - **Hors ligne.** Tout ce dont la démo a besoin est dans son dossier : pas de CDN. Vérifiez ce que les slides
   chargent depuis le réseau (un framework de slides depuis un CDN, des polices) et copiez-le en local. Les
@@ -70,31 +70,8 @@ synchronisées image par image.
 
 ## Le tester automatiquement
 
-Un test dans un navigateur repère ce que vous verriez trop tard : la démo qui ne démarre pas, le cadre rempli
-dans un coin, le bouton qui ne fait rien, la flèche qui reste dans la démo. Le dépôt en a un pour chaque
-exemple, décrit en quelques lignes (`demo.json`), lancé par Playwright dans Chromium (WebGL par SwiftShader,
-pas besoin de carte graphique) :
-
-```json
-{
-  "query": "controls=ampl,k&panel=bl",
-  "steps": [
-    {"set": {"play": 0}}, {"snapshot": "a"},
-    {"set": {"ampl": 0.25}}, {"snapshot": "b"},
-    {"differ": ["a", "b"]}
-  ]
-}
-```
-
-Chaque démo est aussi vérifiée sur ces points : elle démarre, remplit son cadre, dessine quelque chose, la
-flèche atteint la slide, aucune erreur dans la console. Copiez un exemple et son `demo.json` pour tester
-votre propre programme : [tests/test_demo.py](../../../code/tests/test_demo.py).
-
-<details><summary><strong>tests/test_demo.py</strong>, le test d'une démo dans le navigateur</summary>
-
-{% include "_code/tests/test_demo.py.md" %}
-
-</details>
+Un test dans un navigateur repère, avant l'exposé, la démo qui ne démarre pas, le bouton qui ne fait rien
+ou la flèche qui reste dans la démo. Chaque exemple en a un : voir [Tester une démo](../../02_more/03_tests/index.html).
 
 ## En cas de problème
 

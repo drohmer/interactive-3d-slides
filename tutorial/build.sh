@@ -71,10 +71,10 @@ for d in $TALK_DEMOS; do cp -R ".site/demos/$d" .site/decks/reveal.js/demos/; do
 cp .site/demos/slide-controls.js .site/decks/reveal.js/demos/
 
 echo "==> the two talks to download (.site/code/talk-*.zip)"
-rm -f .site/code/talk-reveal.js.zip .site/code/talk-lhtml-site.zip
+rm -f .site/code/talk-reveal.zip .site/code/talk-lhtml-site.zip
 # reveal.js: the talk as it is shown (README.md, index.html, demos/), in a folder talk-reveal/
 rm -rf .work/talk-reveal && cp -R .site/decks/reveal.js .work/talk-reveal
-(cd .work && zip -qr ../.site/code/talk-reveal.js.zip talk-reveal -x '*.DS_Store')
+(cd .work && zip -qr ../.site/code/talk-reveal.zip talk-reveal -x '*.DS_Store')
 # lhtml-site: the sources of the talk, with the demos in src/_demo/ (build it with lhtml-site)
 (cd .work && zip -qr ../.site/code/talk-lhtml-site.zip talk-lhtml-site -x 'talk-lhtml-site/.site/*' \
     'talk-lhtml-site/.structure/*' 'talk-lhtml-site/.verification/*' 'talk-lhtml-site/.layout/*' '*.DS_Store')

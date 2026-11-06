@@ -26,10 +26,24 @@ Les slides du tutoriel sont faites avec [reveal.js](https://revealjs.com/) (chaq
 `slides.html`), et les mêmes démos sont dans un exposé fait avec [lhtml-site](https://scholartools.fr/lhtml/fr/).
 Les deux sont en HTML, où le cadre est natif.
 
-Le petit morceau de code qui relie le programme et la slide (deux fichiers C++ qui lisent les réglages dans le
-programme, et la page `slide-frame.html`) est appelé le *pont* dans ce tutoriel.
+Quelques mots utilisés dans le tutoriel :
+
+- **La démo :** votre programme, compilé pour le web, qui tourne dans le cadre d'une slide.
+- **La page de la démo :** `slide-frame.html`, copiée à côté de la compilation du programme sous le nom
+  `index.html` (c'est le `web/index.html` de chaque exemple).
+- **Le pont :** le petit morceau de code qui relie le programme et la slide : la page de la démo, et deux
+  fichiers C++ (`slide_bridge.hpp/.cpp`) qui lisent les réglages dans le programme.
+- **Le panneau :** les curseurs et boutons que la page de la démo dessine par-dessus, à partir des réglages que
+  déclare le programme ([exemple 2](../03_panel/index.html)).
+- **Le poster :** une image de la démo, utilisée dans le PDF des slides, où un programme ne peut pas tourner.
+- **`data-src`** (reveal.js) et **`demo::`** (lhtml-site) : la manière dont chaque outil écrit le cadre d'une
+  démo (plus bas).
 
 ## Ce qu'il vous faut
+
+Pour voir les démos dans leurs slides, seul **Python 3** est nécessaire (étape [Récupérer le code](#recuperer-le-code)).
+Pour recompiler les exemples 1 et 2, il faut en plus un compilateur C++, CMake, GLFW et Emscripten ; pour les
+exemples 3 à 6, la bibliothèque CGP en plus.
 
 - **Un compilateur C++ et CMake**, et GLFW pour la version bureau des exemples
   (`brew install glfw` sur macOS, `sudo apt install libglfw3-dev` sur Ubuntu).
@@ -53,7 +67,7 @@ programme, et la page `slide-frame.html`) est appelé le *pont* dans ce tutoriel
   faite pour enseigner l'informatique graphique, nécessaire seulement pour les recompiler
   (`git clone https://github.com/drohmer/cgp-2027.git`). Les deux premiers exemples n'ont besoin que de GLFW.
 
-<div class="callout" id="sous-windows"><div class="callout-title">Sous Windows</div>
+<details class="callout" id="sous-windows"><summary class="callout-title">Sous Windows (cliquez pour afficher les commandes)</summary>
 
 Les commandes du tutoriel sont écrites pour macOS et Linux. Dans PowerShell sous Windows :
 
@@ -69,7 +83,7 @@ Les commandes du tutoriel sont écrites pour macOS et Linux. Dans PowerShell sou
 Le `README.md` en haut du zip de chaque exemple donne ces commandes pour cet exemple. *(Ces commandes n'ont pas
 été testées sous Windows.)*
 
-</div>
+</details>
 
 ## Récupérer le code
 

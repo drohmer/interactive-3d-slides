@@ -15,6 +15,7 @@ n'y a donc pas de HTML à écrire.
 <div class="get">
 <div class="get-title">Récupérer cet exemple</div>
 <p><strong>Télécharger :</strong> <a href="../../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont, le module CMake et glad.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/a2-opengl-uniforms/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
@@ -43,44 +44,9 @@ n'y a donc pas de HTML à écrire.
   leur ordre. Un nombre donne un curseur, un booléen un interrupteur, une action un bouton.
 - **Des uniforms envoyés à chaque image :** le programme ne fait que lire ses variables ; il n'a pas besoin de
   savoir que la slide les a changées.
-- **Un angle accumulé,** `angle += 2 pi speed dt`, pour qu'un changement de vitesse ne fasse pas sauter la boîte.
+- **Un angle accumulé,** `angle += 2 pi speed dt`, pour qu'un changement de vitesse ne fasse pas sauter le cube.
 - **Un éclairage sans normales :** le fragment shader tire la normale des dérivées de la position
   (`cross(dFdx(p), dFdy(p))`) ; chaque triangle est plat, ce qui donne de fines bandes sur les faces tordues.
-
-## Les fichiers
-
-Les mêmes que dans l'[exemple 1](../02_cube/index.html#les-fichiers) : la compilation est le même `CMakeLists.txt`.
-
-### main.cpp
-
-[main.cpp]({{ code }}main.cpp)
-
-{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
-
-### slides.html
-
-[slides.html]({{ code }}slides.html)
-
-{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
-
-### lhtml-site/
-
-La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
-le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
-classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_uniforms/index.html.j2        the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
-
-{% include "_code/examples/a2-opengl-uniforms/lhtml-site/src/01_uniforms/index.html.j2.md" %}
-
-{% include "_code/examples/a2-opengl-uniforms/lhtml-site/configure.yaml.md" %}
 
 ## Compiler et lancer
 
@@ -93,5 +59,32 @@ de la ligne de commande.
 | `controls=twist,hue` | les contrôles du panneau, dans cet ordre |
 | `compact=1` | libellés courts, petit panneau (pour un petit cadre) |
 | `panel=tl`, `tr`, `bl`, `br` | le coin du panneau (`tr` par défaut) |
+
+## Les fichiers
+
+Les mêmes que dans l'[exemple 1](../02_cube/index.html#les-fichiers) : la compilation est le même `CMakeLists.txt`.
+
+### main.cpp
+
+[main.cpp]({{ code }}main.cpp)
+
+<details><summary>Afficher le fichier complet: <strong>main.cpp</strong> (256 lignes)</summary>
+
+{% include "_code/examples/a2-opengl-uniforms/main.cpp.md" %}
+
+</details>
+
+### slides.html
+
+[slides.html]({{ code }}slides.html)
+
+{% include "_code/examples/a2-opengl-uniforms/slides.html.md" %}
+
+### lhtml-site/
+
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_uniforms/index.html.j2` :
+
+{% include "_code/examples/a2-opengl-uniforms/lhtml-site/src/01_uniforms/index.html.j2.md" %}
 
 **Ensuite :** [3. Programme CGP](../04_cgp/index.html) : la même chose avec une bibliothèque.

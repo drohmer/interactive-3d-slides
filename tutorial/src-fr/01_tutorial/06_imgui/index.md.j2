@@ -15,6 +15,7 @@ projecteur, et rester cohérente avec les boutons de la slide.
 <div class="get">
 <div class="get-title">Récupérer cet exemple</div>
 <p><strong>Télécharger :</strong> <a href="../../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le projet CGP n'est nécessaire que pour recompiler.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/c6-cgp-marching-cubes/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
@@ -34,18 +35,21 @@ projecteur, et rester cohérente avec les boutons de la slide.
 </div>
 <script src="../../../code/bridge/slide-controls.js"></script>
 
-Le code vient de l'exemple CGP de [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
-(`examples/02_marching_cubes/02_marching_cube_dynamic`).
-
 ## Ce qui est nouveau
 
-- **ImGui lisible au projecteur :** `?gui_scale=1.4` agrandit son texte, par `project::gui_scale`, que le modèle
+- **ImGui lisible au projecteur :** `?gui_scale=1.4` agrandit son texte, par `project::gui_scale`, que le projet modèle
   de CGP donne à ImGui à chaque image. Ses sections restent fermées au départ : une fenêtre longue sort du cadre.
 - **Les mêmes variables pour ImGui et la slide :** elles sont déclarées au pont, avec ce qu'il faut recalculer
   quand la slide les change. ImGui affiche les nouvelles valeurs à l'image suivante, puisqu'il les lit.
 - **Deux contrôles cachés sur le web :** le fil de fer (`glPolygonMode`, voir l'[exemple 4](../05_buttons/index.html))
   et l'export du maillage vers un fichier, qui finirait dans la mémoire de la page.
 - **La souris :** dans CGP, ImGui prend les clics au-dessus de sa fenêtre ; ailleurs, la souris tourne la caméra.
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c6-cgp-marching-cubes`.
+
+*Rem. Les marching cubes de cet exemple viennent d'un exemple de [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027).*
 
 ## Les fichiers
 
@@ -60,13 +64,21 @@ examples/c6-cgp-marching-cubes/src/
 
 [scene.cpp]({{ code }}src/scene.cpp) : les déclarations sont à la fin de `initialize()`.
 
+<details><summary>Afficher le fichier complet: <strong>scene.cpp</strong> (94 lignes)</summary>
+
 {% include "_code/examples/c6-cgp-marching-cubes/src/scene.cpp.md" %}
+
+</details>
 
 ### src/implicit_surface/gui_helper.cpp
 
-La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués par le commentaire `interactive-3d-slides:`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+
+<details><summary>Afficher le fichier complet: <strong>gui_helper.cpp</strong> (63 lignes)</summary>
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp.md" %}
+
+</details>
 
 <details><summary><strong>Les autres fichiers</strong> : main.cpp, scene.hpp, implicit_surface.cpp/.hpp, field_function.cpp/.hpp</summary>
 
@@ -94,25 +106,9 @@ La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués `slide-
 
 ### lhtml-site/
 
-La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
-le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
-classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_marching-cubes/index.html.j2  the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_marching-cubes/index.html.j2` :
 
 {% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/src/01_marching-cubes/index.html.j2.md" %}
-
-{% include "_code/examples/c6-cgp-marching-cubes/lhtml-site/configure.yaml.md" %}
-
-## Compiler et lancer
-
-Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c6-cgp-marching-cubes`.
 
 **Ensuite :** [6. Valeurs renvoyées vers la slide](../07_readout/index.html).

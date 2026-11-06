@@ -4,7 +4,7 @@ Usage (the Emscripten SDK active: source <emsdk>/emsdk_env.sh), from the root of
   git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     the CGP project, once
   CGP_DIR=../cgp-2027 python3 scripts/build_examples.py c3-cgp-waving-surface
   CGP_DIR=../cgp-2027 python3 scripts/build_examples.py               all the examples
-On Windows (PowerShell; the Emscripten SDK active with <emsdk>\emsdk_env.bat, and Ninja installed:
+On Windows (PowerShell; the Emscripten SDK active with <emsdk>\emsdk_env.ps1, and Ninja installed:
 winget install Ninja-build.Ninja):
   $env:CGP_DIR = "..\cgp-2027"
   python scripts\build_examples.py c3-cgp-waving-surface

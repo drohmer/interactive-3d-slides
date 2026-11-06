@@ -6,7 +6,7 @@
 How to put interactive 3D models, typically made with OpenGL, in your presentations: a C++ program
 (raw OpenGL 3.3, or a library such as CGP) compiled to WebAssembly with [Emscripten](https://emscripten.org/),
 shown in a slide as an iframe, and driven from the slide while you speak, in reveal.js or lhtml-site. The tutorial
-goes through complete examples, from a turning cube in raw OpenGL to marching cubes with ImGui: each one with
+goes through complete examples, from a rotating cube in raw OpenGL to marching cubes with ImGui: each one with
 all its code, to download, a slide in reveal.js (`slides.html`) and in lhtml-site (`lhtml-site/`), and a live demo.
 
 This repository holds the tutorial and its code:
@@ -175,16 +175,17 @@ and moves (headless Chromium, WebGL by SwiftShader).
 
 ## Examples
 
-First examples, from basic to advanced, each with another kind of interface:
+The six examples, from basic to advanced, each with another kind of interface; the tutorial numbers
+them 1 to 6, the folders are named by their id (A for raw OpenGL, C for CGP):
 
-| Id | Example | Interface | Status |
+| Tutorial | Folder | Example | Interface |
 |---|---|---|---|
-| A1 | [Raw OpenGL 3.3: a turning cube](examples/a1-opengl-cube/) | none; settings in the address | done |
-| A2 | [A1 with uniforms driven live](examples/a2-opengl-uniforms/) | panel in the iframe, or the slide | done |
-| C1 | [The CGP template, as is](examples/c1-cgp-template/) | mouse in the canvas, ImGui | done |
-| C3 | [A waving surface](examples/c3-cgp-waving-surface/) | panel in the iframe, and buttons in the slide | done |
-| C6 | [Interactive marching cubes](examples/c6-cgp-marching-cubes/) | ImGui, enlarged for the projector | done |
-| C7 | [Select and drag points](examples/c7-cgp-drag-points/) | direct manipulation; a value sent to the slide | done |
+| [1. Rotating cube](https://scholartools.fr/interactive-3d-slides/01_tutorial/02_cube/index.html) | A1 | [Raw OpenGL 3.3: a rotating cube](examples/a1-opengl-cube/) | none; settings in the address |
+| [2. Uniforms driven live](https://scholartools.fr/interactive-3d-slides/01_tutorial/03_panel/index.html) | A2 | [A1 with uniforms driven live](examples/a2-opengl-uniforms/) | panel in the iframe, or the slide |
+| [3. CGP program](https://scholartools.fr/interactive-3d-slides/01_tutorial/04_cgp/index.html) | C1 | [The CGP template, as is](examples/c1-cgp-template/) | mouse in the canvas, ImGui |
+| [4. Buttons in the slide](https://scholartools.fr/interactive-3d-slides/01_tutorial/05_buttons/index.html) | C3 | [A waving surface](examples/c3-cgp-waving-surface/) | panel in the iframe, and buttons in the slide |
+| [5. GUI with ImGui](https://scholartools.fr/interactive-3d-slides/01_tutorial/06_imgui/index.html) | C6 | [Interactive marching cubes](examples/c6-cgp-marching-cubes/) | ImGui, enlarged for the projector |
+| [6. Values sent back to the slide](https://scholartools.fr/interactive-3d-slides/01_tutorial/07_readout/index.html) | C7 | [Select and drag points](examples/c7-cgp-drag-points/) | direct manipulation; a value sent to the slide |
 
 ## License
 

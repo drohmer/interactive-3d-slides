@@ -15,6 +15,7 @@ afficher une valeur du programme.
 <div class="get">
 <div class="get-title">Récupérer cet exemple</div>
 <p><strong>Télécharger :</strong> <a href="../../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a>. Le zip contient le programme C++, sa slide en reveal.js (<code>slides.html</code>) et en lhtml-site (<code>lhtml-site/</code>), la compilation web de la démo (prête à montrer), le pont et le script de compilation. Le projet CGP n'est nécessaire que pour recompiler.</p>
+<p class="try"><strong>L'essayer :</strong> décompressez-le, et dans le dossier décompressé lancez <code>python3 -m http.server 8080</code> ; puis ouvrez <code>http://localhost:8080/examples/c3-cgp-waving-surface/slides.html</code>, la slide avec sa démo. Pour modifier le programme : <a href="#compiler-et-lancer">compiler et lancer</a>.</p>
 <div class="get-actions">
 <a class="btn btn-primary" href="{{ code }}slides.html">Ouvrir la slide en reveal.js →</a>
 <a class="btn btn-primary" href="{{ code }}lhtml-site/html/index.html">Ouvrir la slide en lhtml-site →</a>
@@ -41,9 +42,9 @@ afficher une valeur du programme.
 - **Boutons dans la slide,** en HTML seulement, avec `slide-controls.js` : `data-demo-set` donne les réglages
   à appliquer, `data-demo-value` affiche une valeur en direct, et un bouton reçoit la classe `on` tant que ses
   réglages sont les valeurs courantes de la démo.
-- **Une scène CGP à elle :** trois fichiers remplacent ceux du modèle. `main.cpp` change d'une ligne
+- **Une scène CGP à elle :** trois fichiers remplacent ceux du projet modèle. `main.cpp` change d'une ligne
   (`slide::parse(argc, argv)`) ; les paramètres sont déclarés dans `scene.cpp`.
-- **La fenêtre ImGui du modèle** est cachée dans une slide (la page a son panneau), sauf avec `?gui=1`.
+- **La fenêtre ImGui du projet modèle** est cachée dans une slide (la page a son panneau), sauf avec `?gui=1`.
 
 <div class="callout warn"><div class="callout-title">Un piège du web : le fil de fer</div>
 
@@ -53,6 +54,12 @@ et sur le web. Le test de l'exemple dans le navigateur l'a repéré : l'image ne
 fil de fer.
 
 </div>
+
+## Compiler et lancer
+
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c3-cgp-waving-surface`.
+Son test dans le navigateur, [demo.json]({{ code }}demo.json), clique sur les boutons de la slide et vérifie les
+images et les valeurs (voir [Tester une démo](../../02_more/03_tests/index.html)).
 
 ## Les fichiers
 
@@ -70,13 +77,21 @@ examples/c3-cgp-waving-surface/
 
 [scene.cpp]({{ code }}src/scene.cpp)
 
+<details><summary>Afficher le fichier complet: <strong>scene.cpp</strong> (145 lignes)</summary>
+
 {% include "_code/examples/c3-cgp-waving-surface/src/scene.cpp.md" %}
+
+</details>
 
 ### src/scene.hpp
 
 [scene.hpp]({{ code }}src/scene.hpp)
 
+<details><summary>Afficher le fichier complet: <strong>scene.hpp</strong> (55 lignes)</summary>
+
 {% include "_code/examples/c3-cgp-waving-surface/src/scene.hpp.md" %}
+
+</details>
 
 ### src/main.cpp
 
@@ -95,29 +110,9 @@ et nommez-le sur ses boutons, `data-demo="#surface"`.
 
 ### lhtml-site/
 
-La même slide, faite avec lhtml-site : une présentation d'une seule slide, qui se construit telle quelle depuis
-le zip ([l'ouvrir]({{ code }}lhtml-site/html/index.html)). Dans ce dossier, `lhtml-site` la construit dans
-`.site/html/`, et `lhtml-site --serve` la montre sur `http://127.0.0.1:8000/`. Dans la slide, `(.live)` et `(.still)` donnent une
-classe au cadre et à l'image : le cadre est montré à l'écran, l'image dans un PDF (voir `talk.css`).
-
-```
-lhtml-site/
-  configure.yaml                       the build, and how to fill src/_demo/ from a clone of the repository
-  src/01_waving-surface/index.html.j2  the slide
-  src/_style/talk.css                  the buttons of the slide, and the image of the demo in a PDF
-  src/_demo/                           the demo: the web build, its poster, slide-controls.js (in the zip)
-```
+La même slide en lhtml-site ([l'ouvrir]({{ code }}lhtml-site/html/index.html)), organisée comme dans
+l'[exemple 1](../02_cube/index.html#lhtml-site) ; seule la slide change, `src/01_waving-surface/index.html.j2` :
 
 {% include "_code/examples/c3-cgp-waving-surface/lhtml-site/src/01_waving-surface/index.html.j2.md" %}
-
-{% include "_code/examples/c3-cgp-waving-surface/lhtml-site/configure.yaml.md" %}
-
-## Compiler et lancer
-
-Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c3-cgp-waving-surface`.
-Son test dans le navigateur, [demo.json]({{ code }}demo.json), clique sur les boutons d'une slide et vérifie les
-images et les valeurs :
-
-{% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
 
 **Ensuite :** [5. GUI avec ImGui](../06_imgui/index.html).
