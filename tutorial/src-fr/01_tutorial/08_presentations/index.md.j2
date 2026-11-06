@@ -8,10 +8,14 @@ description: "Deux présentations d'exemple complètes, l'une en reveal.js, l'au
 
 # 7. Présentations complètes
 
-Les exemples mettent un modèle dans une slide. Un exposé est une suite de slides : un titre, un plan, des
-sections, des slides de texte, et de temps en temps une slide avec un modèle à côté de son texte. Ces deux
-présentations sont le même exposé de douze slides, l'une faite avec reveal.js, l'autre avec lhtml-site, avec les
-modèles des exemples.
+<div class="code-path">Code : <code>tutorial/decks/reveal.js/</code>, <code>tutorial/decks/lhtml-site/</code></div>
+
+Les exemples précédents placent un modèle dans une slide. Dans un véritable exposé, les modèles sont mélangés avec
+le reste de la présentation : un titre, un plan, des sections, des slides de texte, et de temps en temps une slide
+avec un modèle à côté de son texte. L'objectif de cette page est de montrer une telle présentation complète.
+
+Le même exposé de douze slides est donné deux fois : une fois fait avec reveal.js, et une fois fait avec
+lhtml-site. Les deux utilisent les modèles des exemples précédents *(les présentations sont en anglais)*.
 
 <div class="talk-actions">
 <a class="btn btn-primary" href="../../../decks/reveal.js/index.html">Ouvrir la présentation reveal.js →</a>
@@ -19,8 +23,9 @@ modèles des exemples.
 <a class="btn" href="../../../decks/lhtml-site/slides.pdf">PDF de la présentation lhtml-site</a>
 </div>
 
-Dans les deux, passez d'une slide à l'autre avec les flèches ; cliquez dans un modèle pour le tourner, puis les
-flèches passent toujours à la slide suivante. Les présentations sont en anglais.
+- **&gt;** Ouvrez l'une des présentations, et passez d'une slide à l'autre avec les flèches.
+- **&gt;** Sur une slide avec un modèle, cliquez dans le modèle et tournez-le à la souris, puis appuyez sur la
+  flèche droite : vérifiez que vous passez bien à la slide suivante.
 
 ## En reveal.js
 
@@ -32,8 +37,8 @@ flèches passent toujours à la slide suivante. Les présentations sont en angla
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/talk-reveal.js.zip">talk-reveal.js.zip</a>, la présentation et ses modèles (<code>demos/</code>), prête à montrer</span><span><strong>La montrer :</strong> <code>python3 -m http.server</code> dans son dossier, puis <code>http://localhost:8000/</code></span></div>
 
-Un seul fichier HTML contient toute la présentation, une `<section>` par slide. Les modèles sont dans `demos/` à
-côté :
+Dans reveal.js, un seul fichier HTML contient toute la présentation, avec une `<section>` par slide. Les modèles
+sont placés dans le répertoire `demos/` à côté :
 
 ```
 reveal.js/
@@ -43,10 +48,13 @@ reveal.js/
     slide-controls.js    the buttons of the slides
 ```
 
-- Une slide avec un modèle : un `<div class="side">` avec le texte à gauche et le cadre à droite.
-- `data-src` charge un modèle quand sa slide approche, et le décharge ensuite : les modèles des autres slides ne
-  tournent pas.
-- Toutes les slides sont dans une même page : les boutons d'une slide nomment leur modèle (`data-demo="#surface"`).
+- **Une slide avec un modèle** est un `<div class="side">`, avec le texte à gauche et le cadre à droite.
+- **data-src** charge un modèle quand sa slide approche, et le décharge ensuite.
+  - De cette manière, les modèles des autres slides ne tournent pas en arrière-plan.
+- Toutes les slides sont dans une même page : les boutons d'une slide indiquent donc leur modèle
+  (`data-demo="#surface"`).
+- *Note : à la fin du fichier, quelques lignes rendent le clavier à la présentation quand la slide change (un
+  modèle qui vient d'être déchargé le garderait sinon).*
 
 ### index.html
 
@@ -64,8 +72,10 @@ reveal.js/
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/talk-lhtml-site.zip">talk-lhtml-site.zip</a>, les sources de la présentation et ses modèles (<code>src/_demo/</code>)</span><span><strong>La construire :</strong> <code>lhtml-site</code> dans son dossier, puis <code>lhtml-site --serve</code></span></div>
 
-Un dossier par slide, dans l'ordre de leurs noms. Les modèles sont dans `src/_demo/` ; un dossier dont le nom
-commence par un tiret bas n'est pas une slide, il est copié tel quel.
+Dans lhtml-site, chaque slide est un dossier, et les slides sont ordonnées par les noms des dossiers. Les modèles
+sont placés dans `src/_demo/`.
+
+*Rem. Un dossier dont le nom commence par un tiret bas n'est pas une slide : il est copié tel quel.*
 
 ```
 lhtml-site/
@@ -80,11 +90,14 @@ lhtml-site/
     _demo/slide-controls.js
 ```
 
-- Une slide avec un modèle : la mise en page `side` met le texte à gauche et le bloc `media::` à droite.
-- `demo::` écrit le cadre ; `img::` donne l'image du modèle dans le PDF (les classes `.live` et `.still`, et
-  `_style/talk.css`).
-- Une slide montre une page : les boutons d'une slide pilotent son modèle sans le nommer.
-- `configure.yaml` charge la feuille de style et `slide-controls.js` dans chaque slide (`cssAbs`, `jsAbs`).
+- **Une slide avec un modèle** utilise la mise en page `side`, qui place le texte à gauche et le bloc `media::`
+  à droite.
+- **demo::** écrit le cadre, et **img::** donne l'image du modèle utilisée dans le PDF.
+  - Les classes `.live` et `.still`, définies dans `_style/talk.css`, montrent le cadre à l'écran et l'image à
+    l'impression.
+- Chaque slide est une page séparée : les boutons d'une slide pilotent son modèle sans avoir à l'indiquer.
+- `configure.yaml` charge la feuille de style et `slide-controls.js` dans chaque slide (mots-clés `cssAbs` et
+  `jsAbs`).
 
 ### configure.yaml
 
@@ -104,12 +117,14 @@ lhtml-site/
 
 ## Le même exposé dans les deux
 
+Le tableau suivant résume les différences entre les deux versions :
+
 | | reveal.js | lhtml-site |
 |---|---|---|
 | Les slides | un fichier HTML, une `<section>` par slide | un dossier par slide, `index.html.j2` |
 | Un modèle | `<iframe class="demo" data-src="demos/c3/index.html?...">` | `demo::../_demo/c3/index.html?...` |
 | Texte et modèle côte à côte | une grille dans le style de la page | la mise en page `side` |
-| Les boutons d'une slide | nomment leur modèle : `data-demo="#surface"` | pilotent le modèle de la slide |
+| Les boutons d'une slide | indiquent leur modèle : `data-demo="#surface"` | pilotent le modèle de la slide |
 | Le PDF | l'impression de reveal.js | `slides-pdf`, avec une image de chaque modèle |
 
 **Ensuite :** [Le jour de l'exposé](../09_talk-day/index.html).

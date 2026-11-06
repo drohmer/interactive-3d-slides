@@ -7,9 +7,14 @@ description: 'The cube of example 1, twisted in its vertex shader and driven whi
 
 # 2. Uniforms driven live
 
-The cube of [example 1](../02_cube/index.html), subdivided and twisted in its vertex shader, changed while it
-runs: the twist, the hue, the speed, the light, and a reset button. The panel is built by the page from the
-parameters the program declares: there is no HTML to write.
+<div class="code-path">Code: <code>examples/a2-opengl-uniforms/</code></div>
+
+The objective of this example is to modify the program while it runs, from a panel displayed in the frame. We
+start from the cube of [example 1](../02_cube/index.html), subdivided and twisted in its vertex shader. Five
+elements can be changed: the twist, the hue, the speed, the light, and a reset button.
+
+The panel is not written in HTML: the page builds it automatically from the parameters that the program
+declares.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?twist=0.8&controls=twist,hue,speed,light,reset" title="A twisted box, driven by a panel"></iframe>
@@ -23,28 +28,39 @@ parameters the program declares: there is no HTML to write.
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a></span><span><strong>Graphics:</strong> basic, a deformation in the vertex shader</span><span><strong>Interface:</strong> a panel built from the C++</span></div>
 
-## What is new
+## Declaring the parameters
 
-- **Parameters declared once,** with their range: the address of the frame, the panel and the slide go
-  through these declarations.
+The parameters are declared once in the C++ code, with their range. The address of the frame, the panel, and
+the buttons of the slide all go through these declarations. In `main.cpp`, the declarations are the following:
 
-  ```cpp
-  slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
-  slide::param("light", light);
-  slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
-  ```
+```cpp
+slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
+slide::param("light", light);
+slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
+```
 
-- **The panel:** `controls=twist,hue,speed,light,reset` in the address of the frame lists the controls, in
-  their order. A number gives a slider, a bool a toggle, an action a button.
-- **Uniforms sent at each frame:** the program only reads its variables; it does not need to know that the
-  slide changed them.
-- **An accumulated angle,** `angle += 2 pi speed dt`, so that a change of speed does not make the box jump.
-- **Lighting without normals:** the fragment shader takes the normal from the derivatives of the position
-  (`cross(dFdx(p), dFdy(p))`); each triangle is flat, which shows as thin bands on the twisted faces.
+- **slide::param(name, variable, min, max, step)** links a name to a variable of the program.
+  - A number gives a slider, a bool gives a toggle.
+  - `with_label` gives the label of the panel (a long one, and a short one for a small frame).
+- **slide::action(name, function)** gives a button, which calls the function.
+- The order and the list of the controls are given in the address of the frame:
+  `controls=twist,hue,speed,light,reset`.
+
+Note that the program does not need to know that the slide changed a variable: the uniforms are sent to the
+shader at each frame, and the program only reads its variables.
+
+Two other details of the code may be useful in your own programs:
+
+- **An accumulated angle:** `angle += 2 pi speed dt`, instead of `angle = 2 pi speed t`. This way, a change of
+  speed does not make the box jump.
+- **Lighting without normals:** the fragment shader computes the normal from the derivatives of the position
+  (`cross(dFdx(p), dFdy(p))`).
+  - *It is normal that each triangle appears flat: this shows as thin bands on the twisted faces.*
 
 ## The files
 
-The same as [example 1](../02_cube/index.html#the-files): the build is the same `CMakeLists.txt`.
+The files are organized as in [example 1](../02_cube/index.html#organization-of-the-files), with the same
+`CMakeLists.txt`.
 
 ### main.cpp
 
@@ -60,9 +76,13 @@ The same as [example 1](../02_cube/index.html#the-files): the build is the same 
 
 ## Build and run
 
-As [example 1](../02_cube/index.html#build-and-run), from `examples/a2-opengl-uniforms/`; on the desktop,
-`./build/project --twist 1.2`. The panel exists only on the web: the desktop version takes its settings from
-the command line.
+- **&gt;** Build the example as in [example 1](../02_cube/index.html#build-and-run), from
+  `examples/a2-opengl-uniforms/`.
+- **&gt;** On the desktop, run `./build/project --twist 1.2`.
+  - *Rem. The panel only exists on the web: the desktop version takes its settings from the command line.*
+- **&gt;** On the web, open the slide, and check that the sliders change the box while it rotates.
+
+The address of the frame accepts the following options for the panel:
 
 | In the address | Effect |
 |---|---|
@@ -70,4 +90,4 @@ the command line.
 | `compact=1` | short labels, small panel (for a small frame) |
 | `panel=tl`, `tr`, `bl`, `br` | the corner of the panel (default `tr`) |
 
-**Next:** [3. CGP program](../04_cgp/index.html): the same with a library.
+**Next:** [3. CGP program](../04_cgp/index.html): the same principle with a library.

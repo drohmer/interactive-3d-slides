@@ -6,29 +6,36 @@ description: 'What you need, how to get the code of the examples, and the princi
 
 # Before you start
 
-The tutorial is a series of complete examples, from the simplest to the most advanced. Each one is a
-folder you can download, build and show in a slide as it is; each page shows all its files. Start with the
-first one, then go as far as you need.
+The objective of this tutorial is to show how to place an interactive 3D model, written in C++ with OpenGL,
+inside the slides of a presentation. The tutorial is organized as a series of complete examples, from the
+simplest (a rotating cube in raw OpenGL) to more advanced ones (marching cubes with an ImGui window, points
+dragged with the mouse). Each example is a folder that you can download, build, and show in a slide as it
+is, and each page displays all its files.
 
-## The principle
+*(You can start with the first example, then go as far as you need: the examples 3 to 6 use the CGP library,
+the two first ones only need GLFW.)*
 
-A slide shows interactive 3D the way a browser does: as a web page, in a frame (`<iframe>`).
+## Principle
+
+A slide displays interactive 3D in the same way as a browser does: as a web page, inside a frame (`<iframe>`).
+Three elements are involved:
 
 <div class="outputs">
 <div class="output"><div class="output-name">1. Your program, for the web</div><p>Your C++ OpenGL program, compiled to WebAssembly by Emscripten: <code>project.js</code>, <code>project.wasm</code>.</p></div>
-<div class="output"><div class="output-name">2. The page of the demo</div><p><code>slide-frame.html</code>: it runs the program in the frame, and passes it the settings of its address.</p></div>
-<div class="output"><div class="output-name">3. The slide</div><p>A frame shows that page; buttons in the slide can drive it, and the arrow keys still go to the next slide.</p></div>
+<div class="output"><div class="output-name">2. The page of the demo</div><p><code>slide-frame.html</code>: it runs the program in the frame, and passes it the settings given in its address.</p></div>
+<div class="output"><div class="output-name">3. The slide</div><p>A frame displays this page; buttons in the slide can drive the program, and the arrow keys still go to the next slide.</p></div>
 </div>
 
-The slides of the tutorial are made with [reveal.js](https://revealjs.com/) (each example comes with a
-slide, `slides.html`), and the same demos are in a talk made with [lhtml-site](https://scholartools.fr/lhtml/).
-Both are HTML, where the frame is native.
+- The slides of the examples are made with [reveal.js](https://revealjs.com/) (each example comes with a
+  slide, `slides.html`).
+- The same demos are also used in a talk made with [lhtml-site](https://scholartools.fr/lhtml/).
+- Both tools generate HTML pages, where a frame is a native element.
 
-## What you need
+## Requirements
 
-- **A C++ compiler and CMake**, and GLFW for the desktop version of the examples
+- **A C++ compiler and CMake**, as well as GLFW for the desktop version of the examples
   (`brew install glfw` on macOS, `sudo apt install libglfw3-dev` on Ubuntu).
-- **The Emscripten SDK**, for the web version:
+- **The Emscripten SDK**, to compile the web version:
 
   ```
   git clone https://github.com/emscripten-core/emsdk.git
@@ -38,29 +45,34 @@ Both are HTML, where the frame is native.
   source ./emsdk_env.sh        # in each new terminal, before building for the web
   ```
 
-  (see [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
-- **Python 3**, for a local web server: a browser refuses to load `project.wasm` from a page opened as a file.
+  *(see also the [Emscripten installation instructions](https://emscripten.org/docs/getting_started/downloads.html))*
+- **Python 3**, to run a local web server.
+  *Note: a browser refuses to load `project.wasm` from a page opened directly as a file.*
 - For the examples 3 to 6: the [CGP](https://github.com/drohmer/cgp-2027) library, a C++ library made for
-  teaching computer graphics. The two first examples need no library but GLFW.
+  teaching computer graphics.
 
-## Get the code
+## Download the code
 
-Each example page has a zip of the example and of what it needs. Or take everything at once:
-[interactive-3d-slides.zip](../../code/interactive-3d-slides.zip) (the bridge, the six examples with their web
-builds, the tests). Every file can also be opened alone: [all the files](../../02_more/01_files/index.html).
+Each example page provides a zip of the example and of what it needs. You can also download everything at
+once: [interactive-3d-slides.zip](../../code/interactive-3d-slides.zip) (the bridge, the six examples with
+their web builds, and the tests). Every file can also be opened individually: [all the files](../../02_more/01_files/index.html).
 
-The web builds are in the zips (`examples/<example>/web/`): you can show a demo before compiling anything.
-From the root of the unzipped folder:
+The web builds are already included in the zips (`examples/<example>/web/`), so that you can show a demo before
+compiling anything.
 
-```
-python3 -m http.server
-```
+- **&gt;** Unzip the archive, and run a web server from the root of the folder:
 
-then open `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+  ```
+  python3 -m http.server
+  ```
 
-## In reveal.js or in lhtml-site
+- **&gt;** Open `http://localhost:8000/examples/a1-opengl-cube/slides.html` in your browser.
+  You should see a slide with a rotating cube.
 
-**reveal.js:** a frame in a `<section>`. `data-src` loads it when its slide comes near, and unloads it after:
+## A demo in a reveal.js or lhtml-site slide
+
+**reveal.js:** the demo is a frame in a `<section>`. The attribute `data-src` loads it when its slide comes
+near, and unloads it after:
 
 ```html
 <section>
@@ -77,15 +89,16 @@ demo::../_demo/cube/index.html?speed=0.2
 ::
 ```
 
-The settings of the demo go in its address (`?speed=0.2`): one build serves several slides. The
-[example talk in reveal.js](../../decks/reveal.js/index.html) and the
-[one in lhtml-site](../../decks/lhtml-site/html/index.html) show the same demos.
+- In both cases, the settings of the demo are given in its address (`?speed=0.2`): a single build can
+  therefore be used in several slides with different settings.
+- The [example talk in reveal.js](../../decks/reveal.js/index.html) and the
+  [one in lhtml-site](../../decks/lhtml-site/html/index.html) show the same demos in a complete presentation.
 
-<div class="callout warn"><div class="callout-title">The frame takes the keyboard</div>
+<div class="callout warn"><div class="callout-title">Note: the frame takes the keyboard</div>
 
-Once you click in a demo, the keyboard goes to the frame: the arrow keys and the remote control stop
-changing the slide. This is how browsers work. The page of the demo (`slide-frame.html`) sends the keys back
-to the slides, in both tools.
+Once you click in a demo, the keyboard goes to the frame, and the arrow keys (or the remote control) no longer
+change the slide. This is the normal behavior of browsers. To avoid this problem, the page of the demo
+(`slide-frame.html`) sends the keys back to the slides, in both tools.
 
 </div>
 

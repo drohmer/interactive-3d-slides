@@ -7,8 +7,13 @@ description: "Des marching cubes interactifs en CGP, avec sa fenêtre ImGui agra
 
 # 5. GUI avec ImGui
 
-Une surface implicite, une somme de blobs et un bruit de Perlin, maillée par marching cubes à chaque changement.
-L'interface est la fenêtre ImGui du programme : aucun HTML à écrire, tous les réglages dans une fenêtre. Dans une slide, elle doit être lisible au projecteur, et rester d'accord avec les boutons de la slide.
+<div class="code-path">Code : <code>examples/c6-cgp-marching-cubes/</code></div>
+
+L'objectif de cet exemple est d'utiliser la fenêtre ImGui du programme comme interface de la slide. La scène est
+une surface implicite (une somme de blobs et d'un bruit de Perlin), maillée par marching cubes à chaque changement
+de ses paramètres. Avec ImGui, il n'y a aucun HTML à écrire, et tous les réglages sont dans une seule fenêtre. Dans
+une slide, deux points demandent un peu d'attention : la fenêtre doit être lisible au projecteur, et elle doit
+rester cohérente avec les boutons de la slide.
 
 <div class="live">
 <iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Des marching cubes avec la fenêtre ImGui"></iframe>
@@ -28,18 +33,25 @@ L'interface est la fenêtre ImGui du programme : aucun HTML à écrire, tous les
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a></span><span><strong>Rendu :</strong> un champ scalaire, des marching cubes, recalculés en direct</span><span><strong>Interface :</strong> ImGui, et des boutons dans la slide</span></div>
 
-Le code vient de l'exemple CGP de [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
-(`examples/02_marching_cubes/02_marching_cube_dynamic`).
+*Le code vient de l'exemple CGP de [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
+(`examples/02_marching_cubes/02_marching_cube_dynamic`).*
 
-## Ce qui est nouveau
+## ImGui dans une slide
 
-- **ImGui lisible au projecteur :** `?gui_scale=1.4` agrandit son texte, par `project::gui_scale`, que le modèle
-  de CGP donne à ImGui à chaque image. Ses sections restent fermées au départ : une fenêtre longue sort du cadre.
-- **Les mêmes variables pour ImGui et la slide :** elles sont déclarées au pont, avec ce qu'il faut recalculer
-  quand la slide les change. ImGui affiche les nouvelles valeurs à l'image suivante, puisqu'il les lit.
-- **Deux contrôles cachés sur le web :** le fil de fer (`glPolygonMode`, voir l'[exemple 4](../05_buttons/index.html))
-  et l'export du maillage vers un fichier, qui finirait dans la mémoire de la page.
-- **La souris :** dans CGP, ImGui prend les clics au-dessus de sa fenêtre ; ailleurs, la souris tourne la caméra.
+- **Lisible au projecteur :** `?gui_scale=1.4` dans l'adresse agrandit le texte d'ImGui.
+  - La valeur est stockée dans `project::gui_scale`, que le modèle de CGP donne à ImGui à chaque image.
+  - Les sections de la fenêtre restent fermées au départ : une fenêtre longue sortirait du cadre.
+- **Les mêmes variables pour ImGui et pour la slide :** les variables sont déclarées au pont, avec ce qu'il faut
+  recalculer quand la slide les change.
+  - ImGui lit les variables à chaque image : il affiche donc les nouvelles valeurs à l'image suivante, sans aucun
+    code supplémentaire.
+- **La souris :** dans CGP, ImGui prend les clics au-dessus de sa fenêtre ; partout ailleurs, la souris tourne la
+  caméra.
+
+Deux contrôles de la fenêtre d'origine sont cachés sur le web :
+
+- le fil de fer, qui utilise `glPolygonMode` (voir la note de l'[exemple 4](../05_buttons/index.html)) ;
+- l'export du maillage vers un fichier, qui serait écrit dans la mémoire de la page.
 
 ## Les fichiers
 
@@ -52,13 +64,13 @@ examples/c6-cgp-marching-cubes/src/
 
 ### src/scene.cpp
 
-[scene.cpp]({{ code }}src/scene.cpp) : les déclarations sont à la fin de `initialize()`.
+[scene.cpp]({{ code }}src/scene.cpp) : les déclarations au pont sont à la fin de la fonction `initialize()`.
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/scene.cpp.md" %}
 
 ### src/implicit_surface/gui_helper.cpp
 
-La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués par le commentaire `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp.md" %}
 
@@ -88,6 +100,8 @@ La fenêtre ImGui ; les deux contrôles cachés sur le web sont marqués `slide-
 
 ## Compiler et lancer
 
-Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c6-cgp-marching-cubes`.
+- **&gt;** Compilez l'exemple comme dans l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp),
+  avec `c6-cgp-marching-cubes`.
+- **&gt;** Ouvrez la slide, cliquez sur "Third blob", et vérifiez que la fenêtre ImGui affiche la nouvelle valeur.
 
 **Ensuite :** [6. Valeurs renvoyées vers la slide](../07_readout/index.html).

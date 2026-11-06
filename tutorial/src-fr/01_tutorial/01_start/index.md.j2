@@ -6,30 +6,36 @@ description: "Ce qu'il vous faut, comment récupérer le code des exemples, et l
 
 # Avant de commencer
 
-Le tutoriel est une suite d'exemples complets, du plus simple au plus avancé. Chacun est un dossier que vous
-pouvez télécharger, compiler et montrer tel quel dans une slide ; chaque page montre tous ses fichiers.
-Commencez par le premier, puis allez aussi loin que nécessaire.
+L'objectif de ce tutoriel est de montrer comment placer un modèle 3D interactif, écrit en C++ avec OpenGL, à
+l'intérieur des slides d'une présentation. Le tutoriel est organisé comme une suite d'exemples complets, du plus
+simple (un cube qui tourne, en OpenGL brut) aux plus avancés (des marching cubes avec une fenêtre ImGui, des points
+déplacés à la souris). Chaque exemple est un dossier que vous pouvez télécharger, compiler et montrer tel quel dans
+une slide, et chaque page affiche tous ses fichiers.
+
+*(Vous pouvez commencer par le premier exemple, puis aller aussi loin que nécessaire : les exemples 3 à 6 utilisent
+la bibliothèque CGP, les deux premiers n'ont besoin que de GLFW.)*
 
 ## Le principe
 
-Une slide montre de la 3D interactive comme le fait un navigateur : sous forme de page web, dans un cadre
-(`<iframe>`).
+Une slide affiche de la 3D interactive de la même manière qu'un navigateur : sous forme de page web, dans un cadre
+(`<iframe>`). Trois éléments interviennent :
 
 <div class="outputs">
 <div class="output"><div class="output-name">1. Votre programme, pour le web</div><p>Votre programme C++ OpenGL, compilé en WebAssembly par Emscripten : <code>project.js</code>, <code>project.wasm</code>.</p></div>
-<div class="output"><div class="output-name">2. La page de la démo</div><p><code>slide-frame.html</code> : elle fait tourner le programme dans le cadre, et lui transmet les réglages de son adresse.</p></div>
-<div class="output"><div class="output-name">3. La slide</div><p>Un cadre affiche cette page ; des boutons de la slide peuvent la piloter, et les flèches passent toujours à la slide suivante.</p></div>
+<div class="output"><div class="output-name">2. La page de la démo</div><p><code>slide-frame.html</code> : elle fait tourner le programme dans le cadre, et lui transmet les réglages donnés dans son adresse.</p></div>
+<div class="output"><div class="output-name">3. La slide</div><p>Un cadre affiche cette page ; des boutons de la slide peuvent piloter le programme, et les flèches passent toujours à la slide suivante.</p></div>
 </div>
 
-Les slides du tutoriel sont faites avec [reveal.js](https://revealjs.com/) (chaque exemple a sa slide,
-`slides.html`), et les mêmes démos sont dans un exposé fait avec [lhtml-site](https://scholartools.fr/lhtml/fr/).
-Les deux sont en HTML, où le cadre est natif.
+- Les slides des exemples sont faites avec [reveal.js](https://revealjs.com/) (chaque exemple est fourni avec une
+  slide, `slides.html`).
+- Les mêmes démos sont aussi utilisées dans un exposé fait avec [lhtml-site](https://scholartools.fr/lhtml/fr/).
+- Les deux outils génèrent des pages HTML, dans lesquelles un cadre est un élément natif.
 
 ## Ce qu'il vous faut
 
-- **Un compilateur C++ et CMake**, et GLFW pour la version bureau des exemples
+- **Un compilateur C++ et CMake**, ainsi que GLFW pour la version bureau des exemples
   (`brew install glfw` sur macOS, `sudo apt install libglfw3-dev` sur Ubuntu).
-- **Le SDK Emscripten**, pour la version web :
+- **Le SDK Emscripten**, pour compiler la version web :
 
   ```
   git clone https://github.com/emscripten-core/emsdk.git
@@ -39,31 +45,35 @@ Les deux sont en HTML, où le cadre est natif.
   source ./emsdk_env.sh        # in each new terminal, before building for the web
   ```
 
-  (voir [Download and install](https://emscripten.org/docs/getting_started/downloads.html)).
-- **Python 3**, pour un serveur web local : un navigateur refuse de charger `project.wasm` depuis une page
-  ouverte comme fichier.
+  *(voir aussi les [instructions d'installation d'Emscripten](https://emscripten.org/docs/getting_started/downloads.html))*
+- **Python 3**, pour lancer un serveur web local.
+  *Note : un navigateur refuse de charger `project.wasm` depuis une page ouverte directement comme fichier.*
 - Pour les exemples 3 à 6 : la bibliothèque [CGP](https://github.com/drohmer/cgp-2027), une bibliothèque C++
-  faite pour enseigner l'informatique graphique. Les deux premiers exemples n'ont besoin que de GLFW.
+  faite pour enseigner l'informatique graphique.
 
 ## Récupérer le code
 
-Chaque page d'exemple a un zip de l'exemple et de ce dont il a besoin. Ou prenez tout d'un coup :
-[interactive-3d-slides.zip](../../../code/interactive-3d-slides.zip) (le pont, les six exemples avec leurs
-compilations web, les tests). Chaque fichier peut aussi s'ouvrir seul : [tous les fichiers](../../02_more/01_files/index.html).
+Chaque page d'exemple propose un zip de l'exemple et de ce dont il a besoin. Vous pouvez aussi tout télécharger en
+une fois : [interactive-3d-slides.zip](../../../code/interactive-3d-slides.zip) (le pont, les six exemples avec
+leurs compilations web, et les tests). Chaque fichier peut également s'ouvrir individuellement :
+[tous les fichiers](../../02_more/01_files/index.html).
 
-Les compilations web sont dans les zips (`examples/<exemple>/web/`) : vous pouvez montrer une démo avant de
-compiler quoi que ce soit. Depuis la racine du dossier décompressé :
+Les compilations web sont déjà incluses dans les zips (`examples/<exemple>/web/`), de manière à pouvoir montrer
+une démo avant de compiler quoi que ce soit.
 
-```
-python3 -m http.server
-```
+- **&gt;** Décompressez l'archive, et lancez un serveur web depuis la racine du dossier :
 
-puis ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
+  ```
+  python3 -m http.server
+  ```
 
-## Dans reveal.js ou dans lhtml-site
+- **&gt;** Ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html` dans votre navigateur.
+  Vous devriez voir une slide avec un cube qui tourne.
 
-**reveal.js :** un cadre dans une `<section>`. `data-src` le charge quand sa slide approche, et le décharge
-ensuite :
+## Une démo dans une slide reveal.js ou lhtml-site
+
+**reveal.js :** la démo est un cadre dans une `<section>`. L'attribut `data-src` la charge quand sa slide
+approche, et la décharge ensuite :
 
 ```html
 <section>
@@ -80,15 +90,17 @@ demo::../_demo/cube/index.html?speed=0.2
 ::
 ```
 
-Les réglages de la démo vont dans son adresse (`?speed=0.2`) : une seule compilation sert plusieurs slides.
-[L'exposé d'exemple en reveal.js](../../../decks/reveal.js/index.html) et
-[celui en lhtml-site](../../../decks/lhtml-site/html/index.html) montrent les mêmes démos (en anglais).
+- Dans les deux cas, les réglages de la démo sont donnés dans son adresse (`?speed=0.2`) : une seule compilation
+  peut donc servir dans plusieurs slides avec des réglages différents.
+- [L'exposé d'exemple en reveal.js](../../../decks/reveal.js/index.html) et
+  [celui en lhtml-site](../../../decks/lhtml-site/html/index.html) montrent les mêmes démos dans une présentation
+  complète *(en anglais)*.
 
-<div class="callout warn"><div class="callout-title">Le cadre prend le clavier</div>
+<div class="callout warn"><div class="callout-title">Note : le cadre prend le clavier</div>
 
-Dès que vous cliquez dans une démo, le clavier va au cadre : les flèches et la télécommande ne changent plus de
-slide. C'est le fonctionnement des navigateurs. La page de la démo (`slide-frame.html`) renvoie les touches aux
-slides, dans les deux outils.
+Dès que vous cliquez dans une démo, le clavier va au cadre, et les flèches (ou la télécommande) ne changent plus
+de slide. C'est le comportement normal des navigateurs. Pour éviter ce problème, la page de la démo
+(`slide-frame.html`) renvoie les touches aux slides, dans les deux outils.
 
 </div>
 

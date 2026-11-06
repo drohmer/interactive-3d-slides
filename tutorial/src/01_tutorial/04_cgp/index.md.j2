@@ -7,14 +7,19 @@ description: 'A program of the CGP library in a slide, without changing a line: 
 
 # 3. CGP program
 
-A program written with a library works the same way, if the library builds for the web. This example is the
-template project of [CGP](https://github.com/drohmer/cgp-2027), a C++ library made for teaching computer
-graphics, compiled for the web without changing a line. The mouse turns the camera, its ImGui window stays
-on screen, and the arrow keys still go to the slides.
+<div class="code-path">Code: <code>examples/c1-cgp-template/</code>, <code>scripts/build_examples.py</code></div>
+
+A program written with a library works in the same way, as long as the library can be compiled for the web.
+The objective of this example is to show it with [CGP](https://github.com/drohmer/cgp-2027), a C++ library
+made for teaching computer graphics: we take the template project of CGP, and compile it for the web without
+changing a line.
+
+Once built, you should observe the following scene: the mouse rotates the camera, the ImGui window of the
+template stays on screen, and the arrow keys still go to the next slide.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html" title="The scene of the CGP template"></iframe>
-<div class="live-note">Live: drag to turn the camera.</div>
+<div class="live-note">Live: drag to rotate the camera.</div>
 </div>
 
 <div class="talk-actions">
@@ -26,9 +31,16 @@ on screen, and the arrow keys still go to the slides.
 
 ## How the CGP examples are built
 
-A CGP project is a template: `CMakeLists.txt`, the library in `cgp/`, your scene in `src/`, the shaders in
-`shaders/`. The examples of this tutorial hold only the files that differ from the template. The build script
-puts them over a copy of the template, adds the bridge, and builds with the `CMakeLists.txt` of CGP itself:
+A CGP project is organized as a template:
+
+- `CMakeLists.txt`: the build of the project;
+- `cgp/`: the library;
+- `src/`: your scene (this is where you usually edit the code);
+- `shaders/`: the shaders.
+
+The examples of this tutorial only contain the files that differ from the template. The build script copies
+the template, places the files of the example over it, adds the bridge, and compiles with the
+`CMakeLists.txt` of CGP itself:
 
 ```
 build/<example>-stage/      a copy of the CGP project (CGP_DIR)
@@ -36,18 +48,24 @@ build/<example>-stage/      a copy of the CGP project (CGP_DIR)
   CMakeLists.txt            the one of CGP, plus the link options of the bridge
 ```
 
-This example has no file of its own: it is the template as it is. With the CGP project in a folder and the
-Emscripten SDK activated, from the root of the repository:
+This first CGP example has no file of its own: it is the template as it is.
 
-```
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py c1-cgp-template
-CGP_DIR=<the CGP project> python3 scripts/build_examples.py --native c1-cgp-template
-```
+- **&gt;** With the CGP project in a folder, and the Emscripten SDK activated, run from the root of the repository:
 
-The first command builds for the web into `examples/c1-cgp-template/web/`, tests it in a browser and captures
-its poster; `--native` also builds the desktop version and runs it for two seconds. In your own CGP project, the
-same is three steps: copy `slide_bridge.hpp` and `slide_bridge.cpp` into `src/`, add the link options of the
-bridge to the web build of the `CMakeLists.txt`, and use `slide-frame.html` as the page of the demo.
+  ```
+  CGP_DIR=<the CGP project> python3 scripts/build_examples.py c1-cgp-template
+  CGP_DIR=<the CGP project> python3 scripts/build_examples.py --native c1-cgp-template
+  ```
+
+  - The first command compiles the web version into `examples/c1-cgp-template/web/`, tests it in a browser, and
+    captures its poster.
+  - With `--native`, the script also compiles the desktop version, and runs it for two seconds.
+
+In your own CGP project, the same can be done in three steps:
+
+- **&gt;** Copy `slide_bridge.hpp` and `slide_bridge.cpp` into `src/`.
+- **&gt;** Add the link options of the bridge to the web build in `CMakeLists.txt`.
+- **&gt;** Use `slide-frame.html` as the page of the demo.
 
 <details><summary><strong>scripts/build_examples.py</strong>, the build script (<a href="../../code/scripts/build_examples.py">download</a>)</summary>
 
@@ -63,11 +81,12 @@ bridge to the web build of the `CMakeLists.txt`, and use `slide-frame.html` as t
 
 ## What the page of the demo adds
 
-The web build of CGP writes its own page for a browser window. `slide-frame.html` replaces it, and:
+The web build of CGP generates its own page, designed for a full browser window. The file `slide-frame.html`
+replaces it, and adds the following elements:
 
-- fills the frame, whatever the size of the window the program creates;
-- sends the arrow keys and Page Down / Page Up to the slides, even after a click in the demo;
-- fades the demo in once its first frames are drawn, and says when it is ready (for a PDF export);
-- keeps the image of the canvas, so that it can be captured (a poster, tests).
+- it fills the frame, whatever the size of the window created by the program;
+- it sends the arrow keys and Page Down / Page Up to the slides, even after a click in the demo;
+- it fades the demo in once its first frames are drawn, and indicates when it is ready (useful for a PDF export);
+- it keeps the image of the canvas, so that it can be captured (for the poster, and for the tests).
 
 **Next:** [4. Buttons in the slide](../05_buttons/index.html): a CGP scene of its own, driven from the text of the slide.
