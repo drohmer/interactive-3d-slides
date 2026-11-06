@@ -11,20 +11,19 @@ description: "Un tutoriel pour intégrer des modèles 3D interactifs, typiquemen
 # Créez des slides avec de la 3D interactive
 
 <p class="hero-lead">Ce tutoriel décrit comment intégrer des modèles 3D interactifs, typiquement générés en
-OpenGL, dans vos présentations : un modèle qui tourne, une simulation que vous réglez, une courbe que vous
-déformez, en direct dans la slide pendant que vous parlez. Il avance par exemples complets, du plus simple au
-plus avancé : chacun avec tout son code, à télécharger, et une démo en direct.</p>
+OpenGL, dans des présentations. Il avance par exemples complets, du plus simple au plus avancé ; chaque exemple
+est fourni avec tout son code, à télécharger, et une démo en direct.</p>
 
 <div class="hero-actions">
 <a class="btn btn-primary" href="01_tutorial/01_start/index.html">Commencer le tutoriel →</a>
 <a class="btn" href="../code/interactive-3d-slides.zip">Télécharger tout le code</a>
 </div>
 
-## Ce que vous allez faire
+## Un exemple
 
-Un programme C++, compilé pour le web, dans un cadre. Les boutons ci-dessous sont en dehors, comme ils le
-seraient dans le texte de votre slide : ils changent le programme pendant qu'il tourne, et affichent une
-valeur qu'il renvoie.
+Voici un programme C++ compilé pour le web, affiché dans un cadre. Les boutons sont en dehors du cadre, comme
+ils le seraient dans le texte d'une slide : ils modifient les paramètres du programme pendant son exécution, et
+affichent une valeur calculée par le programme.
 
 <div class="live">
 <iframe id="surface" class="demo" src="../demos/c3/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="Une surface qui ondule, un programme C++ compilé en WebAssembly"></iframe>

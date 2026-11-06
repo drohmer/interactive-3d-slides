@@ -7,15 +7,10 @@ description: "Un programme de la bibliothèque CGP dans une slide, sans changer 
 
 # 3. Programme CGP
 
-<div class="code-path">Code : <code>examples/c1-cgp-template/</code>, <code>scripts/build_examples.py</code></div>
-
-Un programme écrit avec une bibliothèque fonctionne de la même manière, à condition que la bibliothèque puisse se
-compiler pour le web. L'objectif de cet exemple est de le montrer avec [CGP](https://github.com/drohmer/cgp-2027),
-une bibliothèque C++ faite pour enseigner l'informatique graphique : on prend le projet modèle de CGP, et on le
-compile pour le web sans changer une ligne.
-
-Une fois compilé, vous devriez observer la scène suivante : la souris tourne la caméra, la fenêtre ImGui du modèle
-reste à l'écran, et les flèches passent toujours à la slide suivante.
+Un programme écrit avec une bibliothèque marche de la même façon, si la bibliothèque se compile pour le web. Cet
+exemple est le projet modèle de [CGP](https://github.com/drohmer/cgp-2027), une bibliothèque C++ faite pour
+enseigner l'informatique graphique, compilé pour le web sans changer une ligne. La souris tourne la caméra, sa
+fenêtre ImGui reste à l'écran, et les flèches passent toujours aux slides.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html" title="La scène du modèle CGP"></iframe>
@@ -31,16 +26,10 @@ reste à l'écran, et les flèches passent toujours à la slide suivante.
 
 ## Comment sont compilés les exemples CGP
 
-Un projet CGP est organisé comme un modèle :
-
-- `CMakeLists.txt` : la compilation du projet ;
-- `cgp/` : la bibliothèque ;
-- `src/` : votre scène (c'est ici que vous modifiez habituellement le code) ;
-- `shaders/` : les shaders.
-
-Les exemples de ce tutoriel ne contiennent que les fichiers qui diffèrent du modèle. Le script de compilation
-copie le modèle, place par-dessus les fichiers de l'exemple, ajoute le pont, et compile avec le `CMakeLists.txt` de
-CGP lui-même :
+Un projet CGP est un modèle : `CMakeLists.txt`, la bibliothèque dans `cgp/`, votre scène dans `src/`, les
+shaders dans `shaders/`. Les exemples de ce tutoriel ne contiennent que les fichiers qui diffèrent du modèle. Le
+script de compilation les pose sur une copie du modèle, ajoute le pont, et compile avec le `CMakeLists.txt` de CGP
+lui-même :
 
 ```
 build/<example>-stage/      a copy of the CGP project (CGP_DIR)
@@ -48,24 +37,19 @@ build/<example>-stage/      a copy of the CGP project (CGP_DIR)
   CMakeLists.txt            the one of CGP, plus the link options of the bridge
 ```
 
-Ce premier exemple CGP n'a aucun fichier à lui : c'est le modèle tel quel.
+Cet exemple n'a aucun fichier à lui : c'est le modèle tel quel. Avec le projet CGP dans un dossier et le SDK
+Emscripten activé, depuis la racine du dépôt :
 
-- **&gt;** Avec le projet CGP dans un dossier, et le SDK Emscripten activé, lancez depuis la racine du dépôt :
+```
+CGP_DIR=<the CGP project> python3 scripts/build_examples.py c1-cgp-template
+CGP_DIR=<the CGP project> python3 scripts/build_examples.py --native c1-cgp-template
+```
 
-  ```
-  CGP_DIR=<the CGP project> python3 scripts/build_examples.py c1-cgp-template
-  CGP_DIR=<the CGP project> python3 scripts/build_examples.py --native c1-cgp-template
-  ```
-
-  - La première commande compile la version web dans `examples/c1-cgp-template/web/`, la teste dans un
-    navigateur, et capture son poster.
-  - Avec `--native`, le script compile aussi la version bureau, et la lance pendant deux secondes.
-
-Dans votre propre projet CGP, la même chose peut se faire en trois étapes :
-
-- **&gt;** Copiez `slide_bridge.hpp` et `slide_bridge.cpp` dans `src/`.
-- **&gt;** Ajoutez les options d'édition de liens du pont à la compilation web dans `CMakeLists.txt`.
-- **&gt;** Utilisez `slide-frame.html` comme page de la démo.
+La première commande compile pour le web dans `examples/c1-cgp-template/web/`, teste la démo dans un navigateur
+et capture son poster ; `--native` compile aussi la version bureau et la lance deux secondes. Dans votre propre
+projet CGP, c'est trois étapes : copiez `slide_bridge.hpp` et `slide_bridge.cpp` dans `src/`, ajoutez les options
+d'édition de liens du pont à la compilation web du `CMakeLists.txt`, et prenez `slide-frame.html` comme page de
+la démo.
 
 <details><summary><strong>scripts/build_examples.py</strong>, le script de compilation (<a href="../../../code/scripts/build_examples.py">télécharger</a>)</summary>
 
@@ -81,13 +65,13 @@ Dans votre propre projet CGP, la même chose peut se faire en trois étapes :
 
 ## Ce qu'ajoute la page de la démo
 
-La compilation web de CGP génère sa propre page, prévue pour une fenêtre de navigateur entière. Le fichier
-`slide-frame.html` la remplace, et ajoute les éléments suivants :
+La compilation web de CGP écrit sa propre page, pour une fenêtre de navigateur. `slide-frame.html` la remplace,
+et :
 
-- il remplit le cadre, quelle que soit la taille de la fenêtre créée par le programme ;
-- il envoie les flèches et Page suivante / Page précédente aux slides, même après un clic dans la démo ;
-- il fait apparaître la démo une fois ses premières images dessinées, et signale quand elle est prête (utile pour
-  un export PDF) ;
-- il garde l'image du canvas, de manière à pouvoir la capturer (pour le poster, et pour les tests).
+- remplit le cadre, quelle que soit la taille de la fenêtre que crée le programme ;
+- envoie les flèches et Page suivante / Page précédente aux slides, même après un clic dans la démo ;
+- fait apparaître la démo une fois ses premières images dessinées, et signale quand elle est prête (pour un
+  export PDF) ;
+- garde l'image du canvas, pour qu'elle puisse être capturée (un poster, des tests).
 
 **Ensuite :** [4. Boutons dans la slide](../05_buttons/index.html) : une scène CGP à elle, pilotée depuis le texte de la slide.

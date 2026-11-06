@@ -7,19 +7,13 @@ description: 'The smallest complete example: a cube in raw OpenGL 3.3, compiled 
 
 # 1. Rotating cube
 
-<div class="code-path">Code: <code>examples/a1-opengl-cube/</code></div>
-
-The objective of this first example is to display a minimal OpenGL program in a slide: a cube that rotates by
-itself, written in raw OpenGL 3.3 with GLFW (about 200 lines). There is no control on screen: the slide sets
-the speed and the tilt of the cube through the address of its frame. The same source file is compiled for the
-desktop and for the web.
-
-Once built, you should obtain the following result (the web build of this example, set by
-`?speed=0.2&tilt=25`):
+This first example is a minimal program: a cube that rotates by itself, written in raw OpenGL 3.3 with GLFW
+(about 200 lines). The slide sets its speed and its tilt through the address of the frame, and there is no
+control on screen. The same source file is compiled for the desktop and for the web.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Rotating cube, raw OpenGL compiled to WebAssembly"></iframe>
-<div class="live-note">Live: the web build of this example.</div>
+<div class="live-note">Live: the web build of this example, set by <code>?speed=0.2&amp;tilt=25</code>.</div>
 </div>
 
 <div class="talk-actions">
@@ -29,7 +23,7 @@ Once built, you should obtain the following result (the web build of this exampl
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>, the example and what it needs (the bridge, the CMake module, glad)</span><span><strong>Graphics:</strong> basic</span><span><strong>Interface:</strong> none; settings in the address</span></div>
 
-## Organization of the files
+## The files
 
 ```
 examples/a1-opengl-cube/
@@ -42,33 +36,21 @@ examples/third_party/glad/              the OpenGL loader, for the desktop
 bridge/                                 the bridge between the program and the slide
 ```
 
-- `main.cpp`: the only source file of the program; this is the file to look at first.
-- `CMakeLists.txt` and `raw_opengl_demo.cmake`: the build. Usually you won't have to edit them.
-- `slides.html`: the slide, with a frame pointing to `web/index.html`.
+### main.cpp
 
-## The program: main.cpp
+One source for the desktop (OpenGL 3.3 core, GLFW, glad) and for the web (WebGL 2, which is OpenGL ES 3.0).
+The four differences are marked with `#ifdef __EMSCRIPTEN__`:
 
-First observe the file `main.cpp`. You should recognize the usual organization of an OpenGL program: the
-creation of the window, the initialization of the shaders and of the cube, then the animation loop.
+1. **The headers:** `<GLES3/gl3.h>` on the web, glad on the desktop.
+2. **The first line of the shaders:** `#version 300 es` and a `precision` on the web, `#version 330 core`
+   on the desktop. The body of the shaders is the same; the program prepends the right line
+   (`shader_header`).
+3. **The size of the drawing:** the canvas of the page. The window is created at its size, otherwise
+   `glfwCreateWindow` resizes the canvas, and the size is read at each frame (`surface_size`).
+4. **The main loop:** on the web the browser calls `frame()` at each refresh (`emscripten_set_main_loop`).
 
-The file compiles for the desktop (OpenGL 3.3 core, GLFW, glad) and for the web (WebGL 2, which corresponds to
-OpenGL ES 3.0). The differences between both versions are marked with `#ifdef __EMSCRIPTEN__`. There are only
-four of them:
-
-- **1. The headers:** `<GLES3/gl3.h>` on the web, glad on the desktop.
-- **2. The first line of the shaders:** `#version 300 es` and a `precision` on the web, `#version 330 core`
-  on the desktop.
-  - The body of the shaders is the same; the program prepends the right line (`shader_header`).
-- **3. The size of the drawing:** on the web, it is the size of the canvas of the page.
-  - The window is created at this size, and the size is read again at each frame (`surface_size`).
-  - *Rem. If the window is created at a fixed size, `glfwCreateWindow` resizes the canvas, and the drawing only
-    fills a corner of the frame.*
-- **4. The main loop:** on the web, the browser calls `frame()` at each refresh of the page
-  (`emscripten_set_main_loop`) instead of a `while` loop.
-
-The settings come from the command line. On the web, the page of the demo builds this command line from its
-address (`?speed=0.2` gives `--speed 0.2`). Reading them only needs three lines with the bridge, at the
-beginning of `main()`.
+The settings come from the command line, which the page of the demo builds from its address
+(`?speed=0.2` gives `--speed 0.2`): three lines with the bridge, at the start of `main()`.
 
 [main.cpp]({{ code }}main.cpp)
 
@@ -76,11 +58,9 @@ beginning of `main()`.
 
 ### CMakeLists.txt
 
-The file [CMakeLists.txt]({{ code }}CMakeLists.txt) includes the module
-[raw_opengl_demo.cmake](../../code/examples/cmake/raw_opengl_demo.cmake):
-
-- on the desktop, it links GLFW and glad;
-- on the web, it adds the options of Emscripten, and copies the page of the demo next to the build.
+[CMakeLists.txt]({{ code }}CMakeLists.txt), and the module it includes,
+[raw_opengl_demo.cmake](../../code/examples/cmake/raw_opengl_demo.cmake): on the desktop it links GLFW and
+glad; on the web it adds the options of Emscripten and copies the page of the demo next to the build.
 
 {% include "_code/examples/a1-opengl-cube/CMakeLists.txt.md" %}
 
@@ -93,45 +73,41 @@ loads the demo when its slide comes near. [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/a1-opengl-cube/slides.html.md" %}
 
-*Note: the page of the demo, `web/index.html`, is the file [slide-frame.html](../../code/bridge/slide-frame.html)
-of the bridge, copied by the build. Its code, and the code of the two C++ files of the bridge, are given in the
-[reference](../../02_more/02_reference/index.html#the-code-of-the-bridge).*
+The page of the demo, `web/index.html`, is [slide-frame.html](../../code/bridge/slide-frame.html) of the
+bridge, copied by the build; its code and that of the two C++ files of the bridge are in the
+[reference](../../02_more/02_reference/index.html#the-code-of-the-bridge).
 
 ## Build and run
 
-- **&gt;** Build and run the desktop version, from `examples/a1-opengl-cube/`:
+On the desktop, from `examples/a1-opengl-cube/`:
 
-  ```
-  cmake -S . -B build
-  cmake --build build
-  ./build/project --speed 0.3 --tilt 40
-  ```
+```
+cmake -S . -B build
+cmake --build build
+./build/project --speed 0.3 --tilt 40
+```
 
-  You should see the rotating cube in a window. Check that the options `--speed` and `--tilt` change its motion.
+For the web, with the Emscripten SDK activated:
 
-- **&gt;** Build the web version, with the Emscripten SDK activated:
+```
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```
 
-  ```
-  emcmake cmake -S . -B build_web
-  cmake --build build_web
-  ```
+`build_web/` then holds `index.html`, `project.js` and `project.wasm`: the same files as `web/`. Show the slide
+through a web server, from the root of the repository:
 
-  The directory `build_web/` then contains `index.html`, `project.js` and `project.wasm`: the same files as `web/`.
+```
+python3 -m http.server
+```
 
-- **&gt;** Show the slide through a web server, from the root of the repository:
-
-  ```
-  python3 -m http.server
-  ```
-
-  and open `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
-
-- **&gt;** Click in the cube, then press the right arrow: check that the slide changes all the same.
+and open `http://localhost:8000/examples/a1-opengl-cube/slides.html`. After a click in the cube, the right
+arrow still goes to the next slide.
 
 ## In lhtml-site
 
-In lhtml-site, the same frame is written by the macro `demo::`, in a slide whose layout places the text on the
-left and the demo on the right (see [the slide in the example talk](../../decks/lhtml-site/html/04_program/index.html)):
+The same frame, written by `demo::` in a slide whose layout puts the text on the left and the demo on the
+right ([the slide in the example talk](../../decks/lhtml-site/html/04_program/index.html)):
 
 ```
 {% raw %}{% set layout = 'side' %}
@@ -143,4 +119,4 @@ demo::../_demo/a1/index.html?speed=0.2&tilt=25
 ::{% endraw %}
 ```
 
-**Next:** [2. Uniforms driven live](../03_panel/index.html): the same cube, modified while it runs.
+**Next:** [2. Uniforms driven live](../03_panel/index.html): the same cube, changed while it runs.

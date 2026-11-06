@@ -7,14 +7,10 @@ description: "Déplacez à la souris les points de contrôle d'une courbe de Bé
 
 # 6. Valeurs renvoyées vers la slide
 
-<div class="code-path">Code : <code>examples/c7-cgp-drag-points/</code></div>
-
-Dans les exemples précédents, l'information va de la slide vers le programme. L'objectif de cet exemple est
-d'envoyer une valeur dans l'autre sens : du programme vers la slide.
-
-La scène affiche les points de contrôle d'une courbe, que l'on peut déplacer à la souris : soit une courbe de
-Bézier, qui approche ses points, soit une spline de Catmull-Rom, qui passe par eux. Le programme calcule la
-longueur de la courbe, et la slide l'affiche pendant que vous déplacez les points.
+Dans cet exemple, les points de contrôle d'une courbe sont déplacés à la souris. La courbe est soit une courbe
+de Bézier, qui approche ses points, soit une spline de Catmull-Rom, qui passe par eux. Le programme calcule la
+longueur de la courbe, et la slide l'affiche pendant le déplacement des points : la valeur va de la démo vers la
+slide.
 
 <div class="live">
 <iframe id="curve" class="demo" src="{{ code }}web/index.html?controls=points,polygon,reset&compact=1&panel=br" title="Une courbe dont on déplace les points de contrôle à la souris"></iframe>
@@ -23,7 +19,7 @@ longueur de la courbe, et la slide l'affiche pendant que vous déplacez les poin
 <button data-demo="#curve" data-demo-set="curve=spline">Spline</button>
 <span>Longueur de la courbe : <span class="value" data-demo="#curve" data-demo-value="length" data-digits="2"></span></span>
 </div>
-<div class="live-note">En direct : déplacez un point bleu, et observez la longueur.</div>
+<div class="live-note">En direct : déplacez un point bleu, et regardez la longueur.</div>
 </div>
 <script src="../../../code/bridge/slide-controls.js"></script>
 
@@ -34,26 +30,19 @@ longueur de la courbe, et la slide l'affiche pendant que vous déplacez les poin
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a></span><span><strong>Rendu :</strong> des courbes de tout degré, la sélection en 3D</span><span><strong>Interface :</strong> manipulation directe ; une valeur envoyée à la slide</span></div>
 
-## Une valeur calculée par le programme
+## Ce qui est nouveau
 
-- **La valeur est déclarée en lecture seule** au pont : `slide::readout("length", ...)`.
-  - Le panneau peut l'afficher (`controls=length` dans l'adresse).
-  - La slide l'affiche avec `<span data-demo-value="length"></span>`, comme dans l'[exemple 4](../05_buttons/index.html).
-- **Le programme prévient la page quand la valeur change** (un déplacement, une autre courbe), avec
-  `slide::notify()`.
-  - La page affiche alors les nouvelles valeurs, et les envoie à la slide (au plus une fois par image).
+- **Une valeur calculée par le programme :** déclarée en lecture seule, `slide::readout("length", ...)`. Le
+  panneau peut l'afficher (`controls=length`), et la slide avec `<span data-demo-value="length">`.
+- **Le programme prévient la page :** quand la longueur change (un déplacement, une autre courbe),
+  `slide::notify()` ; la page affiche les nouvelles valeurs et les envoie à la slide, au plus une fois par image.
+- **La sélection :** au clic, `picking_spheres` trouve le point sous la souris ; tant que le bouton est enfoncé, le
+  point suit la souris dans le plan face à la caméra, et la caméra reste immobile.
 
-## Sélection des points
+<div class="callout warn"><div class="callout-title">Lignes d'un pixel</div>
 
-- Quand on appuie sur le bouton de la souris, `picking_spheres` trouve le point sous la souris.
-- Tant que le bouton reste enfoncé, le point suit la souris dans le plan face à la caméra, et la caméra ne bouge
-  pas.
-
-<div class="callout warn"><div class="callout-title">Note : des lignes d'un pixel</div>
-
-La plupart des navigateurs dessinent les lignes WebGL avec une largeur d'un pixel, quelle que soit la valeur donnée
-à `glLineWidth` : la courbe apparaît donc fine au projecteur. Une courbe qui doit rester visible est mieux dessinée
-sous forme de tube (un maillage).
+La plupart des navigateurs dessinent les lignes WebGL sur un pixel de large, quoi que demande `glLineWidth` : la
+courbe est fine au projecteur. Une courbe qui doit rester visible se dessine mieux en tube, un maillage.
 
 </div>
 
@@ -85,8 +74,6 @@ sous forme de tube (un maillage).
 
 ## Compiler et lancer
 
-- **&gt;** Compilez l'exemple comme dans l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp),
-  avec `c7-cgp-drag-points`.
-- **&gt;** Ouvrez la slide, déplacez un point, et vérifiez que la longueur sous le cadre est mise à jour.
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c7-cgp-drag-points`.
 
 **Ensuite :** [7. Présentations complètes](../08_presentations/index.html) : ces modèles dans deux exposés complets.

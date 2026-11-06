@@ -7,14 +7,10 @@ description: 'A waving surface in CGP, driven from buttons written in the text o
 
 # 4. Buttons in the slide
 
-<div class="code-path">Code: <code>examples/c3-cgp-waving-surface/</code></div>
-
-The objective of this example is to drive the program from buttons written in the text of the slide, outside
-the frame of the demo. This way, you can change the model while you speak, the audience sees which state is
-shown, and the slide can display a value of the program.
-
-The scene is a grid of 120 x 120 vertices whose positions are updated at each frame: either a ripple from the
-center, or parallel waves.
+This example is a grid of 120 x 120 vertices whose positions are updated at each frame: either a ripple from
+the center, or parallel waves. The surface is driven by buttons written in the text of the slide, outside the
+frame of the demo. The current state is therefore visible in the slide, and the slide can also display a value
+of the program.
 
 <div class="live">
 <iframe id="surface" class="demo" src="{{ code }}web/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="A waving surface, driven by buttons outside its frame"></iframe>
@@ -36,42 +32,21 @@ center, or parallel waves.
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a></span><span><strong>Graphics:</strong> a mesh updated at each frame</span><span><strong>Interface:</strong> buttons in the slide, a panel, ImGui</span></div>
 
-## Buttons in the slide
+## What is new
 
-The buttons are written in HTML only, and handled by the script `slide-controls.js`. A button of the slide
-looks like the following line:
+- **Buttons in the slide,** in HTML only, with `slide-controls.js`: `data-demo-set` gives the settings to apply,
+  `data-demo-value` shows a value live, and a button gets the class `on` while its settings are the current
+  values of the demo.
+- **A CGP scene of its own:** three files replace those of the template. `main.cpp` changes by one line
+  (`slide::parse(argc, argv)`); the parameters are declared in `scene.cpp`.
+- **The ImGui window of the template** is hidden in a slide (the page has its panel), unless `?gui=1`.
 
-```html
-<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
-```
+<div class="callout warn"><div class="callout-title">A trap of the web: the wireframe</div>
 
-- **data-demo-set** gives the settings to apply when the button is clicked (several settings are separated by `&`, written `&amp;amp;` in HTML).
-- **data-demo-value** displays a value of the program, updated live:
-  `<span data-demo="#surface" data-demo-value="ampl"></span>`.
-- A button gets the class `on` while its settings are the current values of the demo: the audience sees
-  which state is displayed.
-- **data-demo="#surface"** names the frame driven by the button.
-  - *Rem. In reveal.js, all the slides are in the same page: with several demos, give an `id` to each frame,
-    and name it on its buttons.*
-
-## The CGP scene
-
-Compared to [example 3](../04_cgp/index.html), the example now has a scene of its own: three files replace
-those of the template.
-
-- `main.cpp` only changes by one line: `slide::parse(argc, argv)`.
-- The parameters of the wave are declared in `scene.cpp`, as in [example 2](../03_panel/index.html).
-- The ImGui window of the template is hidden in a slide (the page already has its panel), unless the address
-  contains `?gui=1`.
-
-<div class="callout warn"><div class="callout-title">Note: the wireframe on the web</div>
-
-The function `draw_wireframe()` of CGP uses `glPolygonMode`, which does not exist in WebGL: on the web it draws
-nothing, without any error message. In this example, the wireframe is therefore a `curve_drawable` made of
-segments (`GL_LINES`), drawn in the same way on the desktop and on the web.
-
-*(This problem was detected by the browser test of the example: the image did not change when the wireframe
-was activated.)*
+`draw_wireframe()` of CGP uses `glPolygonMode`, which WebGL does not have: on the web it draws nothing, without
+an error. The wireframe here is a `curve_drawable` of segments (`GL_LINES`), drawn the same way on the desktop
+and on the web. The browser test of the example caught it: the image did not change when the wireframe was
+turned on.
 
 </div>
 
@@ -106,19 +81,17 @@ examples/c3-cgp-waving-surface/
 
 ### slides.html
 
-The buttons are placed below the frame, and the slide loads `slide-controls.js`. [slides.html]({{ code }}slides.html)
+The buttons below the frame, and `slide-controls.js`. [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c3-cgp-waving-surface/slides.html.md" %}
 
+In reveal.js all the slides are in one page: with several demos, give each frame an `id` and name it on its
+buttons, `data-demo="#surface"`.
+
 ## Build and run
 
-- **&gt;** Build the example as in [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with
-  `c3-cgp-waving-surface`.
-- **&gt;** Open the slide, and check that the buttons change the surface, and that the amplitude is displayed
-  below the frame.
-
-The browser test of the example, [demo.json]({{ code }}demo.json), clicks on the buttons of the slide and
-checks the images and the values:
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c3-cgp-waving-surface`. Its browser
+test, [demo.json]({{ code }}demo.json), clicks the buttons of a slide and checks the images and the values:
 
 {% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
 

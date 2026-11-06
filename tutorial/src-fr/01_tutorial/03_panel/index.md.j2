@@ -7,14 +7,10 @@ description: "Le cube de l'exemple 1, tordu dans son vertex shader et piloté pe
 
 # 2. Uniforms pilotés en direct
 
-<div class="code-path">Code : <code>examples/a2-opengl-uniforms/</code></div>
-
-L'objectif de cet exemple est de modifier le programme pendant qu'il tourne, depuis un panneau affiché dans le
-cadre. On repart du cube de l'[exemple 1](../02_cube/index.html), subdivisé et tordu dans son vertex shader. Cinq
-éléments peuvent être changés : la torsion, la teinte, la vitesse, l'éclairage, et un bouton de remise à zéro.
-
-Le panneau n'est pas écrit en HTML : la page le construit automatiquement à partir des paramètres que déclare le
-programme.
+Cet exemple part du cube de l'[exemple 1](../02_cube/index.html), subdivisé et tordu dans son vertex shader.
+Ses paramètres sont modifiés pendant qu'il tourne : la torsion, la teinte, la vitesse, l'éclairage, et un bouton
+de remise à zéro. Le panneau est construit par la page à partir des paramètres déclarés par le programme, il
+n'y a donc pas de HTML à écrire.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?twist=0.8&controls=twist,hue,speed,light,reset" title="Une boîte tordue, pilotée par un panneau"></iframe>
@@ -28,41 +24,28 @@ programme.
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/a2-opengl-uniforms.zip">a2-opengl-uniforms.zip</a></span><span><strong>Rendu :</strong> simple, une déformation dans le vertex shader</span><span><strong>Interface :</strong> un panneau construit à partir du C++</span></div>
 
-## Déclaration des paramètres
+## Ce qui est nouveau
 
-Les paramètres sont déclarés une seule fois dans le code C++, avec leur intervalle. L'adresse du cadre, le panneau
-et les boutons de la slide passent tous par ces déclarations. Dans `main.cpp`, les déclarations sont les
-suivantes :
+- **Des paramètres déclarés une seule fois,** avec leur intervalle : l'adresse du cadre, le panneau et la slide
+  passent par ces déclarations.
 
-```cpp
-slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
-slide::param("light", light);
-slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
-```
+  ```cpp
+  slide::param("twist", twist, -3.0f, 3.0f, 0.05f).with_label("twist (rad/unit)", "twist");
+  slide::param("light", light);
+  slide::action("reset", [] { speed = 0.15f; twist = 0.0f; hue = 0.58f; light = true; angle = 0.0f; });
+  ```
 
-- **slide::param(nom, variable, min, max, pas)** associe un nom à une variable du programme.
-  - Un nombre donne un curseur, un booléen donne un interrupteur.
-  - `with_label` donne le libellé du panneau (un long, et un court pour un petit cadre).
-- **slide::action(nom, fonction)** donne un bouton, qui appelle la fonction.
-- L'ordre et la liste des contrôles sont donnés dans l'adresse du cadre :
-  `controls=twist,hue,speed,light,reset`.
-
-Notez que le programme n'a pas besoin de savoir que la slide a changé une variable : les uniforms sont envoyés au
-shader à chaque image, et le programme ne fait que lire ses variables.
-
-Deux autres détails du code peuvent être utiles dans vos propres programmes :
-
-- **Un angle accumulé :** `angle += 2 pi speed dt`, au lieu de `angle = 2 pi speed t`. De cette manière, un
-  changement de vitesse ne fait pas sauter la boîte.
-- **Un éclairage sans normales :** le fragment shader calcule la normale à partir des dérivées de la position
-  (`cross(dFdx(p), dFdy(p))`).
-  - *Il est normal que chaque triangle apparaisse plat : cela se voit sous forme de fines bandes sur les faces
-    tordues.*
+- **Le panneau :** `controls=twist,hue,speed,light,reset` dans l'adresse du cadre liste les contrôles, dans
+  leur ordre. Un nombre donne un curseur, un booléen un interrupteur, une action un bouton.
+- **Des uniforms envoyés à chaque image :** le programme ne fait que lire ses variables ; il n'a pas besoin de
+  savoir que la slide les a changées.
+- **Un angle accumulé,** `angle += 2 pi speed dt`, pour qu'un changement de vitesse ne fasse pas sauter la boîte.
+- **Un éclairage sans normales :** le fragment shader tire la normale des dérivées de la position
+  (`cross(dFdx(p), dFdy(p))`) ; chaque triangle est plat, ce qui donne de fines bandes sur les faces tordues.
 
 ## Les fichiers
 
-Les fichiers sont organisés comme dans l'[exemple 1](../02_cube/index.html#organisation-des-fichiers), avec le même
-`CMakeLists.txt`.
+Les mêmes que dans l'[exemple 1](../02_cube/index.html#les-fichiers) : la compilation est le même `CMakeLists.txt`.
 
 ### main.cpp
 
@@ -78,13 +61,9 @@ Les fichiers sont organisés comme dans l'[exemple 1](../02_cube/index.html#orga
 
 ## Compiler et lancer
 
-- **&gt;** Compilez l'exemple comme dans l'[exemple 1](../02_cube/index.html#compiler-et-lancer), depuis
-  `examples/a2-opengl-uniforms/`.
-- **&gt;** Sur le bureau, lancez `./build/project --twist 1.2`.
-  - *Rem. Le panneau n'existe que sur le web : la version bureau prend ses réglages de la ligne de commande.*
-- **&gt;** Sur le web, ouvrez la slide, et vérifiez que les curseurs changent la boîte pendant qu'elle tourne.
-
-L'adresse du cadre accepte les options suivantes pour le panneau :
+Comme l'[exemple 1](../02_cube/index.html#compiler-et-lancer), depuis `examples/a2-opengl-uniforms/` ; sur le
+bureau, `./build/project --twist 1.2`. Le panneau n'existe que sur le web : la version bureau prend ses réglages
+de la ligne de commande.
 
 | Dans l'adresse | Effet |
 |---|---|
@@ -92,4 +71,4 @@ L'adresse du cadre accepte les options suivantes pour le panneau :
 | `compact=1` | libellés courts, petit panneau (pour un petit cadre) |
 | `panel=tl`, `tr`, `bl`, `br` | le coin du panneau (`tr` par défaut) |
 
-**Ensuite :** [3. Programme CGP](../04_cgp/index.html) : le même principe avec une bibliothèque.
+**Ensuite :** [3. Programme CGP](../04_cgp/index.html) : la même chose avec une bibliothèque.

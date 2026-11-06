@@ -7,14 +7,10 @@ description: "Une surface qui ondule en CGP, pilotée depuis des boutons écrits
 
 # 4. Boutons dans la slide
 
-<div class="code-path">Code : <code>examples/c3-cgp-waving-surface/</code></div>
-
-L'objectif de cet exemple est de piloter le programme depuis des boutons écrits dans le texte de la slide, en
-dehors du cadre de la démo. De cette manière, vous pouvez changer le modèle pendant que vous parlez, le public voit
-quel état est montré, et la slide peut afficher une valeur du programme.
-
-La scène est une grille de 120 x 120 sommets dont les positions sont mises à jour à chaque image : soit une ride
-depuis le centre, soit des vagues parallèles.
+Cet exemple est une grille de 120 x 120 sommets dont les positions sont mises à jour à chaque image : soit une
+ride depuis le centre, soit des vagues parallèles. La surface est pilotée par des boutons écrits dans le texte de
+la slide, en dehors du cadre de la démo. L'état courant est donc visible dans la slide, et la slide peut aussi
+afficher une valeur du programme.
 
 <div class="live">
 <iframe id="surface" class="demo" src="{{ code }}web/index.html?controls=ampl,k,speed&compact=1&panel=bl" title="Une surface qui ondule, pilotée par des boutons hors de son cadre"></iframe>
@@ -36,43 +32,21 @@ depuis le centre, soit des vagues parallèles.
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/c3-cgp-waving-surface.zip">c3-cgp-waving-surface.zip</a></span><span><strong>Rendu :</strong> un maillage mis à jour à chaque image</span><span><strong>Interface :</strong> des boutons dans la slide, un panneau, ImGui</span></div>
 
-## Boutons dans la slide
+## Ce qui est nouveau
 
-Les boutons sont écrits uniquement en HTML, et gérés par le script `slide-controls.js`. Un bouton de la slide
-ressemble à la ligne suivante :
+- **Boutons dans la slide,** en HTML seulement, avec `slide-controls.js` : `data-demo-set` donne les réglages
+  à appliquer, `data-demo-value` affiche une valeur en direct, et un bouton reçoit la classe `on` tant que ses
+  réglages sont les valeurs courantes de la démo.
+- **Une scène CGP à elle :** trois fichiers remplacent ceux du modèle. `main.cpp` change d'une ligne
+  (`slide::parse(argc, argv)`) ; les paramètres sont déclarés dans `scene.cpp`.
+- **La fenêtre ImGui du modèle** est cachée dans une slide (la page a son panneau), sauf avec `?gui=1`.
 
-```html
-<button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
-```
+<div class="callout warn"><div class="callout-title">Un piège du web : le fil de fer</div>
 
-- **data-demo-set** donne les réglages à appliquer quand on clique sur le bouton (plusieurs réglages sont séparés
-  par `&`, écrit `&amp;amp;` en HTML).
-- **data-demo-value** affiche une valeur du programme, mise à jour en direct :
-  `<span data-demo="#surface" data-demo-value="ampl"></span>`.
-- Un bouton reçoit la classe `on` tant que ses réglages sont les valeurs courantes de la démo : le public voit
-  quel état est affiché.
-- **data-demo="#surface"** désigne le cadre piloté par le bouton.
-  - *Rem. Dans reveal.js, toutes les slides sont dans une même page : avec plusieurs démos, donnez un `id` à chaque
-    cadre, et indiquez-le sur ses boutons.*
-
-## La scène CGP
-
-Par rapport à l'[exemple 3](../04_cgp/index.html), l'exemple a maintenant une scène à lui : trois fichiers
-remplacent ceux du modèle.
-
-- `main.cpp` ne change que d'une ligne : `slide::parse(argc, argv)`.
-- Les paramètres de la vague sont déclarés dans `scene.cpp`, comme dans l'[exemple 2](../03_panel/index.html).
-- La fenêtre ImGui du modèle est cachée dans une slide (la page a déjà son panneau), sauf si l'adresse contient
-  `?gui=1`.
-
-<div class="callout warn"><div class="callout-title">Note : le fil de fer sur le web</div>
-
-La fonction `draw_wireframe()` de CGP utilise `glPolygonMode`, qui n'existe pas en WebGL : sur le web, elle ne
-dessine rien, sans aucun message d'erreur. Dans cet exemple, le fil de fer est donc un `curve_drawable` constitué
-de segments (`GL_LINES`), dessiné de la même manière sur le bureau et sur le web.
-
-*(Ce problème a été repéré par le test de l'exemple dans le navigateur : l'image ne changeait pas quand on
-activait le fil de fer.)*
+`draw_wireframe()` de CGP utilise `glPolygonMode`, que WebGL n'a pas : sur le web, il ne dessine rien, sans
+erreur. Le fil de fer est ici un `curve_drawable` de segments (`GL_LINES`), dessiné de la même façon sur le bureau
+et sur le web. Le test de l'exemple dans le navigateur l'a repéré : l'image ne changeait pas quand on activait le
+fil de fer.
 
 </div>
 
@@ -107,19 +81,18 @@ examples/c3-cgp-waving-surface/
 
 ### slides.html
 
-Les boutons sont placés sous le cadre, et la slide charge `slide-controls.js`. [slides.html]({{ code }}slides.html)
+Les boutons sous le cadre, et `slide-controls.js`. [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/c3-cgp-waving-surface/slides.html.md" %}
 
+Dans reveal.js, toutes les slides sont dans une même page : avec plusieurs démos, donnez un `id` à chaque cadre
+et nommez-le sur ses boutons, `data-demo="#surface"`.
+
 ## Compiler et lancer
 
-- **&gt;** Compilez l'exemple comme dans l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp),
-  avec `c3-cgp-waving-surface`.
-- **&gt;** Ouvrez la slide, et vérifiez que les boutons changent la surface, et que l'amplitude est affichée sous
-  le cadre.
-
-Le test de l'exemple dans le navigateur, [demo.json]({{ code }}demo.json), clique sur les boutons de la slide et
-vérifie les images et les valeurs :
+Comme l'[exemple 3](../04_cgp/index.html#comment-sont-compiles-les-exemples-cgp), avec `c3-cgp-waving-surface`.
+Son test dans le navigateur, [demo.json]({{ code }}demo.json), clique sur les boutons d'une slide et vérifie les
+images et les valeurs :
 
 {% include "_code/examples/c3-cgp-waving-surface/demo.json.md" %}
 

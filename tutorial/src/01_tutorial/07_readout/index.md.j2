@@ -7,14 +7,10 @@ description: 'Drag the control points of a Bezier curve or a spline with the mou
 
 # 6. Values sent back to the slide
 
-<div class="code-path">Code: <code>examples/c7-cgp-drag-points/</code></div>
-
-In the previous examples, the information goes from the slide to the program. The objective of this example
-is to send a value in the other direction: from the program to the slide.
-
-The scene displays the control points of a curve, which can be dragged with the mouse: either a Bezier curve,
-which approaches its points, or a Catmull-Rom spline, which goes through them. The program computes the length
-of the curve, and the slide displays it while you drag the points.
+In this example, the control points of a curve are dragged with the mouse. The curve is either a Bezier
+curve, which approaches its points, or a Catmull-Rom spline, which goes through them. The program computes the
+length of the curve, and the slide displays it while the points are moved: the value goes from the demo to the
+slide.
 
 <div class="live">
 <iframe id="curve" class="demo" src="{{ code }}web/index.html?controls=points,polygon,reset&compact=1&panel=br" title="A curve whose control points are dragged with the mouse"></iframe>
@@ -23,7 +19,7 @@ of the curve, and the slide displays it while you drag the points.
 <button data-demo="#curve" data-demo-set="curve=spline">Spline</button>
 <span>Length of the curve: <span class="value" data-demo="#curve" data-demo-value="length" data-digits="2"></span></span>
 </div>
-<div class="live-note">Live: drag a blue point, and observe the length.</div>
+<div class="live-note">Live: drag a blue point, and watch the length.</div>
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
 
@@ -34,24 +30,18 @@ of the curve, and the slide displays it while you drag the points.
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/c7-cgp-drag-points.zip">c7-cgp-drag-points.zip</a></span><span><strong>Graphics:</strong> curves of any degree, picking in 3D</span><span><strong>Interface:</strong> direct manipulation; a value sent to the slide</span></div>
 
-## A value computed by the program
+## What is new
 
-- **The value is declared read only** to the bridge: `slide::readout("length", ...)`.
-  - The panel can display it (`controls=length` in the address).
-  - The slide displays it with `<span data-demo-value="length"></span>`, as in [example 4](../05_buttons/index.html).
-- **The program tells the page when the value changes** (a drag, another curve), with `slide::notify()`.
-  - The page then displays the new values, and sends them to the slide (at most once per frame).
+- **A value computed by the program:** declared read only, `slide::readout("length", ...)`. The panel can show
+  it (`controls=length`), and the slide with `<span data-demo-value="length">`.
+- **The program tells the page:** when the length changes (a drag, another curve), `slide::notify()`; the page
+  shows the new values and sends them to the slide, at most once a frame.
+- **Picking:** at the click, `picking_spheres` finds the point under the mouse; while the button is down, the
+  point follows the mouse in the plane facing the camera, and the camera stays still.
 
-## Picking the points
+<div class="callout warn"><div class="callout-title">Lines of 1 pixel</div>
 
-- When the mouse button is pressed, `picking_spheres` finds the point under the mouse.
-- While the button stays pressed, the point follows the mouse in the plane facing the camera, and the camera
-  does not move.
-
-<div class="callout warn"><div class="callout-title">Note: lines of 1 pixel</div>
-
-Most browsers draw WebGL lines with a width of one pixel, whatever the value given to `glLineWidth`: the curve
-therefore appears thin on a projector. A curve that must stay visible is better drawn as a tube (a mesh).
+Most browsers draw WebGL lines one pixel wide, whatever `glLineWidth` asks: the curve is thin on a projector. A curve that must stay visible is better drawn as a tube, a mesh.
 
 </div>
 
@@ -83,8 +73,6 @@ therefore appears thin on a projector. A curve that must stay visible is better 
 
 ## Build and run
 
-- **&gt;** Build the example as in [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with
-  `c7-cgp-drag-points`.
-- **&gt;** Open the slide, drag a point, and check that the length below the frame is updated.
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c7-cgp-drag-points`.
 
 **Next:** [7. Complete presentations](../08_presentations/index.html): these models in two complete talks.

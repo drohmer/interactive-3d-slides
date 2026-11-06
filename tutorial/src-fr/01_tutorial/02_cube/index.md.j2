@@ -7,19 +7,13 @@ description: "Le plus petit exemple complet : un cube en OpenGL 3.3 brut, compil
 
 # 1. Cube en rotation
 
-<div class="code-path">Code : <code>examples/a1-opengl-cube/</code></div>
-
-L'objectif de ce premier exemple est d'afficher un programme OpenGL minimal dans une slide : un cube qui tourne
-tout seul, écrit en OpenGL 3.3 brut avec GLFW (environ 200 lignes). Il n'y a aucun contrôle à l'écran : la slide
-règle la vitesse et l'inclinaison du cube par l'adresse de son cadre. Le même fichier source est compilé pour le
-bureau et pour le web.
-
-Une fois compilé, vous devriez obtenir le résultat suivant (la compilation web de cet exemple, réglée par
-`?speed=0.2&tilt=25`) :
+Ce premier exemple est un programme minimal : un cube qui tourne tout seul, écrit en OpenGL 3.3 brut avec GLFW
+(environ 200 lignes). La slide règle sa vitesse et son inclinaison par l'adresse du cadre, et il n'y a aucun
+contrôle à l'écran. Le même fichier source est compilé pour le bureau et pour le web.
 
 <div class="live">
 <iframe class="demo" src="{{ code }}web/index.html?speed=0.2&tilt=25" title="Cube en rotation, OpenGL brut compilé en WebAssembly"></iframe>
-<div class="live-note">En direct : la compilation web de cet exemple.</div>
+<div class="live-note">En direct : la compilation web de cet exemple, réglée par <code>?speed=0.2&amp;tilt=25</code>.</div>
 </div>
 
 <div class="talk-actions">
@@ -29,7 +23,7 @@ Une fois compilé, vous devriez obtenir le résultat suivant (la compilation web
 
 <div class="needs"><span><strong>Télécharger :</strong> <a href="../../../code/a1-opengl-cube.zip">a1-opengl-cube.zip</a>, l'exemple et ce dont il a besoin (le pont, le module CMake, glad)</span><span><strong>Rendu :</strong> simple</span><span><strong>Interface :</strong> aucune ; réglages dans l'adresse</span></div>
 
-## Organisation des fichiers
+## Les fichiers
 
 ```
 examples/a1-opengl-cube/
@@ -42,33 +36,22 @@ examples/third_party/glad/              the OpenGL loader, for the desktop
 bridge/                                 the bridge between the program and the slide
 ```
 
-- `main.cpp` : l'unique fichier source du programme ; c'est le fichier à regarder en premier.
-- `CMakeLists.txt` et `raw_opengl_demo.cmake` : la compilation. En général, vous n'aurez pas à les modifier.
-- `slides.html` : la slide, avec un cadre qui pointe vers `web/index.html`.
+### main.cpp
 
-## Le programme : main.cpp
+Une seule source pour le bureau (OpenGL 3.3 core, GLFW, glad) et pour le web (WebGL 2, c'est-à-dire OpenGL
+ES 3.0). Les quatre différences sont marquées par `#ifdef __EMSCRIPTEN__` :
 
-Observez d'abord le fichier `main.cpp`. Vous devriez reconnaître l'organisation habituelle d'un programme OpenGL :
-la création de la fenêtre, l'initialisation des shaders et du cube, puis la boucle d'animation.
+1. **Les en-têtes :** `<GLES3/gl3.h>` sur le web, glad sur le bureau.
+2. **La première ligne des shaders :** `#version 300 es` et une `precision` sur le web, `#version 330 core`
+   sur le bureau. Le corps des shaders est le même ; le programme ajoute devant la bonne ligne
+   (`shader_header`).
+3. **La taille du dessin :** celle du canvas de la page. La fenêtre est créée à sa taille, sinon
+   `glfwCreateWindow` redimensionne le canvas, et la taille est lue à chaque image (`surface_size`).
+4. **La boucle principale :** sur le web, le navigateur appelle `frame()` à chaque rafraîchissement
+   (`emscripten_set_main_loop`).
 
-Le fichier se compile pour le bureau (OpenGL 3.3 core, GLFW, glad) et pour le web (WebGL 2, qui correspond à
-OpenGL ES 3.0). Les différences entre les deux versions sont marquées par `#ifdef __EMSCRIPTEN__`. Il n'y en a que
-quatre :
-
-- **1. Les en-têtes :** `<GLES3/gl3.h>` sur le web, glad sur le bureau.
-- **2. La première ligne des shaders :** `#version 300 es` et une `precision` sur le web, `#version 330 core`
-  sur le bureau.
-  - Le corps des shaders est le même ; le programme ajoute devant la bonne ligne (`shader_header`).
-- **3. La taille du dessin :** sur le web, c'est la taille du canvas de la page.
-  - La fenêtre est créée à cette taille, et la taille est relue à chaque image (`surface_size`).
-  - *Rem. Si la fenêtre est créée à une taille fixe, `glfwCreateWindow` redimensionne le canvas, et le dessin
-    n'occupe qu'un coin du cadre.*
-- **4. La boucle principale :** sur le web, le navigateur appelle `frame()` à chaque rafraîchissement de la page
-  (`emscripten_set_main_loop`) au lieu d'une boucle `while`.
-
-Les réglages viennent de la ligne de commande. Sur le web, la page de la démo construit cette ligne de commande à
-partir de son adresse (`?speed=0.2` donne `--speed 0.2`). Les lire ne demande que trois lignes avec le pont, au
-début de `main()`.
+Les réglages viennent de la ligne de commande, que la page de la démo construit à partir de son adresse
+(`?speed=0.2` donne `--speed 0.2`) : trois lignes avec le pont, au début de `main()`.
 
 [main.cpp]({{ code }}main.cpp)
 
@@ -76,11 +59,9 @@ début de `main()`.
 
 ### CMakeLists.txt
 
-Le fichier [CMakeLists.txt]({{ code }}CMakeLists.txt) inclut le module
-[raw_opengl_demo.cmake](../../../code/examples/cmake/raw_opengl_demo.cmake) :
-
-- sur le bureau, il lie GLFW et glad ;
-- sur le web, il ajoute les options d'Emscripten, et copie la page de la démo à côté de la compilation.
+[CMakeLists.txt]({{ code }}CMakeLists.txt), et le module qu'il inclut,
+[raw_opengl_demo.cmake](../../../code/examples/cmake/raw_opengl_demo.cmake) : sur le bureau il lie GLFW et
+glad ; sur le web il ajoute les options d'Emscripten et copie la page de la démo à côté de la compilation.
 
 {% include "_code/examples/a1-opengl-cube/CMakeLists.txt.md" %}
 
@@ -88,61 +69,55 @@ Le fichier [CMakeLists.txt]({{ code }}CMakeLists.txt) inclut le module
 
 ### slides.html
 
-La slide utilise reveal.js, et contient un cadre dont l'adresse donne les réglages. L'attribut `data-src` charge
-la démo quand sa slide approche. [slides.html]({{ code }}slides.html)
+La slide utilise reveal.js, et contient un cadre dont l'adresse donne les réglages. L'attribut `data-src`
+charge la démo quand sa slide approche. [slides.html]({{ code }}slides.html)
 
 {% include "_code/examples/a1-opengl-cube/slides.html.md" %}
 
-*Note : la page de la démo, `web/index.html`, est le fichier [slide-frame.html](../../../code/bridge/slide-frame.html)
-du pont, copié par la compilation. Son code, ainsi que celui des deux fichiers C++ du pont, sont donnés dans la
-[référence](../../02_more/02_reference/index.html#le-code-du-pont).*
+La page de la démo, `web/index.html`, est [slide-frame.html](../../../code/bridge/slide-frame.html) du pont,
+copiée par la compilation ; son code et celui des deux fichiers C++ du pont sont dans la
+[référence](../../02_more/02_reference/index.html#le-code-du-pont).
 
 ## Compiler et lancer
 
-- **&gt;** Compilez et lancez la version bureau, depuis `examples/a1-opengl-cube/` :
+Sur le bureau, depuis `examples/a1-opengl-cube/` :
 
-  ```
-  cmake -S . -B build
-  cmake --build build
-  ./build/project --speed 0.3 --tilt 40
-  ```
+```
+cmake -S . -B build
+cmake --build build
+./build/project --speed 0.3 --tilt 40
+```
 
-  Vous devriez voir le cube tourner dans une fenêtre. Vérifiez que les options `--speed` et `--tilt` changent son
-  mouvement.
+Pour le web, avec le SDK Emscripten activé :
 
-- **&gt;** Compilez la version web, avec le SDK Emscripten activé :
+```
+emcmake cmake -S . -B build_web
+cmake --build build_web
+```
 
-  ```
-  emcmake cmake -S . -B build_web
-  cmake --build build_web
-  ```
+`build_web/` contient alors `index.html`, `project.js` et `project.wasm` : les mêmes fichiers que `web/`.
+Montrez la slide à travers un serveur web, depuis la racine du dépôt :
 
-  Le répertoire `build_web/` contient alors `index.html`, `project.js` et `project.wasm` : les mêmes fichiers que
-  `web/`.
+```
+python3 -m http.server
+```
 
-- **&gt;** Montrez la slide à travers un serveur web, depuis la racine du dépôt :
-
-  ```
-  python3 -m http.server
-  ```
-
-  et ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`.
-
-- **&gt;** Cliquez dans le cube, puis appuyez sur la flèche droite : vérifiez que la slide change quand même.
+et ouvrez `http://localhost:8000/examples/a1-opengl-cube/slides.html`. Après un clic dans le cube, la flèche
+droite passe toujours à la slide suivante.
 
 ## Dans lhtml-site
 
-Dans lhtml-site, le même cadre est écrit par la macro `demo::`, dans une slide dont la mise en page place le texte
-à gauche et la démo à droite (voir [la slide dans l'exposé d'exemple](../../../decks/lhtml-site/html/04_program/index.html)) :
+Le même cadre, écrit par `demo::` dans une slide dont la mise en page met le texte à gauche et la démo à droite
+([la slide dans l'exposé d'exemple](../../../decks/lhtml-site/html/04_program/index.html)) :
 
 ```
 {% raw %}{% set layout = 'side' %}
 
-= Rotating cube
+= A turning cube
 
 media::
 demo::../_demo/a1/index.html?speed=0.2&tilt=25
 ::{% endraw %}
 ```
 
-**Ensuite :** [2. Uniforms pilotés en direct](../03_panel/index.html) : le même cube, modifié pendant qu'il tourne.
+**Ensuite :** [2. Uniforms pilotés en direct](../03_panel/index.html) : le même cube, changé pendant qu'il tourne.

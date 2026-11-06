@@ -7,13 +7,10 @@ description: 'Interactive marching cubes in CGP, with its ImGui window enlarged 
 
 # 5. GUI with ImGui
 
-<div class="code-path">Code: <code>examples/c6-cgp-marching-cubes/</code></div>
-
-The objective of this example is to use the ImGui window of the program as the interface of the slide. The
-scene is an implicit surface (a sum of blobs and of Perlin noise), meshed by marching cubes at each change of
-its parameters. With ImGui, there is no HTML to write, and all the settings are in a single window. In a
-slide, two points need some care: the window must be readable on the projector, and it must stay consistent
-with the buttons of the slide.
+This example displays an implicit surface (a sum of blobs and of Perlin noise), meshed by marching cubes at
+each change of its parameters. The interface is the ImGui window of the program, so that all the settings are
+in a single window and there is no HTML to write. In a slide, this window has to be readable on the projector,
+and to stay consistent with the buttons of the slide.
 
 <div class="live">
 <iframe id="mc" class="demo" src="{{ code }}web/index.html?gui_scale=1.2" title="Marching cubes with the ImGui window"></iframe>
@@ -22,7 +19,7 @@ with the buttons of the slide.
 <button data-demo="#mc" data-demo-set="isovalue=0.3">Larger</button>
 <button data-demo="#mc" data-demo-set="power_c=0&amp;isovalue=0.5">Back</button>
 </div>
-<div class="live-note">Live: the buttons change the same variables as the ImGui window, which displays the new values.</div>
+<div class="live-note">Live: the buttons change the same variables as the ImGui window, which shows the new values.</div>
 </div>
 <script src="../../code/bridge/slide-controls.js"></script>
 
@@ -33,24 +30,19 @@ with the buttons of the slide.
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/c6-cgp-marching-cubes.zip">c6-cgp-marching-cubes.zip</a></span><span><strong>Graphics:</strong> a scalar field, marching cubes, recomputed live</span><span><strong>Interface:</strong> ImGui, and buttons in the slide</span></div>
 
-*The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
-(`examples/02_marching_cubes/02_marching_cube_dynamic`).*
+The code comes from the CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027)
+(`examples/02_marching_cubes/02_marching_cube_dynamic`).
 
-## ImGui in a slide
+## What is new
 
-- **Readable on the projector:** `?gui_scale=1.4` in the address enlarges the text of ImGui.
-  - The value is stored in `project::gui_scale`, which the template of CGP gives to ImGui at each frame.
-  - The sections of the window stay closed at start: a long window would go out of the frame.
-- **The same variables for ImGui and for the slide:** the variables are declared to the bridge, together with
-  what to recompute when the slide changes them.
-  - ImGui reads the variables at each frame: it therefore displays the new values at the next frame, without
-    any additional code.
-- **The mouse:** in CGP, ImGui takes the clicks over its window; everywhere else, the mouse rotates the camera.
-
-Two controls of the original window are hidden on the web:
-
-- the wireframe, which uses `glPolygonMode` (see the note of [example 4](../05_buttons/index.html));
-- the export of the mesh to a file, which would be written in the memory of the page.
+- **ImGui readable on the projector:** `?gui_scale=1.4` enlarges its text, through `project::gui_scale`, which the
+  template of CGP gives to ImGui at each frame. Its sections stay closed at start: a long window goes out of the
+  frame.
+- **The same variables for ImGui and the slide:** they are declared to the bridge, with what to recompute when
+  the slide changes them. ImGui shows the new values at the next frame, as it reads them.
+- **Two controls hidden on the web:** the wireframe (`glPolygonMode`, see [example 4](../05_buttons/index.html))
+  and the export of the mesh to a file, which would land in the memory of the page.
+- **Mouse:** in CGP, ImGui takes the clicks over its window; elsewhere the mouse turns the camera.
 
 ## The files
 
@@ -63,13 +55,13 @@ examples/c6-cgp-marching-cubes/src/
 
 ### src/scene.cpp
 
-[scene.cpp]({{ code }}src/scene.cpp): the declarations to the bridge are at the end of the function `initialize()`.
+[scene.cpp]({{ code }}src/scene.cpp): the declarations are at the end of `initialize()`.
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/scene.cpp.md" %}
 
 ### src/implicit_surface/gui_helper.cpp
 
-The ImGui window; the two controls hidden on the web are marked with the comment `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
+The ImGui window; the two controls hidden on the web are marked `slide-demos`. [gui_helper.cpp]({{ code }}src/implicit_surface/gui_helper.cpp)
 
 {% include "_code/examples/c6-cgp-marching-cubes/src/implicit_surface/gui_helper.cpp.md" %}
 
@@ -99,8 +91,6 @@ The ImGui window; the two controls hidden on the web are marked with the comment
 
 ## Build and run
 
-- **&gt;** Build the example as in [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with
-  `c6-cgp-marching-cubes`.
-- **&gt;** Open the slide, click on "Third blob", and check that the ImGui window displays the new value.
+As [example 3](../04_cgp/index.html#how-the-cgp-examples-are-built), with `c6-cgp-marching-cubes`.
 
 **Next:** [6. Values sent back to the slide](../07_readout/index.html).

@@ -8,14 +8,10 @@ description: 'Two complete example presentations, one in reveal.js and one in lh
 
 # 7. Complete presentations
 
-<div class="code-path">Code: <code>tutorial/decks/reveal.js/</code>, <code>tutorial/decks/lhtml-site/</code></div>
-
-The previous examples place one model in one slide. In a real talk, the models are mixed with the rest of the
+The previous examples place one model in one slide. In a talk, the models are mixed with the rest of the
 presentation: a title, an outline, sections, slides of text, and from time to time a slide with a model next to
-its text. The objective of this page is to show such a complete presentation.
-
-The same talk of twelve slides is given twice: once made with reveal.js, and once made with lhtml-site. Both use
-the models of the previous examples.
+its text. The two presentations below are the same talk of twelve slides, made once with reveal.js and once
+with lhtml-site, using the models of the examples.
 
 <div class="talk-actions">
 <a class="btn btn-primary" href="../../decks/reveal.js/index.html">Open the reveal.js presentation →</a>
@@ -23,9 +19,8 @@ the models of the previous examples.
 <a class="btn" href="../../decks/lhtml-site/slides.pdf">PDF of the lhtml-site presentation</a>
 </div>
 
-- **&gt;** Open one of the presentations, and go from slide to slide with the arrow keys.
-- **&gt;** On a slide with a model, click in the model and rotate it with the mouse, then press the right arrow:
-  check that you go to the next slide.
+In both, go from slide to slide with the arrow keys; click in a model to turn it, then the arrows still go to
+the next slide.
 
 ## In reveal.js
 
@@ -37,8 +32,7 @@ the models of the previous examples.
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-reveal.js.zip">talk-reveal.js.zip</a>, the presentation and its models (<code>demos/</code>), ready to show</span><span><strong>Show it:</strong> <code>python3 -m http.server</code> in its folder, then <code>http://localhost:8000/</code></span></div>
 
-In reveal.js, a single HTML file contains the whole presentation, with one `<section>` per slide. The models
-are placed in the directory `demos/` next to it:
+One HTML file holds the whole presentation, a `<section>` per slide. The models are in `demos/` next to it:
 
 ```
 reveal.js/
@@ -48,12 +42,10 @@ reveal.js/
     slide-controls.js    the buttons of the slides
 ```
 
-- **A slide with a model** is a `<div class="side">`, with the text on the left and the frame on the right.
-- **data-src** loads a model when its slide comes near, and unloads it after.
-  - This way, the models of the other slides do not run in the background.
-- All the slides are in the same page: the buttons of a slide therefore name their model (`data-demo="#surface"`).
-- *Note: at the end of the file, a few lines give the keyboard back to the presentation when the slide changes
-  (a model that has just been unloaded would otherwise keep it).*
+- A slide with a model: a `<div class="side">` with the text on the left and the frame on the right.
+- `data-src` loads a model when its slide comes near, and unloads it after: the models of the other slides
+  do not run.
+- All the slides are in one page: the buttons of a slide name their model (`data-demo="#surface"`).
 
 ### index.html
 
@@ -71,10 +63,8 @@ reveal.js/
 
 <div class="needs"><span><strong>Download:</strong> <a href="../../code/talk-lhtml-site.zip">talk-lhtml-site.zip</a>, the sources of the presentation and its models (<code>src/_demo/</code>)</span><span><strong>Build it:</strong> <code>lhtml-site</code> in its folder, then <code>lhtml-site --serve</code></span></div>
 
-In lhtml-site, each slide is a folder, and the slides are ordered by the names of the folders. The models are
-placed in `src/_demo/`.
-
-*Rem. A folder whose name starts with an underscore is not a slide: it is copied as it is.*
+A folder per slide, in the order of their names. The models are in `src/_demo/`; a folder whose name starts
+with an underscore is not a slide, it is copied as it is.
 
 ```
 lhtml-site/
@@ -89,12 +79,11 @@ lhtml-site/
     _demo/slide-controls.js
 ```
 
-- **A slide with a model** uses the layout `side`, which places the text on the left and the block `media::`
-  on the right.
-- **demo::** writes the frame, and **img::** gives the image of the model used in the PDF.
-  - The classes `.live` and `.still`, defined in `_style/talk.css`, show the frame on screen and the image in print.
-- Each slide is a separate page: the buttons of a slide drive its model without having to name it.
-- `configure.yaml` loads the stylesheet and `slide-controls.js` in every slide (keywords `cssAbs` and `jsAbs`).
+- A slide with a model: the layout `side` puts the text on the left and the `media::` block on the right.
+- `demo::` writes the frame; `img::` gives the image of the model in the PDF (the classes `.live` and `.still`,
+  and `_style/talk.css`).
+- A slide shows one page: the buttons of a slide drive its model without naming it.
+- `configure.yaml` loads the stylesheet and `slide-controls.js` in every slide (`cssAbs`, `jsAbs`).
 
 ### configure.yaml
 
@@ -113,8 +102,6 @@ lhtml-site/
 {% endfor %}
 
 ## The same talk in both
-
-The following table summarizes the differences between both versions:
 
 | | reveal.js | lhtml-site |
 |---|---|---|
