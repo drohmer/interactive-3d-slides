@@ -20,7 +20,7 @@ TUTORIAL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(TUTORIAL)
 
 LANGUAGES = {'.cpp': 'cpp', '.hpp': 'cpp', '.txt': 'cmake', '.cmake': 'cmake', '.html': 'html',
-             '.js': 'javascript', '.json': 'json', '.py': 'python', '.sh': 'bash', '.conf': 'nginx'}
+             '.js': 'javascript', '.json': 'json', '.py': 'python', '.sh': 'bash', '.conf': 'nginx', '.yaml': 'yaml', '.css': 'css', '.j2': 'html'}
 
 # What each example needs, besides its own folder (repository-relative paths)
 BRIDGE = ['bridge/slide_bridge.hpp', 'bridge/slide_bridge.cpp', 'bridge/slide-frame.html', 'bridge/slide-controls.js']
@@ -45,11 +45,18 @@ def tracked():
                   if not f.startswith('tutorial/') and os.path.isfile(os.path.join(REPO, f)))
 
 
+def deck_files():
+    """The sources of the example talks (tutorial/decks/), shown in the pages too."""
+    out = subprocess.run(['git', '-C', REPO, 'ls-files', '--cached', '--others', '--exclude-standard', 'tutorial/decks'],
+                         check=True, capture_output=True, text=True).stdout
+    return sorted(f for f in set(out.splitlines()) if os.path.isfile(os.path.join(REPO, f)))
+
+
 def fragments():
     target = os.path.join(TUTORIAL, 'src', '_code')
     shutil.rmtree(target, ignore_errors=True)
     count = 0
-    for path in tracked():
+    for path in tracked() + deck_files():
         language = LANGUAGES.get(os.path.splitext(path)[1])
         if language is None or '/web/' in path or 'third_party/' in path:
             continue

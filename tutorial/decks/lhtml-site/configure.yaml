@@ -1,8 +1,17 @@
-# An example talk of the tutorial "Create slides with interactive 3D", made with lhtml-site.
-# Built by ../../build.sh into .site/decks/lhtml-site/: html/ in the browser, slides.pdf.
-# The demos (src/_demo/) are copied there by build.sh from ../../../examples/*/web.
+# An example talk of the tutorial "Create slides with interactive 3D", made with lhtml-site:
+# twelve slides, with titles, text, and interactive 3D models in some of them.
+#
+#   lhtml-site                   build into .site/: html/ in the browser, slides.pdf
+#   lhtml-site --serve --watch   preview on http://127.0.0.1:8000/
+#
+# The demos are in src/_demo/<name>/ (the web builds of the examples: index.html, project.js,
+# project.wasm, project.data, poster.png), with slide-controls.js; a folder whose name starts with an
+# underscore is not a slide, it is copied as it is.
 source_directory: 'src/'
 site_directory: '.site/'
 targets:
   html: {theme: slides}
   pdf: {theme: slides-pdf}
+keywords:
+  cssAbs: [_style/talk.css]              # the buttons of the slides, and the image of a demo in the PDF
+  jsAbs: [_demo/slide-controls.js]       # the buttons of the slides drive their demo

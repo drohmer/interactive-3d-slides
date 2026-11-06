@@ -3,59 +3,174 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Interactive 3D in reveal.js slides</title>
+<title>Interactive 3D in a talk</title>
 <!--
-  The same demos as in the other example talk, in reveal.js: nothing in the demos depends on the
-  slide tool. Each demo is an <iframe> (data-src: reveal.js loads it when its slide is near, and
-  unloads it after), the buttons are in the slide, with slide-controls.js. Several demos are in the
-  same page here, so each button names its demo: data-demo="#surface".
-  reveal.js comes from a CDN: for a talk without network, download it next to this page.
+  An example talk of the tutorial "Create slides with interactive 3D", made with reveal.js: twelve
+  slides, with titles, text, and interactive 3D models in some of them.
+
+  The models are in demos/<name>/ next to this file (the web builds of the examples: index.html,
+  project.js, project.wasm, project.data), with slide-controls.js. Each one is a plain <iframe>;
+  data-src loads it when its slide comes near and unloads it after. All the slides are in this page:
+  the buttons of a slide name their model (data-demo="#surface").
+
+  Open it through a web server: python3 -m http.server in this folder, then http://localhost:8000/
+  reveal.js comes from a CDN: for a talk without network, download it next to this file.
 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
 <style>
+  /* the text on the left, the model on the right */
+  .reveal .side { display: grid; grid-template-columns: 40% 60%; gap: 30px; align-items: center; text-align: left; }
+  .reveal .side ul { font-size: 0.75em; margin: 0; }
+  .reveal .side p { font-size: 0.75em; }
   .reveal iframe.demo { width: 100%; height: 520px; border: 0; }
-  .reveal .controls-row { font-size: 0.6em; margin-top: 12px; }
-  .reveal .controls-row button { font: inherit; padding: 4px 14px; margin: 0 4px; border-radius: 8px;
-                                  border: 2px solid #999; background: white; cursor: pointer; }
+  .reveal code { font-size: 0.85em; }
+  .reveal .muted { color: #888; font-size: 0.6em; }
+  /* the buttons of the slides, and the current state of the model (class on) */
+  .reveal .controls-row button { font: inherit; font-size: 0.7em; padding: 4px 14px; margin: 0 6px 8px 0;
+                                 border-radius: 8px; border: 2px solid #999; background: white; cursor: pointer; }
   .reveal .controls-row button.on { background: #333; color: white; border-color: #333; }
+  .reveal .value { font-weight: bold; color: #c0392b; }
 </style>
 </head>
 <body>
 <div class="reveal"><div class="slides">
 
 <section>
-  <h2>Interactive 3D in reveal.js</h2>
-  <p>C++ programs compiled to WebAssembly, in plain <code>&lt;iframe&gt;</code>s.</p>
+  <h2>Interactive 3D in a talk</h2>
+  <p>An example presentation, made with reveal.js</p>
+  <p class="muted">Tutorial: Create slides with interactive 3D</p>
 </section>
 
 <section>
-  <h3>Set by the address</h3>
-  <iframe class="demo" id="cube" data-src="../../demos/a1/index.html?speed=0.2&tilt=25"></iframe>
+  <h3>Outline</h3>
+  <p style="font-size: 0.7em">The models of this talk are C++ programs (OpenGL 3.3), compiled to WebAssembly:
+  each one runs in a frame of the slide, next to the text.</p>
+  <ol>
+    <li>A model in the slide</li>
+    <li>Settings and controls</li>
+    <li>Values from the program</li>
+  </ol>
+  <p class="muted">Click in a model to turn it with the mouse; the arrow keys still go to the next slide.</p>
+</section>
+
+<section><h2>1. A model in the slide</h2></section>
+
+<section>
+  <h3>A C++ program in the slide</h3>
+  <div class="side">
+    <ul>
+      <li>A program in raw OpenGL 3.3, about 200 lines</li>
+      <li>Compiled to WebAssembly with Emscripten</li>
+      <li>Shown by the slide in an <code>&lt;iframe&gt;</code></li>
+      <li>Set by the address of the frame: <code>?speed=0.2&amp;tilt=25</code></li>
+    </ul>
+    <iframe class="demo" data-src="demos/a1/index.html?speed=0.2&tilt=25"></iframe>
+  </div>
+</section>
+
+<section>
+  <h3>The same program, another preset</h3>
+  <div class="side">
+    <ul>
+      <li>The same build as the previous slide</li>
+      <li>Another address: <code>?speed=0.5&amp;tilt=-30&amp;background=dark</code></li>
+      <li>One build serves all the slides that show this model</li>
+    </ul>
+    <iframe class="demo" data-src="demos/a1/index.html?speed=0.5&tilt=-30&background=dark"></iframe>
+  </div>
+</section>
+
+<section><h2>2. Settings and controls</h2></section>
+
+<section>
+  <h3>A panel built from the program</h3>
+  <div class="side">
+    <ul>
+      <li>The program declares its parameters, with their ranges</li>
+      <li>The page of the demo builds the panel from them</li>
+      <li>Each slider changes a uniform while the model turns</li>
+    </ul>
+    <iframe class="demo" data-src="demos/a2/index.html?twist=0.8&controls=twist,hue,speed,light,reset"></iframe>
+  </div>
 </section>
 
 <section>
   <h3>Buttons in the slide</h3>
-  <iframe class="demo" id="surface" data-src="../../demos/c3/index.html?controls=ampl,k,speed&panel=bl"></iframe>
-  <div class="controls-row">
-    <button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
-    <button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
-    <button data-demo="#surface" data-demo-set="drop">Drop</button>
-    Amplitude: <span data-demo="#surface" data-demo-value="ampl" data-digits="2"></span>
+  <div class="side">
+    <div>
+      <p>The buttons below are in the text of the slide, outside the frame.</p>
+      <div class="controls-row">
+        <button data-demo="#surface" data-demo-set="shape=ripple">Ripple</button>
+        <button data-demo="#surface" data-demo-set="shape=waves">Waves</button>
+        <button data-demo="#surface" data-demo-set="drop">Drop</button>
+        <button data-demo="#surface" data-demo-set="ampl=0.25&amp;k=14">Strong</button>
+      </div>
+      <p>Amplitude: <span class="value" data-demo="#surface" data-demo-value="ampl" data-digits="2"></span></p>
+    </div>
+    <iframe class="demo" id="surface" data-src="demos/c3/index.html?controls=ampl,k,speed&panel=bl"></iframe>
   </div>
 </section>
 
 <section>
-  <h3>A value sent back to the slide</h3>
-  <iframe class="demo" id="curve" data-src="../../demos/c7/index.html?controls=points,polygon,reset&panel=br"></iframe>
-  <div class="controls-row">
-    Length of the curve: <span data-demo="#curve" data-demo-value="length" data-digits="2"></span>
+  <h3>An ImGui window</h3>
+  <div class="side">
+    <div>
+      <ul>
+        <li>Marching cubes on a scalar field, recomputed at each change</li>
+        <li>The interface is the ImGui window of the program</li>
+        <li>Its text is enlarged by the address: <code>?gui_scale=1.4</code></li>
+      </ul>
+      <div class="controls-row">
+        <button data-demo="#marching" data-demo-set="power_c=1.2">Third blob</button>
+        <button data-demo="#marching" data-demo-set="isovalue=0.3">Larger</button>
+        <button data-demo="#marching" data-demo-set="power_c=0&amp;isovalue=0.5">Back</button>
+      </div>
+    </div>
+    <iframe class="demo" id="marching" data-src="demos/c6/index.html?gui_scale=1.4"></iframe>
   </div>
+</section>
+
+<section><h2>3. Values from the program</h2></section>
+
+<section>
+  <h3>The slide shows a value of the program</h3>
+  <div class="side">
+    <div>
+      <p>Drag a blue point: the program computes the length of the curve, and the slide shows it.</p>
+      <p>Length of the curve: <span class="value" data-demo="#curve" data-demo-value="length" data-digits="2"></span></p>
+      <div class="controls-row">
+        <button data-demo="#curve" data-demo-set="curve=bezier">B&eacute;zier</button>
+        <button data-demo="#curve" data-demo-set="curve=spline">Spline</button>
+      </div>
+    </div>
+    <iframe class="demo" id="curve" data-src="demos/c7/index.html?controls=points,polygon,reset&panel=br"></iframe>
+  </div>
+</section>
+
+<section>
+  <h3>Conclusion</h3>
+  <ul style="font-size: 0.75em">
+    <li>A 3D model in a slide is a web page in a frame</li>
+    <li>The address of the frame sets it, slide by slide</li>
+    <li>A panel, buttons in the slide or ImGui drive it during the talk</li>
+    <li>The program can send values back to the slide</li>
+  </ul>
+  <p style="font-size: 0.7em">The method, the code of these models and of this talk: the tutorial
+  <a href="https://scholartools.fr/interactive-3d-slides/">Create slides with interactive 3D</a>.</p>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script src="../../demos/slide-controls.js"></script>
-<script>Reveal.initialize({hash: true});</script>
+<script src="demos/slide-controls.js"></script>
+<script>
+  Reveal.initialize({hash: true});
+  // After a click in a model, the keyboard stays in its frame. When the slide changes, reveal.js
+  // unloads that model (data-src): the frame keeps the keyboard but becomes an empty page, which
+  // sends no key back, and the next arrow would be lost. The presentation takes the keyboard back.
+  Reveal.on('slidechanged', () => {
+    if (document.activeElement && document.activeElement.tagName === 'IFRAME') document.activeElement.blur();
+  });
+</script>
 </body>
 </html>

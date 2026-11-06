@@ -50,5 +50,15 @@ else
 fi
 cp -R .work/lhtml-site/.site .site/decks/lhtml-site
 cp -R decks/reveal.js .site/decks/reveal.js
+cp -R .site/demos .site/decks/reveal.js/demos      # the talk is self-contained: its models next to it
+
+echo "==> the two talks to download (.site/code/talk-*.zip)"
+rm -f .site/code/talk-reveal.js.zip .site/code/talk-lhtml-site.zip
+# reveal.js: the talk as it is shown, index.html and demos/
+(cd .site/decks && zip -qr ../code/talk-reveal.js.zip reveal.js -x '*.DS_Store')
+# lhtml-site: the sources of the talk, with the demos in src/_demo/ (build it with lhtml-site)
+(cd .work && zip -qr ../.site/code/talk-lhtml-site.zip lhtml-site -x 'lhtml-site/.site/*' 'lhtml-site/.structure/*' \
+    'lhtml-site/.verification/*' 'lhtml-site/.layout/*' '*.DS_Store')
+ls -l .site/code/talk-*.zip | awk '{print "    " $5 " bytes  " $9}'
 
 echo "==> done: .site/"
