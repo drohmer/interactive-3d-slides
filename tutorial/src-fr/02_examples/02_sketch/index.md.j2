@@ -25,11 +25,11 @@ clavier : les touches de la démo ne doivent pas prendre celles de la présentat
 <div class="live">
 <iframe id="sketch" class="demo" src="{{ code }}web/index.html?controls=width,draw&compact=1&panel=br" title="Des traits dessinés à la souris"></iframe>
 <div class="live-controls">
-<button data-demo="#sketch" data-demo-set="color=black">Black</button>
-<button data-demo="#sketch" data-demo-set="color=red">Red</button>
-<button data-demo="#sketch" data-demo-set="color=blue">Blue</button>
-<button data-demo="#sketch" data-demo-set="undo">Undo</button>
-<button data-demo="#sketch" data-demo-set="clear">Clear</button>
+<button data-demo="#sketch" data-demo-set="color=black">Noir</button>
+<button data-demo="#sketch" data-demo-set="color=red">Rouge</button>
+<button data-demo="#sketch" data-demo-set="color=blue">Bleu</button>
+<button data-demo="#sketch" data-demo-set="undo">Annuler</button>
+<button data-demo="#sketch" data-demo-set="clear">Effacer</button>
 <span>Traits : <span class="value" data-demo="#sketch" data-demo-value="strokes"></span></span>
 </div>
 <div class="live-note">En direct : dessinez dans le cadre, puis essayez les touches Z (annuler), C (effacer), 1 2 3 (couleurs), D (dessiner ou tourner la caméra).</div>
@@ -43,12 +43,13 @@ clavier : les touches de la démo ne doivent pas prendre celles de la présentat
   démo, pour que la présentation les garde. Évitez la barre d'espace, que certains outils de slides utilisent aussi.
 - **Les codes des touches :** sur le web, comparez les codes GLFW (`key == GLFW_KEY_Z`) : les noms des touches
   (`glfwGetKeyName`) ne sont pas connus dans un navigateur.
-- **Une touche et un bouton pour la même action :** les touches appellent `slide::set("undo", "")`, comme le font
-  les boutons de la slide ; après un changement fait par le programme, `slide::notify()` permet au panneau et à la
+- **Une touche et un bouton pour la même action :** les touches appellent `slide::set("undo", "")`, qui change un
+  paramètre ou lance une action comme le font les boutons de la slide (pour une action, la valeur est vide ; voir la
+  [référence](../../03_more/02_reference/index.html#c-slide-bridge-hpp)) ; après un changement fait par le programme, `slide::notify()` permet au panneau et à la
   slide d'afficher les nouvelles valeurs.
 - **Des traits larges :** WebGL dessine les lignes sur un pixel de large. Chaque trait est un ruban, un maillage
   reconstruit pendant le mouvement de la souris, aussi large que voulu.
-- **Une image pour le PDF :** `?sample=1` démarre avec une spirale déjà dessinée ; l'image fixe de la démo est prise
+- **Une image pour le PDF :** `?sample=1` démarre avec une spirale déjà dessinée ; le poster de la démo est pris
   avec elle.
 
 ## Compiler et lancer

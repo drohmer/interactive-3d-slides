@@ -98,6 +98,13 @@
     set(settings, framesOf(input));
   });
 
+  // a slider released keeps the focus, and the slide tools ignore the arrow keys while an input has it:
+  // give the focus back to the page, so that the arrow keys change the slide again
+  document.addEventListener('change', function (event) {
+    var input = event.target.closest && event.target.closest('[data-demo-input]');
+    if (input) input.blur();
+  });
+
   window.addEventListener('message', function (event) {
     var m = event.data && event.data.slide;
     if (!m || typeof m !== 'object') return;

@@ -34,9 +34,9 @@ TITLES = {
     'c3-cgp-waving-surface': (4, 'Buttons in the slide', '05_buttons'),
     'c6-cgp-marching-cubes': (5, 'GUI with ImGui', '06_imgui'),
     'c7-cgp-drag-points': (6, 'Values sent back to the slide', '07_readout'),
-    'c4-cgp-load-obj': (7, 'Models from files', '../03_examples/01_models'),
-    'c8-cgp-sketch': (8, 'Sketch with the mouse', '../03_examples/02_sketch'),
-    'c9-cgp-compare': (9, 'Two demos side by side', '../03_examples/03_compare'),
+    'c4-cgp-load-obj': (7, 'Models from files', '../02_examples/01_models'),
+    'c8-cgp-sketch': (8, 'Sketch with the mouse', '../02_examples/02_sketch'),
+    'c9-cgp-compare': (9, 'Two demos side by side', '../02_examples/03_compare'),
 }
 SITE = 'https://scholartools.fr/interactive-3d-slides/'
 # Not in the zips: the configuration of the web server of the tutorial

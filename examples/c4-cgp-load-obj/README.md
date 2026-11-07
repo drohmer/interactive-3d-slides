@@ -1,12 +1,12 @@
 # Example 7 (C4): Models from files
 
 *CGP, OBJ models loaded from files, with their materials and textures, chosen from the slide. The page of the
-tutorial: [7. Models from files](https://scholartools.fr/interactive-3d-slides/03_examples/01_models/index.html).*
+tutorial: [7. Models from files](https://scholartools.fr/interactive-3d-slides/02_examples/01_models/index.html).*
 
 ![The atrium of Sponza](poster.png)
 
 Two models, chosen by the buttons of the slide: a camel (a single OBJ file, without texture) and the atrium of
-Sponza (an OBJ file, its materials `sponza.mtl` and 14 textures). The slide shows the number of triangles of the
+Sponza (an OBJ file, its materials `sponza.mtl` and 12 textures). The slide shows the number of triangles of the
 model shown.
 
 - **Graphics:** meshes and textures read from files.
@@ -32,7 +32,7 @@ demo::../_demo/index.html?controls=turn&panel=bl
 - The files of `assets/` are read with the same paths as on the desktop (`project::path + "assets/..."`). For
   the web, the `CMakeLists.txt` of CGP packs this folder into `project.data` (`--preload-file`), downloaded
   with the demo before it starts.
-- `project.data` is about 4 MB here: keep the files small (meshes simplified, images of 512 pixels or less),
+- `project.data` is about 3 MB here: keep the files small (meshes simplified, images of 512 pixels or less),
   the demo is downloaded at the first display of its slide.
 - The file system of the browser is case-sensitive: the names in `sponza.mtl` must be those of the files,
   exactly (see [assets/sponza/origin.txt](assets/sponza/origin.txt)).

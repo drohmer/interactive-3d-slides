@@ -1,7 +1,7 @@
 ---
 title: 9. Two demos side by side
 section: Advanced examples
-description: 'The same demo twice in a slide, with two methods side by side, driven by the same slider and buttons of the slide. All the code, to download.'
+description: 'The same demo twice in a slide, with two methods side by side, driven by the same slider and the same Restart button of the slide. All the code, to download.'
 ---
 {% set code = '../../code/examples/c9-cgp-compare/' %}
 
@@ -31,6 +31,7 @@ shape is the same, the lighting is not. One slider of the slide sets the amplitu
 <span class="value" data-demo="#left" data-demo-value="ampl" data-digits="3"></span>
 <button data-demo="#left, #right" data-demo-set="restart">Restart both</button>
 </div>
+<div class="live-note">Live: move the slider; drag in a frame to turn its camera.</div>
 <script src="../../code/bridge/slide-controls.js"></script>
 
 ## What is new
@@ -43,8 +44,9 @@ shape is the same, the lighting is not. One slider of the slide sets the amplitu
   follows its value.
 - **Two clocks:** each copy runs its own time. "Restart both" sets them to the same time, so that the two
   ripples stay in phase.
-- *Rem. Two demos are two WebGL contexts: the browser limits their number in a page (see
-  [On the day of the talk](../../01_tutorial/10_talk-day/index.html)).*
+
+*Rem. Two demos are two WebGL contexts: the browser limits their number in a page (see
+[On the day of the talk](../../01_tutorial/10_talk-day/index.html)).*
 
 ## Build and run
 
@@ -97,4 +99,4 @@ The same slide in lhtml-site ([open it]({{ code }}lhtml-site/html/index.html)), 
 
 *Rem. The deformation comes from a CGP example of [epita_ani3d_lab_code-2027](https://github.com/drohmer/epita_ani3d_lab_code-2027).*
 
-**Next:** [Complete presentations](../../01_tutorial/08_presentations/index.html): the demos in two complete talks.
+**Next:** [All the files](../../03_more/01_files/index.html): the zips of all the examples.

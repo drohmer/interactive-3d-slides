@@ -43,8 +43,9 @@ of the demo must not take the keys of the presentation.
   presentation keeps them. Avoid the space bar, which some slide tools also use.
 - **The codes of the keys:** on the web, compare the GLFW codes (`key == GLFW_KEY_Z`): the names of the keys
   (`glfwGetKeyName`) are not known in a browser.
-- **A key and a button for the same action:** the keys call `slide::set("undo", "")`, as the buttons of the slide
-  do; after a change made by the program, `slide::notify()` lets the panel and the slide show the new values.
+- **A key and a button for the same action:** the keys call `slide::set("undo", "")`, which changes a parameter or runs an
+  action as the buttons of the slide do (for an action, the value is empty; see the
+  [reference](../../03_more/02_reference/index.html#c-slide-bridge-hpp)); after a change made by the program, `slide::notify()` lets the panel and the slide show the new values.
 - **Wide strokes:** WebGL draws lines one pixel wide. Each stroke is a ribbon, a mesh rebuilt while the mouse
   moves, as wide as wanted.
 - **An image for the PDF:** `?sample=1` starts with a spiral already drawn; the poster of the demo is taken with it.

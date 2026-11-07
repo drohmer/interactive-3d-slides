@@ -1,7 +1,7 @@
 # Example 9 (C9): Two demos side by side
 
 *CGP, the same demo twice in a slide, with two methods, driven by the same slider. The page of the tutorial:
-[9. Two demos side by side](https://scholartools.fr/interactive-3d-slides/03_examples/03_compare/index.html).*
+[9. Two demos side by side](https://scholartools.fr/interactive-3d-slides/02_examples/03_compare/index.html).*
 
 ![A deformed plane](poster.png)
 

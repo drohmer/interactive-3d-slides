@@ -8,7 +8,7 @@ description: "Des modèles OBJ lus depuis des fichiers, avec leurs matériaux et
 # 7. Modèles chargés depuis des fichiers
 
 Cet exemple montre des modèles lus depuis des fichiers : un chameau (un seul fichier OBJ, sans texture) et l'atrium
-de Sponza (un fichier OBJ, ses matériaux et 14 textures). Les boutons de la slide choisissent le modèle, et la slide
+de Sponza (un fichier OBJ, ses matériaux et 12 textures). Les boutons de la slide choisissent le modèle, et la slide
 affiche son nombre de triangles. L'intérêt de l'exemple tient aux fichiers : comment une démo pour le web les lit, et
 ce que cela coûte.
 
@@ -26,11 +26,11 @@ ce que cela coûte.
 <div class="live">
 <iframe id="models" class="demo" src="{{ code }}web/index.html?controls=turn&compact=1&panel=bl" title="Des modèles OBJ lus depuis des fichiers"></iframe>
 <div class="live-controls">
-<button data-demo="#models" data-demo-set="model=camel">Camel</button>
+<button data-demo="#models" data-demo-set="model=camel">Chameau</button>
 <button data-demo="#models" data-demo-set="model=sponza">Sponza</button>
 <span>Triangles : <span class="value" data-demo="#models" data-demo-value="triangles"></span></span>
 </div>
-<div class="live-note">En direct : choisissez un modèle, et faites glisser la souris dans le cadre pour tourner la caméra.</div>
+<div class="live-note">En direct : choisissez un modèle, et faites glisser la souris dans le cadre pour tourner la caméra. Turn, dans le panneau : le chameau tourne sur lui-même.</div>
 </div>
 <script src="../../../code/bridge/slide-controls.js"></script>
 
@@ -39,7 +39,7 @@ ce que cela coûte.
 - **Des fichiers lus comme sur le bureau :** le programme lit `project::path + "assets/camel.obj"`. Pour le web, le
   `CMakeLists.txt` de CGP empaquette le dossier `assets/` dans `project.data` (`--preload-file`), un fichier à côté
   de `project.js` que la page télécharge avant le démarrage du programme.
-- **La taille de la démo :** `project.data` fait ici environ 4 Mo, téléchargés au premier affichage de la slide. Les
+- **La taille de la démo :** `project.data` fait ici environ 3 Mo, téléchargés au premier affichage de la slide. Les
   fichiers de Sponza ont été allégés pour le web (coordonnées arrondies, images de 512 pixels au plus).
 - **Les noms des fichiers :** le système de fichiers du navigateur distingue les majuscules des minuscules, comme
   sous Linux. Les noms écrits dans `sponza.mtl` doivent être exactement ceux des fichiers images.

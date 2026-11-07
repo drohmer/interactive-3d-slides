@@ -30,11 +30,11 @@ void scene_structure::initialize()
 	if (slide::has_arg("sample")) {
 		stroke_structure stroke;
 		stroke.color = {0.05f, 0.05f, 0.05f};
+		stroke.width = 0.04f;
 		for (int k = 0; k <= 200; ++k) {
 			float const a = 0.1f * k, r = 0.004f * k;
 			stroke.points.push_back({r * std::cos(a), r * std::sin(a), 0});
 		}
-		parameters.width = 0.04f;
 		update_ribbon(stroke);
 		strokes.push_back(stroke);
 	}
@@ -74,8 +74,8 @@ void scene_structure::update_ribbon(stroke_structure& stroke)
 		vec3 const b = stroke.points[k + 1 < N ? k + 1 : N - 1];
 		vec3 side = cross(b - a, front);
 		side = norm(side) > 1e-6f ? normalize(side) : vec3{0, 1, 0};
-		m.position.push_back(stroke.points[k] - 0.5f * parameters.width * side);
-		m.position.push_back(stroke.points[k] + 0.5f * parameters.width * side);
+		m.position.push_back(stroke.points[k] - 0.5f * stroke.width * side);
+		m.position.push_back(stroke.points[k] + 0.5f * stroke.width * side);
 		if (k + 1 < N) {
 			unsigned int const i = static_cast<unsigned int>(2 * k);
 			m.connectivity.push_back({i, i + 1, i + 2});
@@ -93,6 +93,7 @@ void scene_structure::update_ribbon(stroke_structure& stroke)
 
 void scene_structure::undo()
 {
+	drawing = false;                 // Z during a drag: the rest of the drag draws nothing
 	if (strokes.empty()) return;
 	strokes.back().ribbon.clear();   // free the GPU buffers
 	strokes.pop_back();
@@ -102,6 +103,7 @@ void scene_structure::undo()
 
 void scene_structure::clear()
 {
+	drawing = false;
 	for (stroke_structure& stroke : strokes)
 		stroke.ribbon.clear();
 	strokes.clear();
@@ -131,7 +133,7 @@ void scene_structure::mouse_move_event()
 {
 	if (parameters.draw) {
 		// extend the current stroke while the left button is down
-		if (inputs.mouse.click.left && !inputs.mouse.on_gui && !strokes.empty()) {
+		if (drawing && inputs.mouse.click.left && !strokes.empty()) {
 			stroke_structure& stroke = strokes.back();
 			vec3 const p = mouse_position_3d();
 			if (stroke.points.empty() || norm(p - stroke.points.back()) > 0.005f) {
@@ -149,20 +151,23 @@ void scene_structure::mouse_click_event()
 {
 	if (parameters.draw && !inputs.mouse.on_gui
 		&& inputs.mouse.click.last_action == last_mouse_cursor_action::click_left) {
-		// a new stroke, with the current color
+		// a new stroke, with the current color and width
 		vec3 const colors[] = {{0.05f, 0.05f, 0.05f}, {0.85f, 0.1f, 0.1f}, {0.1f, 0.3f, 0.9f}};
 		stroke_structure stroke;
 		stroke.color = parameters.color == "red" ? colors[1] : parameters.color == "blue" ? colors[2] : colors[0];
+		stroke.width = parameters.width;
 		stroke.points.push_back(mouse_position_3d());
 		strokes.push_back(stroke);
+		drawing = true;
 		slide::notify();
 	}
 	else if (parameters.draw && inputs.mouse.click.last_action == last_mouse_cursor_action::release_left) {
 		// a click without a move leaves a stroke of a single point: remove it
-		if (!strokes.empty() && strokes.back().points.size() < 2) {
+		if (drawing && !strokes.empty() && strokes.back().points.size() < 2) {
 			strokes.pop_back();
 			slide::notify();
 		}
+		drawing = false;
 	}
 	else
 		camera_control.action_mouse_click();

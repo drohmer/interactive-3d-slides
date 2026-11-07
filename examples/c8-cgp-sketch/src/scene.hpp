@@ -16,6 +16,7 @@ using cgp::vec3;
 struct stroke_structure {
 	std::vector<vec3> points;
 	vec3 color;
+	float width = 0.03f;
 	mesh_drawable ribbon;
 };
 
@@ -44,6 +45,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	mesh_drawable sheet;                  // the white sheet behind the strokes
 	std::vector<stroke_structure> strokes;
 	sketch_parameters parameters;
+	bool drawing = false;                 // true while the left button draws the last stroke
 
 	vec3 mouse_position_3d() const;
 	void update_ribbon(stroke_structure& stroke);

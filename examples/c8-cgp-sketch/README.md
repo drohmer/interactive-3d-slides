@@ -1,7 +1,7 @@
 # Example 8 (C8): Sketch with the mouse
 
 *CGP, strokes drawn with the mouse, with keys of the demo that leave the arrow keys to the slides. The page of the
-tutorial: [8. Sketch with the mouse](https://scholartools.fr/interactive-3d-slides/03_examples/02_sketch/index.html).*
+tutorial: [8. Sketch with the mouse](https://scholartools.fr/interactive-3d-slides/02_examples/02_sketch/index.html).*
 
 ![A spiral drawn in the demo](poster.png)
 

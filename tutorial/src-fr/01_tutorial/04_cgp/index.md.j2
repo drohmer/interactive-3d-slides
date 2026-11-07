@@ -56,7 +56,7 @@ CGP_DIR=../cgp-2027 python3 scripts/build_examples.py --native c1-cgp-template
 
 La première commande compile pour le web, copie le résultat dans `examples/c1-cgp-template/web/` et
 `examples/c1-cgp-template/lhtml-site/src/_demo/`, puis teste la démo dans un navigateur et capture son poster
-(si Playwright est installé, voir [Tester une démo](../../02_more/03_tests/index.html)) ; `--native` compile aussi la version bureau et la lance deux secondes. Dans votre propre
+(si Playwright est installé, voir [Tester une démo](../../03_more/03_tests/index.html)) ; `--native` compile aussi la version bureau et la lance deux secondes. Dans votre propre
 projet CGP, c'est trois étapes : copiez `slide_bridge.hpp` et `slide_bridge.cpp` dans `src/`, ajoutez les options
 d'édition de liens du pont à la compilation web du `CMakeLists.txt`, et prenez `slide-frame.html` comme page de
 la démo.
