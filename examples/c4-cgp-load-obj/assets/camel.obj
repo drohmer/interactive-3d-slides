@@ -1,6 +1,6 @@
 # Blender v2.92.0 OBJ File: ''
 # www.blender.org
-mtllib camel2.mtl
+# (line mtllib removed: its file is not given, the color is set by the program)
 o camel
 v -0.092296 2.107955 1.364481
 v -0.106367 2.070009 1.400160

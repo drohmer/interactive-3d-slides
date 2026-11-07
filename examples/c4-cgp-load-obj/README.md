@@ -3,7 +3,7 @@
 *CGP, OBJ models loaded from files, with their materials and textures, chosen from the slide. The page of the
 tutorial: [7. Models from files](https://scholartools.fr/interactive-3d-slides/02_examples/01_models/index.html).*
 
-![The atrium of Sponza](poster.png)
+![The camel, one of the two models](poster.png)
 
 Two models, chosen by the buttons of the slide: a camel (a single OBJ file, without texture) and the atrium of
 Sponza (an OBJ file, its materials `sponza.mtl` and 12 textures). The slide shows the number of triangles of the
@@ -36,6 +36,8 @@ demo::../_demo/index.html?controls=turn&panel=bl
   the demo is downloaded at the first display of its slide.
 - The file system of the browser is case-sensitive: the names in `sponza.mtl` must be those of the files,
   exactly (see [assets/sponza/origin.txt](assets/sponza/origin.txt)).
+- Reading the OBJ file of Sponza takes a few seconds: the program reads it the first time it is shown
+  (`load_sponza()`), so that the camel appears without waiting.
 
 ## Build
 

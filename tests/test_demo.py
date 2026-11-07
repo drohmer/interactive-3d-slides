@@ -23,6 +23,9 @@ Usage: python test_demo.py <web_dir> <demo.json> [--poster out.png]
                        {"expect": {key: value}}     values of the parameters (numbers within 1e-3)
     "slide":   HTML put in the test slide under the demo, with bridge/slide-controls.js (optional)
     "poster":  {"query": ..., "wait": seconds}      address and delay of the poster image (optional)
+    "pair":    {"queries": [q_left, q_right], "slide": HTML, "input": {key: value}}   (optional)
+               two copies of the demo, #left and #right, in one slide: each slider data-demo-input=key of
+               the slide is set to value, and both demos must take it (controls with data-demo="#left, #right")
 
 Every demo is also checked for: the ready message, window.__lhtmlReady, a canvas that is not blank,
 the arrow keys reaching the slide while the demo has the focus, and no JavaScript error.
@@ -44,6 +47,37 @@ DECK = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>test slide</ti
   window.addEventListener('message', function (e) {{ if (e.data && e.data.slide) window.messages.push(e.data.slide); }});
   document.addEventListener('keydown', function (e) {{ window.keys.push(e.key); }});
 </script></body></html>'''
+
+
+PAIR = '''<!DOCTYPE html><html><head><meta charset="utf-8"><title>test slide, two demos</title></head>
+<body style="margin:0">
+<iframe id="left" class="demo" src="demo/index.html?{q0}" style="width:{w}px;height:{h}px;border:0"></iframe>
+<iframe id="right" class="demo" src="demo/index.html?{q1}" style="width:{w}px;height:{h}px;border:0"></iframe>
+<div id="slide">{slide}</div>
+<script src="slide-controls.js"></script></body></html>'''
+
+
+def check_pair(browser, port, pair, check, errors):
+    """Two copies of the demo in one slide, driven by the same slider."""
+    page = browser.new_page(viewport={'width': 1240, 'height': 600})
+    page.on('pageerror', lambda e: errors.append(str(e)))
+    page.goto(f'http://127.0.0.1:{port}/pair.html')
+    both = "['left', 'right'].every(id => window.slideDemo.params(document.getElementById(id)))"
+    page.wait_for_function(both, timeout=60000)
+    for key, value in pair.get('input', {}).items():
+        selector = f'[data-demo-input="{key}"]'
+        page.focus(selector)
+        page.evaluate("""([sel, v]) => { const i = document.querySelector(sel); i.value = v;
+            i.dispatchEvent(new Event('input', {bubbles: true})); i.dispatchEvent(new Event('change', {bubbles: true})); }""",
+                      [selector, str(value)])
+        got = lambda: page.evaluate(f"""['left', 'right'].map(id =>
+            window.slideDemo.params(document.getElementById(id))['{key}'].value)""")
+        deadline = time.time() + 5
+        while time.time() < deadline and not all(abs(v - value) < 1e-3 for v in got()):
+            time.sleep(0.1)
+        check(f'slider {key} = {value} in both demos', all(abs(v - value) < 1e-3 for v in got()), got())
+        check(f'slider {key} gives the focus back', not page.evaluate(f"document.activeElement.matches('{selector}')"))
+    page.close()
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -84,6 +118,10 @@ def main():
         with open(os.path.join(root, f'deck_{abs(hash(q))}.html'), 'w') as f:
             f.write(DECK.format(query=q, w=w, h=h, slide=spec.get('slide', '') if q == queries[0] else ''))
     shutil.copy2(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'bridge', 'slide-controls.js'), root)
+    if 'pair' in spec:
+        q0, q1 = spec['pair']['queries']
+        with open(os.path.join(root, 'pair.html'), 'w') as f:
+            f.write(PAIR.format(q0=q0, q1=q1, w=600, h=400, slide=spec['pair'].get('slide', '')))
     server = serve(root)
     port = server.server_address[1]
 
@@ -212,6 +250,9 @@ def main():
         time.sleep(0.2)
         check('ArrowRight reaches the slide', 'ArrowRight' in page.evaluate('window.keys'), page.evaluate('window.keys'))
         page.close()
+
+        if 'pair' in spec:
+            check_pair(browser, port, spec['pair'], check, errors)
 
         if options.poster and 'poster' in spec:
             poster = open_demo(browser, port, spec['poster'].get('query', ''), w, h, errors)

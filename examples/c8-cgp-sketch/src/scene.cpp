@@ -20,7 +20,7 @@ void scene_structure::initialize()
 	// slide go through the same parameters and actions.
 	slide::param("color", parameters.color, {{"black", "Black"}, {"red", "Red"}, {"blue", "Blue"}});
 	slide::param("width", parameters.width, 0.005f, 0.1f, 0.005f).with_label("width");
-	slide::param("draw", parameters.draw).with_label("Draw (off: turn the camera)");
+	slide::param("draw", parameters.draw).with_label("Draw (else: turn the camera)");
 	slide::param("gui", parameters.gui).with_label("ImGui");
 	slide::action("undo", [this] { undo(); }).with_label("Undo");
 	slide::action("clear", [this] { clear(); }).with_label("Clear");
@@ -53,7 +53,8 @@ void scene_structure::display_frame()
 }
 
 
-// The point of the plane through the origin, facing the camera, under the mouse
+// The point under the mouse, in the plane through the origin that faces the camera: the strokes are drawn
+// in this plane (on the sheet as long as the camera is not turned)
 vec3 scene_structure::mouse_position_3d() const
 {
 	intersection_structure const I = picking_plane_orthogonal_to_camera(
@@ -62,7 +63,9 @@ vec3 scene_structure::mouse_position_3d() const
 }
 
 
-// The ribbon of a stroke: two vertices per point, on each side of the stroke, in the plane facing the camera
+// The ribbon of a stroke: two vertices per point, on each side of the stroke, in the plane facing the camera.
+// The whole mesh is rebuilt at each new point: simple, and fast enough for strokes of a few hundred points
+// (for longer ones, update the buffers in place, as the surface of example c3)
 void scene_structure::update_ribbon(stroke_structure& stroke)
 {
 	size_t const N = stroke.points.size();
@@ -178,6 +181,7 @@ void scene_structure::mouse_click_event()
 // slides by the page of the demo (slide-frame.html): keep them for the presentation.
 void scene_structure::keyboard_event()
 {
+	// No camera_control.action_keyboard() here, unlike the other examples: the keys belong to the drawing
 	// The GLFW codes of the keys (GLFW_KEY_Z...): the names of the keys are not known on the web
 	auto const& key = inputs.keyboard.last_action;
 	if (key.action != GLFW_PRESS) return;
@@ -188,7 +192,9 @@ void scene_structure::keyboard_event()
 	else if (key.key == GLFW_KEY_2) slide::set("color", "red");
 	else if (key.key == GLFW_KEY_3) slide::set("color", "blue");
 	else return;
-	slide::notify();   // a value changed from the program: the panel and the slide show it
+	// a value changed from the program: the panel and the slide show it (undo and clear already notify,
+	// this call is needed for color and draw)
+	slide::notify();
 }
 
 

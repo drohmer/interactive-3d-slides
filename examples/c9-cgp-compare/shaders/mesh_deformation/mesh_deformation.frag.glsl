@@ -1,5 +1,7 @@
 #version 330 core
 
+// Unchanged copy of the default mesh shader of CGP: only the vertex shader differs in this example.
+
 // Fragment shader - this code is executed for every pixel/fragment that belongs to a displayed shape
 //
 // Compute the color using Phong illumination (ambient, diffuse, specular) 
@@ -47,7 +49,7 @@ struct phong_structure {
 struct texture_settings_structure {
 	bool use_texture;       // Switch the use of texture on/off
 	bool texture_inverse_v; // Reverse the texture in the v component (1-v)
-	bool two_sided;         // Display a two-sided illuminated surface (doesn't work on Mac)
+	bool two_sided;         // Display a two-sided illuminated surface
 };
 
 // Material of the mesh (using a Phong model)
@@ -75,7 +77,6 @@ void main()
 	vec3 N = normalize(fragment.normal);
 
 	// Inverse the normal if it is viewed from its back (two-sided surface)
-	//  (note: gl_FrontFacing doesn't work on Mac)
 	if (material.texture_settings.two_sided && gl_FrontFacing == false) {
 		N = -N;
 	}

@@ -41,7 +41,7 @@ void scene_structure::display_frame()
 	environment.uniform_generic.uniform_float["time"] = t;
 	environment.uniform_generic.uniform_float["amplitude"] = parameters.amplitude;
 	environment.uniform_generic.uniform_float["frequency"] = parameters.frequency;
-	environment.uniform_generic.uniform_float["exact_normals"] = parameters.normals == "exact" ? 1.0f : 0.0f;
+	environment.uniform_generic.uniform_int["exact_normals"] = parameters.normals == "exact" ? 1 : 0;
 	draw(surface, environment);
 }
 

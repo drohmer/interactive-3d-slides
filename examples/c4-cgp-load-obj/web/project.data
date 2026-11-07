@@ -1,6 +1,6 @@
 # Blender v2.92.0 OBJ File: ''
 # www.blender.org
-mtllib camel2.mtl
+# (line mtllib removed: its file is not given, the color is set by the program)
 o camel
 v -0.092296 2.107955 1.364481
 v -0.106367 2.070009 1.400160
@@ -8654,6 +8654,15 @@ vñÊ˙ÙŸ˝kwJ¯¨.Ø'≥ìNPb€Ücì∆q∑˙‘ÚÎ©6◊S”ãH—îC∑jı>›∫w¨€ÀõiµË·˘Éã&r£;v˘™π8‡«J≈∫ÒA
 
 Sponza modeled by Marko Dabrovic, with UVs and crack errors fixed by Kenzie Lamar at Vicarious Visions.
 Bump maps painted by Morgan McGuire.
+Origin: EPITA Ani3D repository github.com/drohmer/epita_ani3d_lab_code-2027
+(examples/09_mesh_loading, assets/sponza.zip; Sponza by Marko Dabrovic, see
+assets/sponza/copyright.txt). Reduced to fit the web demo:
+ - sponza.obj: coordinates rounded (2 decimals for v, 3 for vt), duplicates merged (5.6 -> 2.6 MB);
+ - sponza.mtl: the Tr lines removed (the loader warns when d and Tr are both given), the map_Kd
+   lines kept, with the file names in the case of the image
+   files (the original asks for "SP_LUK.JPG" for "sp_luk.JPG", etc.: the file system of the
+   browser is case-sensitive, as on Linux);
+ - images larger than 512 pixels resized to 512, bump maps removed.
 ˇÿˇ‡ JFIF      ˇ€ C 	!"$"$ˇ€ Cˇ¿ e1" ˇƒ               ˇƒ M 	 !1"AQa2qÅë°#BR±¡—3S·$bí%rÇì¢CTÒ&45DUcÉ≤≥¬ˇƒ             ˇƒ *      !1AQa"2q±¡#BÅëˇ⁄   ? Ï∫   ì+++*L¨¨¨©2≤≤Å‘5}2√?KæÇ&≤[-¯jC´*ß}◊:|`ã;iÓNp~≠O„œÂUªﬁæ’¶î«n∂ˆ√–™noƒÒ˘Vo8|khPW∫∂ôfH∫ø∂âáÏ¥Éw·ﬁµ%Êπ©›ê.ØÆ%∫Ô!≈Eâ∑œ≥‘÷/À˙k¡∂n˙€@Äê∑Œ√úGˇ ˛∞*"Î‚=¢Ù}6iÏ^@ø√5ØßEï¡Rˆ˚k∆
 ë„ˇ Yø%>1wü‚†Hl¨–¡ã9¸±Q◊=m‘úEqo}Rq¯Ê´R6v¨må˚R§tçêd0Fk7ù˝ô ˘:Ø©ú≥I¨œ…‡$h£Ú9ÍfPUıÀ}÷v¬¢∑èï8R{öı„Bÿ…‹xÙ£ úá/µen¢úk:õ,jƒ'“[kìÓ3Õ<oØpπΩº!á*goø÷£&+*ó# ˆÔäê∑,Ú¿`è∫ç¶ä]CQÑ£}GÏ‹0¿˚çTkêÄ´tƒúæÔ„BŸ£6 …§ÄüQË)⁄∂˝c‘ gÙÅe∆pßÙ£aÎÌZâñ“P1…åÉ˘ÂUwãÖ#ï>¥‹∂ƒ0*+qˆS9QëÉ‚	«ÎÙ¿G´$ﬂ»èÁR6Ωu§M√√wı%ë≠j±∏Y2èÊ*‡Ö›Äùj|ïx∆Â≥Í=Î=B%'“L°ˇ ›äîGGPË  {ri4búF1^YMqk4ì[‹À	<‚7+€Ï≠OìˆœÉwVV´≥Í›rŸî°2IP7ÁﬂÛ©´^øÿ»óñHÃﬁ∞æ‹ı≠OíΩVTFü‘öEËnÑ/˚≥§}˝ø:óR§{ZóYeeee)ïïïï&VVVTôYYYR
 5-8í˝©#æ&_Î^˛ê∞ˇ Á≠øıW˙÷ë≥∑àÉ!ïG|®Ôüj"…b2ë¥psˆW/»ﬂÉs~ê∞ˇ Á≠øıW˙“≈›©0ëÚêV§∏⁄ë‡˘–p ≤I¬Æ=2*¸ã¡∏Óµ->⁄#,˜ê"2\~ﬁ´öß[ZƒçÙ¯˝π’˚ás˘U
@@ -9055,7 +9064,6 @@ newmtl sp_00_luk_mali
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9068,7 +9076,6 @@ newmtl sp_svod_kapitel
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9081,7 +9088,6 @@ newmtl sp_01_stub_baza_
 	Ns 19.999998
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9093,7 +9099,6 @@ newmtl sp_01_stub_kut
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9106,7 +9111,6 @@ newmtl sp_00_stup
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9119,7 +9123,6 @@ newmtl sp_01_stub_baza
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9132,7 +9135,6 @@ newmtl sp_00_luk_mal1
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9145,7 +9147,6 @@ newmtl sp_01_stub
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9158,7 +9159,6 @@ newmtl sp_01_stup
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9171,7 +9171,6 @@ newmtl sp_vijenac
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9184,7 +9183,6 @@ newmtl sp_00_svod
 	Ns 1.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.145098 0.145098 0.145098
@@ -9197,7 +9195,6 @@ newmtl sp_02_reljef
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9210,7 +9207,6 @@ newmtl sp_01_luk_a
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9223,7 +9219,6 @@ newmtl sp_zid_vani
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9236,7 +9231,6 @@ newmtl sp_01_stup_baza
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9249,7 +9243,6 @@ newmtl sp_00_zid
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9262,7 +9255,6 @@ newmtl sp_00_prozor
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9275,7 +9267,6 @@ newmtl sp_00_vrata_krug
 	Ns 19.999998
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9288,7 +9279,6 @@ newmtl sp_00_pod
 	Ns 50.000000
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000
@@ -9301,7 +9291,6 @@ newmtl sp_00_vrata_kock
 	Ns 19.999998
 	Ni 1.500000
 	d 1.000000
-	Tr 0.000000
 	Tf 1.000000 1.000000 1.000000 
 	illum 2
 	Ka 0.000000 0.000000 0.000000

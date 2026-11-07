@@ -40,7 +40,9 @@ ce que cela coûte.
   `CMakeLists.txt` de CGP empaquette le dossier `assets/` dans `project.data` (`--preload-file`), un fichier à côté
   de `project.js` que la page télécharge avant le démarrage du programme.
 - **La taille de la démo :** `project.data` fait ici environ 3 Mo, téléchargés au premier affichage de la slide. Les
-  fichiers de Sponza ont été allégés pour le web (coordonnées arrondies, images de 512 pixels au plus).
+  fichiers de Sponza ont été allégés pour le web (coordonnées arrondies, images de 512 pixels au plus). La lecture
+  de son fichier OBJ prend quelques secondes : le programme ne lit Sponza qu'à son premier affichage, pour que le
+  chameau apparaisse sans attendre.
 - **Les noms des fichiers :** le système de fichiers du navigateur distingue les majuscules des minuscules, comme
   sous Linux. Les noms écrits dans `sponza.mtl` doivent être exactement ceux des fichiers images.
 - **Le modèle choisi par la slide :** un choix `slide::param("model", ...)` dont le `on_change` place la caméra pour

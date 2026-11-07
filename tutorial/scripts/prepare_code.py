@@ -116,6 +116,11 @@ def example_readme(example):
     url = SITE + os.path.normpath('01_tutorial/' + page) + '/index.html'
     slide = sorted(x for x in os.listdir(os.path.join(REPO, 'examples', example, 'lhtml-site', 'src')) if not x.startswith('_'))[0]
     cgp = example.startswith('c')
+    # the folders read by the program, when the example has them
+    extra = ''.join(f"| `examples/{example}/{folder}/` | {what} |\n" for folder, what in
+                    [('assets', 'the files read by the program (models, textures), packed with the demo for the web'),
+                     ('shaders', 'the shaders of the program')]
+                    if os.path.isdir(os.path.join(REPO, 'examples', example, folder)))
     build = (f"""```sh
 source <emsdk>/emsdk_env.sh                                       # the Emscripten SDK, in each new terminal
 git clone https://github.com/drohmer/cgp-2027.git ../cgp-2027     # the CGP project, once
@@ -176,7 +181,7 @@ From the tutorial *Create slides with interactive 3D*: {url}
 | `examples/{example}/slides.html` | the slide in reveal.js |
 | `examples/{example}/lhtml-site/` | the same slide in lhtml-site (`src/{slide}/index.html.j2`), with the demo in `src/_demo/` |
 | `examples/{example}/web/` | the demo, already built for the web |
-| `bridge/` | the code that connects the program and the slide (used by the build) |
+{extra}| `bridge/` | the code that connects the program and the slide (used by the build) |
 | {"`scripts/build_examples.py`" if cgp else "`examples/cmake/`, `examples/third_party/glad/`"} | {"the build of the CGP examples" if cgp else "the build of the raw OpenGL examples, and the OpenGL loader for the desktop"} |
 
 ## 1. See the demo in its slide (nothing to install but Python)

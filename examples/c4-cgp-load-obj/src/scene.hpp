@@ -33,11 +33,12 @@ struct scene_structure : cgp::scene_inputs_generic {
 	mesh_drawable camel;                  // a single mesh, without texture
 	std::vector<mesh_drawable> sponza;    // one mesh per material, each with its texture
 	float camel_triangles = 0;            // the number of triangles of each model (readout)
-	float sponza_triangles = 0;
+	float sponza_triangles = 0;           // known once Sponza is read
 	model_parameters parameters;
 	float angle = 0;
 
 	void place_camera();
+	void load_sponza();
 
 	void mouse_move_event();
 	void mouse_click_event();

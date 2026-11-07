@@ -25,7 +25,7 @@ uniform mat4 projection;
 uniform float time;
 uniform float amplitude;      // A
 uniform float frequency;      // k
-uniform float exact_normals;  // 1: exact normals, 0: the normals of the plane
+uniform int exact_normals;    // 1: exact normals, 0: the normals of the plane
 
 vec3 deformer(vec3 p0)
 {
@@ -46,7 +46,7 @@ vec3 deformer_normal(vec3 p0)
 void main()
 {
 	vec3 p_deformed = deformer(vertex_position);
-	vec3 n_deformed = exact_normals > 0.5 ? deformer_normal(vertex_position) : vertex_normal;
+	vec3 n_deformed = exact_normals == 1 ? deformer_normal(vertex_position) : vertex_normal;
 
 	vec4 position = model * vec4(p_deformed, 1.0);
 	mat4 modelNormal = transpose(inverse(model));

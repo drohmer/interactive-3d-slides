@@ -44,6 +44,11 @@ OUTPUTS = ['index.html', 'project.js', 'project.wasm', 'project.data']
 # Appended to the CMakeLists.txt of CGP in a staged project
 CGP_CMAKE_SUFFIX = '''
 # ---- interactive-3d-slides: the bridge, and the page of the demo for a slide
+# paths relative to the project in __FILE__ (messages of the assertions of CGP): no path of the
+# machine of the build in project.wasm
+if(NOT MSVC)
+    target_compile_options(${{PROJECT_NAME}} PRIVATE "-fmacro-prefix-map=${{CMAKE_SOURCE_DIR}}/=")
+endif()
 if(EMSCRIPTEN)
     target_link_options(${{PROJECT_NAME}} PRIVATE
         -sEXPORTED_FUNCTIONS=_main,_slide_set,_slide_describe -sEXPORTED_RUNTIME_METHODS=ccall)

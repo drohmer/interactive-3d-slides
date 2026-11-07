@@ -175,6 +175,8 @@ void main()
 }
 #version 330 core
 
+// Unchanged copy of the default mesh shader of CGP: only the vertex shader differs in this example.
+
 // Fragment shader - this code is executed for every pixel/fragment that belongs to a displayed shape
 //
 // Compute the color using Phong illumination (ambient, diffuse, specular) 
@@ -222,7 +224,7 @@ struct phong_structure {
 struct texture_settings_structure {
 	bool use_texture;       // Switch the use of texture on/off
 	bool texture_inverse_v; // Reverse the texture in the v component (1-v)
-	bool two_sided;         // Display a two-sided illuminated surface (doesn't work on Mac)
+	bool two_sided;         // Display a two-sided illuminated surface
 };
 
 // Material of the mesh (using a Phong model)
@@ -250,7 +252,6 @@ void main()
 	vec3 N = normalize(fragment.normal);
 
 	// Inverse the normal if it is viewed from its back (two-sided surface)
-	//  (note: gl_FrontFacing doesn't work on Mac)
 	if (material.texture_settings.two_sided && gl_FrontFacing == false) {
 		N = -N;
 	}
@@ -301,7 +302,8 @@ void main()
 	
 	// Output color, with the alpha component
 	FragColor = vec4(color_shading, material.alpha * color_image_texture.a);
-}#version 330 core // Header for OpenGL 3.3 (CGP replaces it by the one of WebGL 2 on the web)
+}
+#version 330 core // Header for OpenGL 3.3 (CGP replaces it by the one of WebGL 2 on the web)
 
 // Vertex shader: a plane deformed by a ripple, z = A cos(k r - 3 t), computed on the GPU.
 // The normal is either the exact normal of the deformed surface (exact_normals = 1), or the normal of
@@ -328,7 +330,7 @@ uniform mat4 projection;
 uniform float time;
 uniform float amplitude;      // A
 uniform float frequency;      // k
-uniform float exact_normals;  // 1: exact normals, 0: the normals of the plane
+uniform int exact_normals;    // 1: exact normals, 0: the normals of the plane
 
 vec3 deformer(vec3 p0)
 {
@@ -349,7 +351,7 @@ vec3 deformer_normal(vec3 p0)
 void main()
 {
 	vec3 p_deformed = deformer(vertex_position);
-	vec3 n_deformed = exact_normals > 0.5 ? deformer_normal(vertex_position) : vertex_normal;
+	vec3 n_deformed = exact_normals == 1 ? deformer_normal(vertex_position) : vertex_normal;
 
 	vec4 position = model * vec4(p_deformed, 1.0);
 	mat4 modelNormal = transpose(inverse(model));

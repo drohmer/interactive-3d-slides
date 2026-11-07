@@ -91,7 +91,7 @@
     }
   ],
   "poster": {
-    "query": "model=sponza",
+    "query": "turn=0",
     "wait": 1.5
   }
 }
