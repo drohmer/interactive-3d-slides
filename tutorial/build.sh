@@ -3,7 +3,7 @@ set -euo pipefail
 
 # === The tutorial "Create slides with interactive 3D": the whole site ===
 # Usage: ./build.sh     (needs lhtml-site; the demos are the builds committed in ../examples/*/web)
-#   .site/              the English pages
+#   .site/              the English pages, and sitemap.xml (scripts/seo.py)
 #   .site/fr/           the French pages
 #   .site/demos/<id>/   the live demos (a1, a2, c1, c3, c6, c7) and slide-controls.js
 #   .site/decks/lhtml-site/   an example talk made with lhtml-site (html/, slides.pdf)
@@ -22,6 +22,8 @@ echo "==> pages, English and French"
 "$LHTML_SITE" -i configure.yaml
 "$LHTML_SITE" -i configure.fr.yaml
 cp -R .site-fr .site/fr
+echo "==> canonical, hreflang, Open Graph and sitemap.xml"
+python3 scripts/seo.py .site
 
 echo "==> the code to download, and the slides of the examples, live (.site/code/)"
 python3 scripts/prepare_code.py publish .site
